@@ -1,13 +1,13 @@
 const electron = require('electron');
 const app = require('./app');
+
 let window;
 
 function createWindow() {
     /* Créer une fenêtre de 800px par 600px sans bordures */
     window = new electron.BrowserWindow({
-        fullscreen: true,
-        titre: "Assistance Navigation Maritime", 
-        frame: false
+        titre: "Assistance Navigation Maritime",
+        maximize: true
     });
     /* Si vous décommentez cette ligne, vous verrez la console de débug Chrome */
     /* window.webContents.openDevTools(); */
@@ -23,6 +23,7 @@ function createWindow() {
 electron.app.on('ready', function () {
     app.start(function () {
         createWindow();
+        window.maximize()
     });
 });
 

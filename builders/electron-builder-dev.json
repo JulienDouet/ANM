@@ -1,0 +1,13 @@
+{
+    "appId": "fr.univ.anm",
+    "artifactName": "${productName}-${version}.${ext}",
+    "win": {
+        "target": [{
+            "target": "portable",
+            "arch": [
+                "x64"
+            ]
+        }]
+    }
+}
+
