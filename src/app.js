@@ -25,7 +25,7 @@ app.post('/carte', (req, res) => {
   var longitude = [req.body.lon_radio,req.body.lon_deg,req.body.lon_min,req.body.lon_sec];
 
   var deg_decim = dms_to_dd(latitude,longitude);
-  var num = deg_to_num(13,deg_decim[0],deg_decim[1]);
+  var num = deg_to_num(15,deg_decim[0],deg_decim[1]);
   res.render('carte', {test:num});
 })
 
