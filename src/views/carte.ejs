@@ -6,12 +6,12 @@
 
 
 <table cellspacing="0" cellpadding="0" style="border:none;">
-  <% for(var j = 0; j <5; j++){  %>
+  <% for(var j = 0; j <taille ; j++){  %>
     <tr>
-    <% for(var i = 0; i <5; i++){  %>
-      <td style ="background-image: url(https://a.tile.openstreetmap.fr/osmfr/<%= test[i][j][0] %>/<%= test[i][j][1] %>/<%= test[i][j][2] %>.png);">
+    <% for(var i = 0; i <taille; i++){  %>
+      <td style ="background-image: url(https://a.tile.openstreetmap.fr/osmfr/<%= tableau_images[i][j][0] %>/<%= tableau_images[i][j][1] %>/<%= tableau_images[i][j][2] %>.png);">
 
-        <img  src="https://tiles.openseamap.org/seamark/<%= test[i][j][0] %>/<%= test[i][j][1] %>/<%= test[i][j][2] %>.png" alt="">
+        <img  src="https://tiles.openseamap.org/seamark/<%= tableau_images[i][j][0] %>/<%= tableau_images[i][j][1] %>/<%= tableau_images[i][j][2] %>.png" alt="">
 
       </td>
 

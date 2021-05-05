@@ -24,10 +24,13 @@ app.post('/carte', (req, res) => {
   var latitude = [req.body.lat_radio,req.body.lat_deg,req.body.lat_min,req.body.lat_sec];
   var longitude = [req.body.lon_radio,req.body.lon_deg,req.body.lon_min,req.body.lon_sec];
   var zoom = req.body.zoom;
+  var taille = req.body.taille;
 
   var deg_decim = dms_to_dd(latitude,longitude);
   var num = deg_to_num(zoom,deg_decim[0],deg_decim[1]);
-  res.render('carte', {test:tableau_images(num)});
+
+  var tab_images = tableau_images(num,taille);
+  res.render('carte', {tableau_images:tab_images,taille:taille});
 })
 
 app.listen(port, () => {
@@ -76,21 +79,39 @@ function dms_to_dd(latitude, longitude)
 
 }
 
-function tableau_images(num)
+function tableau_images(num,taille)
 {
 
 
-  var tab_images = new Array(4)
-  for (i=0; i < 4; i++){
-        tab_images[i] = new Array(4)
+
+  var tab_images = new Array(30);
+  for (i=0; i < 30; i++){
+        tab_images[i] = new Array(30);
+  }
+
+  var fin = 0;
+  var debut = 0;
+  var ajout = 0
+
+  if (taille%2!=0){
+
+     fin = (taille / 2) >> 0;
+     debut = -fin;
+     ajout = fin;
+  }
+  else{
+
+    fin = (taille / 2) >> 0;
+    debut = -(fin -1);
+    ajout = Math.abs(debut);
   }
 
 
-  for(var i = -2; i<3; i++){
 
-    for(var j = -2; j<3; j++){
-      console.log(i+" "+j);
-      tab_images[i+2][j+2] = [num[0],num[1]+i,num[2]+j];
+  for(var i = debut; i<=fin; i++){
+
+    for(var j = debut; j<=fin; j++){
+      tab_images[i+ajout][j+ajout] = [num[0],num[1]+i,num[2]+j];
 
     }
 
