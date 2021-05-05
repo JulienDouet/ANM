@@ -1,5 +1,27 @@
-<h1><%= test[0] %></h1>
+
 <div>
-<img style="display:block; position:absolute;" src="https://tile.openstreetmap.fr/osmfr/<%= test[0] %>/<%= test[1] %>/<%= test[2] %>.png" alt="">
-<img style="display:block; position:absolute;" src="https://tiles.openseamap.org/seamark/<%= test[0] %>/<%= test[1] %>/<%= test[2] %>.png" alt="">
 </div>
+
+
+
+
+<table cellspacing="0" cellpadding="0" style="border:none;">
+  <% for(var j = 0; j <5; j++){  %>
+    <tr>
+    <% for(var i = 0; i <5; i++){  %>
+      <td style ="background-image: url(https://a.tile.openstreetmap.fr/osmfr/<%= test[i][j][0] %>/<%= test[i][j][1] %>/<%= test[i][j][2] %>.png);">
+
+        <img  src="https://tiles.openseamap.org/seamark/<%= test[i][j][0] %>/<%= test[i][j][1] %>/<%= test[i][j][2] %>.png" alt="">
+
+      </td>
+
+    <% }  %>
+
+    </tr>
+  <% }  %>
+</table>
+
+
+<style media="screen">
+
+</style>

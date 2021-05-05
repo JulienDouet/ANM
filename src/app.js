@@ -23,10 +23,11 @@ app.post('/carte', (req, res) => {
 
   var latitude = [req.body.lat_radio,req.body.lat_deg,req.body.lat_min,req.body.lat_sec];
   var longitude = [req.body.lon_radio,req.body.lon_deg,req.body.lon_min,req.body.lon_sec];
+  var zoom = req.body.zoom;
 
   var deg_decim = dms_to_dd(latitude,longitude);
-  var num = deg_to_num(15,deg_decim[0],deg_decim[1]);
-  res.render('carte', {test:num});
+  var num = deg_to_num(zoom,deg_decim[0],deg_decim[1]);
+  res.render('carte', {test:tableau_images(num)});
 })
 
 app.listen(port, () => {
@@ -72,5 +73,28 @@ function dms_to_dd(latitude, longitude)
   }
 
   return [latitude_dd, longitude_dd];
+
+}
+
+function tableau_images(num)
+{
+
+
+  var tab_images = new Array(4)
+  for (i=0; i < 4; i++){
+        tab_images[i] = new Array(4)
+  }
+
+
+  for(var i = -2; i<3; i++){
+
+    for(var j = -2; j<3; j++){
+      console.log(i+" "+j);
+      tab_images[i+2][j+2] = [num[0],num[1]+i,num[2]+j];
+
+    }
+
+  }
+  return tab_images;
 
 }
