@@ -1,4 +1,5 @@
 var app = {};
+
 function start(callback) {
     init(function() {
         /* On démarre le routeur défini juste avant */
@@ -9,6 +10,7 @@ function start(callback) {
         });
     });
 }
+
 function init(callback) {
     /* On instancie notre module router */
     app.router = require('./router');
@@ -16,6 +18,7 @@ function init(callback) {
         callback();
     }
 }
+
 module.exports = {
     start: start
 };

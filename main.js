@@ -5,8 +5,8 @@ let window;
 function createWindow() {
     /* Créer une fenêtre de 800px par 600px sans bordures */
     window = new electron.BrowserWindow({
-        width: 800,
-        height: 600,
+        fullscreen: true,
+        titre: "Assistance Navigation Maritime", 
         frame: false
     });
     /* Si vous décommentez cette ligne, vous verrez la console de débug Chrome */
