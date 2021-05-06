@@ -1,6 +1,11 @@
 const electron = require('electron');
 const app = require('./app');
 
+try {
+    require('electron-reloader')(module)
+} catch (_) {}
+  
+
 let window;
 
 function createWindow() {
