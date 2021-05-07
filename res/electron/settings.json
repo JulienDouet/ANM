@@ -4,7 +4,8 @@
     "width": 1900,
     "maximize": true,
     "webPreferences": {
-      "nodeIntegration": false
+      "nodeIntegration": true,
+      "devTools": false
     }
   }
 }
