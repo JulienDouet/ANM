@@ -1,6 +1,7 @@
 $(() => {
     const map = $("#map");
     const validateCoordinates = $("#validateCoordinates");
+    const cancelCoordinates = $("#cancelCoordinates");
 
     // tooltip initializer
     $("body").tooltip({ selector: "[data-toggle=tooltip]" });
@@ -35,8 +36,6 @@ $(() => {
                     : decimalDegreLongitude
         };
     };
-
-    const resetMap = () => map.html("");
 
     // core functions
     const gatherFormParams = () => {
@@ -95,6 +94,7 @@ $(() => {
         return generateTileArray(centerTileCoords, zoom, size);
     };
 
+    const resetMap = () => map.html("");
     const renderMap = (mapData) => {
         resetMap();
         mapData.forEach((row) => {
@@ -122,9 +122,15 @@ $(() => {
         });
     };
 
+    // event handlers
     validateCoordinates.click(() => {
         const mapData = gatherFormParams();
         const formattedMapData = formatMapData(mapData);
+        closeCoordinatesModal();
         renderMap(formattedMapData);
+    });
+
+    cancelCoordinates.click(() => {
+        closeCoordinatesModal();
     });
 });
