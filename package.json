@@ -1,15 +1,24 @@
 {
+<<<<<<< HEAD
   "name": "com.demo.app",
   "displayName": "DemoApp",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
+=======
+  "name": "com.anm.app",
+  "displayName": "ANM",
+  "version": "1.0.0",
+  "description": "Application d'assitance de navigation maritime",
+  "main": "map.js",
+>>>>>>> feat-ABT
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "ecosystem:cordova"
   ],
+<<<<<<< HEAD
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
@@ -17,11 +26,19 @@
     "cordova-electron": "^1.1.1",
     "cordova-plugin-whitelist": "^1.3.4",
     "electron-reloader": "^1.2.1"
+=======
+  "author": "Alexandre BOUDET",
+  "devDependencies": {
+    "cordova-android": "^9.1.0",
+    "cordova-electron": "^1.1.1",
+    "cordova-plugin-whitelist": "^1.3.4"
+>>>>>>> feat-ABT
   },
   "cordova": {
     "plugins": {
       "cordova-plugin-whitelist": {}
     },
+<<<<<<< HEAD
 <<<<<<< HEAD
     "repository": {
         "type": "git",
@@ -40,10 +57,16 @@
         "mkdirp": "^1.0.4"
     }
 =======
+=======
+>>>>>>> feat-ABT
     "platforms": [
       "electron",
       "android"
     ]
   }
+<<<<<<< HEAD
 >>>>>>> feat-JD
 }
+=======
+}
+>>>>>>> feat-ABT
