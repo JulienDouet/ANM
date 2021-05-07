@@ -58,208 +58,153 @@
         </nav>
         <!-- End topbar -->
 
-        <!-- Map -->
-        <div>
-            <table
-                cellspacing="0"
-                cellpadding="0"
-                style="border: none"
-                id="map"
-            ></table>
-        </div>
-        <!-- End map -->
+    <!-- Map -->
+    <div>
+      <table
+        cellspacing="0"
+        cellpadding="0"
+        style="border: none"
+        id="map"
+      ></table>
+    </div>
+    <!-- End map -->
 
-        <!-- Modals -->
-        <div
-            class="modal fade coordinatesModal"
-            tabindex="-1"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content modal-background">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Gestion des coordonnées</h5>
-                        <button
-                            type="button"
-                            class="close rounded"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                        >
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row" style="margin-bottom: 25px">
-                                <div class="col-md-5 offset-md-1">
-                                    <div class="form-check">
-                                        <input
-                                            class="form-check-input"
-                                            type="radio"
-                                            id="lat_radio_n"
-                                            name="lat_radio"
-                                            value="N"
-                                            checked
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="lat_radio_n"
-                                            >Nord</label
-                                        >
-                                    </div>
+    <!-- Modals -->
+    <div class="modal fade coordinatesModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content modal-background">
+          <div class="modal-header">
+            <h5 class="modal-title">Gestion des coordonnées</h5>
+            <button
+              type="button"
+              class="close rounded"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row" style="margin-bottom: 25px">
+                <div class="col-md-5 offset-md-1">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="lat_radio_n"
+                      name="lat_radio"
+                      value="N"
+                      checked
+                    />
+                    <label class="form-check-label" for="lat_radio_n"
+                      >Nord</label
+                    >
+                  </div>
 
-                                    <div class="form-check">
-                                        <input
-                                            class="form-check-input"
-                                            type="radio"
-                                            id="lat_radio_s"
-                                            name="lat_radio"
-                                            value="S"
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="lat_radio_s"
-                                            >Sud</label
-                                        >
-                                    </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="lat_radio_s"
+                      name="lat_radio"
+                      value="S"
+                    />
+                    <label class="form-check-label" for="lat_radio_s"
+                      >Sud</label
+                    >
+                  </div>
 
-                                    <div>
-                                        <label for="lat_deg">Degré :</label>
-                                        <input
-                                            type="text"
-                                            id="lat_deg"
-                                            name="lat_deg"
-                                            value="0"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label for="lat_min">Minutes :</label>
-                                        <input
-                                            type="text"
-                                            id="lat_min"
-                                            name="lat_min"
-                                            value="0"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label for="lat_sec">Secondes :</label>
-                                        <input
-                                            type="text"
-                                            id="lat_sec"
-                                            name="lat_sec"
-                                            value="0"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="col-md-5 offset-md-1">
-                                    <div class="form-check">
-                                        <input
-                                            class="form-check-input"
-                                            type="radio"
-                                            id="lon_radio_o"
-                                            name="lon_radio"
-                                            value="O"
-                                            checked
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="lon_radio_o"
-                                            >Ouest</label
-                                        >
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input
-                                            class="form-check-input"
-                                            type="radio"
-                                            id="lon_radio_e"
-                                            name="lon_radio"
-                                            value="E"
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="lon_radio_e"
-                                            >Est</label
-                                        >
-                                    </div>
-
-                                    <div>
-                                        <label for="lon_deg">Degré :</label>
-                                        <input
-                                            type="text"
-                                            id="lon_deg"
-                                            name="lon_deg"
-                                            value="0"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label for="lon_min">Minutes :</label>
-                                        <input
-                                            type="text"
-                                            id="lon_min"
-                                            name="lon_min"
-                                            value="0"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label for="lon_sec">Secondes :</label>
-                                        <input
-                                            type="text"
-                                            id="lon_sec"
-                                            name="lon_sec"
-                                            value="0"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-7 offset-md-1">
-                                    <div>
-                                        <label for="zoom">Zoom :</label>
-                                        <input
-                                            value="10"
-                                            type="number"
-                                            id="zoom"
-                                            name="zoom"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label for="size"
-                                            >Taille de la carte :</label
-                                        >
-                                        <input
-                                            min="2"
-                                            value="6"
-                                            type="number"
-                                            id="size"
-                                            name="size"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div style="float: right">
-                                        <button
-                                            id="cancelCoordinates"
-                                            class="btn btn-danger"
-                                        >
-                                            Annuler
-                                        </button>
-                                        <button
-                                            id="validateCoordinates"
-                                            class="btn btn-success"
-                                        >
-                                            Valider
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  <div>
+                    <label for="lat_deg">Degré :</label>
+                    <input type="text" id="lat_deg" name="lat_deg" value="0" />
+                  </div>
+                  <div>
+                    <label for="lat_min">Minutes :</label>
+                    <input type="text" id="lat_min" name="lat_min" value="0" />
+                  </div>
+                  <div>
+                    <label for="lat_sec">Secondes :</label>
+                    <input type="text" id="lat_sec" name="lat_sec" value="0" />
+                  </div>
                 </div>
+                <div class="col-md-5 offset-md-1">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="lon_radio_o"
+                      name="lon_radio"
+                      value="O"
+                      checked
+                    />
+                    <label class="form-check-label" for="lon_radio_o"
+                      >Ouest</label
+                    >
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="lon_radio_e"
+                      name="lon_radio"
+                      value="E"
+                    />
+                    <label class="form-check-label" for="lon_radio_e"
+                      >Est</label
+                    >
+                  </div>
+
+                  <div>
+                    <label for="lon_deg">Degré :</label>
+                    <input type="text" id="lon_deg" name="lon_deg" value="0" />
+                  </div>
+                  <div>
+                    <label for="lon_min">Minutes :</label>
+                    <input type="text" id="lon_min" name="lon_min" value="0" />
+                  </div>
+                  <div>
+                    <label for="lon_sec">Secondes :</label>
+                    <input type="text" id="lon_sec" name="lon_sec" value="0" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-7 offset-md-1">
+                  <div>
+                    <label for="zoom">Zoom :</label>
+                    <input value="10" type="number" id="zoom" name="zoom" />
+                  </div>
+                  <div>
+                    <label for="size">Taille de la carte :</label>
+                    <input
+                      min="2"
+                      value="6"
+                      type="number"
+                      id="size"
+                      name="size"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div style="float: right">
+                    <button id="cancelCoordinates" class="btn btn-danger">
+                      Annuler
+                    </button>
+                    <button id="validateCoordinates" class="btn btn-success">
+                      Valider
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-        <!-- End modals -->
-    </body>
+      </div>
+    </div>
+    <!-- End modals -->
+  </body>
 </html>
