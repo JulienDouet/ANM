@@ -1,0 +1,10 @@
+{
+  "browserWindow": {
+    "height": 1100,
+    "width": 1900,
+    "maximize": true,
+    "webPreferences": {
+      "nodeIntegration": false
+    }
+  }
+}

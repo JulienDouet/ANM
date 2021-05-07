@@ -9,10 +9,18 @@ NPM : 6.14.12
 `npm install`
 
 2. Lancement de l'application electron  
-`npm run start`
+`cordova run electron --nobuild`
 
-## Pour build l'application (Windows, Linux, MacOS)
+## Pour build l'application (Windows, Linux, MacOS, Android)
 
-`npm run build-dev`
+`cordova build`
 
-> Pour choisir sur quelle platforme nous souaitons générer l'archive il faut modifier le fichier 'package.json' dans la rubrique script build-dev
+> La configuration du build se fait dans le fichier `build.json`
+
+### Android
+
+L'APK de l'application se situe dans `/platforms/android/app/build/outputs/apk/debug/app-debug.apk`.
+
+### Windows, Linux, MacOS
+
+Les exécutable se situe dans `/platforms/electron/build/*`
