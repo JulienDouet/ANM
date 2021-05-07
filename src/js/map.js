@@ -1,3 +1,5 @@
+var mkdirp = require('mkdirp');
+
 $(() => {
     const map = $("#map");
     const validateCoordinates = $("#validateCoordinates");
@@ -108,6 +110,9 @@ $(() => {
         return tableau_images(num, size);
     };
 
+
+
+
     const renderMap = (rowList) => {
         map.html("");
         rowList.forEach((row, j) => {
@@ -136,8 +141,13 @@ $(() => {
     };
 
     validateCoordinates.click(() => {
+        //fs.mkdir("<your path>",callback);
+        makeDir("entdeent/");
         const mapData = gatherFormParams();
         const formattedMapData = formatMapData(mapData);
         renderMap(formattedMapData);
+
+
+
     });
 });
