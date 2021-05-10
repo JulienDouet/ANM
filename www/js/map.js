@@ -6,6 +6,14 @@ $(() => {
     $("body").tooltip({ selector: "[data-toggle=tooltip]" });
 
     // utils
+    /**
+     * Fonction permettant de convertir des degrés en numéro Tile pour préparer 
+     * les appels à l'API l'API OpenStreetMap et OpenSeaMap
+     * @param {Le zoom que l'on veut appliquer à la carte} zoom 
+     * @param {Le degré de latitude} lat_deg 
+     * @param {Le degré de longitude} lon_deg 
+     * @returns Un tableau avec les 3 paramètres nécessaires aux appels l'API OpenStreetMap et OpenSeaMap
+     */
     function convertDegToNum(zoom, lat_deg, lon_deg) {
         var lat_rad = convertDegToRad(lat_deg);
 
@@ -18,11 +26,23 @@ $(() => {
 
         return [zoom, xtile, ytile];
     }
-
+    
+    /**
+     * Fonction permettant de convertir un degré en radians
+     * @param {Le degré à convertir} degrees 
+     * @returns Le radian correspondant au degré
+     */
     function convertDegToRad(degrees) {
         var pi = Math.PI;
         return degrees * (pi / 180);
     }
+
+    /**
+     * Fonction permettant de convertir des DMS (Degré, Minutes, Secondes) en DD (Degré Decimaux)
+     * @param {La latitude à convertir en DD} latitude 
+     * @param {La longitude à convertir en DD} longitude 
+     * @returns Les coordonnées DMS converties en DD
+     */
     const convertDMSToDD = (latitude, longitude) => {
         // traitement latitude
         latitude_dd =
@@ -46,7 +66,10 @@ $(() => {
         return [latitude_dd, longitude_dd];
     };
 
-    // core functions
+    /**
+     * Fonction permettant de récupérer toutes les valeurs des champs du formulaire
+     * @returns Retourne un objet contenant toutes les valeurs du formulaire
+     */
     const gatherFormParams = () => {
         const latRad = $("input[name='lat_radio']").toArray();
         const lonRad = $("input[name='lon_radio']").toArray();
@@ -67,6 +90,13 @@ $(() => {
             size: $("#size")[0].value
         };
     };
+
+    /**
+     * ??????
+     * @param {Les coordonnées de la taille centrale} num 
+     * @param {La taille de la carte} taille 
+     * @returns 
+     */
     function tableau_images(num, taille) {
         var tab_images = new Array(taille);
         for (i = 0; i < taille; i++) {
@@ -99,6 +129,11 @@ $(() => {
         return tab_images;
     }
 
+    /**
+     * 
+     * @param {Les données du formulaire} data 
+     * @returns 
+     */
     const formatMapData = (data) => {
         const { latitude, longitude, zoom, size } = data;
 
@@ -108,6 +143,10 @@ $(() => {
         return tableau_images(num, size);
     };
 
+    /**
+     * Fonction permettant d'afficher la carte 
+     * @param {Les valeurs Tiles de chaque image à afficher} rowList 
+     */
     const renderMap = (rowList) => {
         map.html("");
         rowList.forEach((row, j) => {
@@ -135,6 +174,9 @@ $(() => {
         });
     };
 
+    /**
+     * Ecouteur sur le bouton valider qui appelle la fonction d'affichage de la carte
+     */
     validateCoordinates.click(() => {
         const mapData = gatherFormParams();
         const formattedMapData = formatMapData(mapData);
