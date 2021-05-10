@@ -122,6 +122,12 @@ $(() => {
         });
     };
 
+    const closeCoordinatesModal = () => {
+        $(".coordinatesModal").modal("toggle");
+    };
+
+    const closeAmerModal = () => {};
+
     // event handlers
     validateCoordinates.click(() => {
         const mapData = gatherFormParams();
