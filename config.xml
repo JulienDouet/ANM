@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.anm.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Assistance Navigation Maritime</name>
+    <name>ANM</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Une application simple servant d'Assistant de Navigation Maritime
     </description>
-    <author email="alexandre.boudet@etud.univ-angers.fr" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="alexandre.boudet@etud.univ-angers.fr" href="https://www.univ-angers.fr/fr/index.html">
+        Les matelots engagés.
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -24,5 +24,6 @@
     </platform>
     <platform name="electron">
         <preference name="ElectronSettingsFilePath" value="res/electron/settings.json"/>
+        <icon src="res/electron/logo.png" />
     </platform>
 </widget>
