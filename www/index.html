@@ -19,7 +19,7 @@
                 </a>
                 <span data-bs-toggle="modal" data-bs-target="#coordinatesModal">
                     <button
-                        class="btn btn-info"
+                        class="btn btn-primary"
                         data-bs-toggle="tooltip"
                         title="Gérer les coordonnées"
                     >
@@ -28,7 +28,7 @@
                 </span>
                 <span data-bs-toggle="modal" data-bs-target="#amerModal">
                     <button
-                        class="btn btn-info"
+                        class="btn btn-primary"
                         data-bs-toggle="tooltip"
                         title="Placer un amer"
                     >
@@ -37,7 +37,7 @@
                 </span>
                 <span data-bs-toggle="modal">
                     <button
-                        class="btn btn-info disabled pointer"
+                        class="btn btn-primary disabled pointer"
                         data-bs-toggle="tooltip"
                         title="Tracer une route"
                     >
@@ -46,7 +46,7 @@
                 </span>
                 <span data-bs-toggle="modal" data-bs-target=".helpModal">
                     <button
-                        class="btn btn-info"
+                        class="btn btn-primary"
                         data-bs-toggle="tooltip"
                         title="Aide"
                     >
@@ -83,9 +83,31 @@
                     </div>
                     <div class="modal-body">
                         <!-- Latitude -->
-                        <form class="row gy-2 gx-3 align-items-end needs-validation" novalidate>
-                            <div class="col-sm-3">
-                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <form class="row g-3 align-items-end needs-validation" novalidate>
+                            <div class="col-sm">
+                                <label class="form-label" for="lat_deg">Degré</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" id="lat_deg" name="lat_deg" value="0" min="0" max="60"/>
+                                    <span class="input-group-text"><b>°</b></span>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <label class="form-label" for="lat_min">Minutes</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" id="lat_min" name="lat_min" value="0" min="0" max="60"/>
+                                    <span class="input-group-text"><b>'</b></span>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <label class="form-label" for="lat_sec">Secondes</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" id="lat_sec" name="lat_sec" value="0" min="0" max="60"/>
+                                    <span class="input-group-text"><b>"</b></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <label class="form-label" for="latitude">Latitude</label>
+                                <div name="latitude" class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                     <input class="btn-check" type="radio" id="lat_radio_n" name="lat_radio" value="N" autocomplete="off" checked/>
                                     <label class="btn btn-outline-primary" for="lat_radio_n">Nord</label>
 
@@ -93,45 +115,43 @@
                                     <label class="btn btn-outline-primary" for="lat_radio_s">Sud</label> 
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                <label class="form-label" for="lat_deg">Degré :</label>
-                                <input class="form-control" type="number" id="lat_deg" name="lat_deg" value="0"/>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="form-label" for="lat_min">Minutes :</label>
-                                <input class="form-control" type="number" id="lat_min" name="lat_min" value="0"/>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="form-label" for="lat_sec">Secondes :</label>
-                                <input class="form-control" type="number" id="lat_sec" name="lat_sec" value="0"/>
-                            </div>
                         </form>
                         <!-- End Latitude -->
 
                         <hr class="my-4">
 
                         <!-- Longitude -->
-                        <form class="row gy-2 gx-3 align-items-end needs-validation" novalidate>
-                            <div class="col-sm-3">
-                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <form class="row g-3 align-items-end needs-validation" novalidate>
+                            <div class="col-sm">
+                                <label class="form-label" for="lon_deg">Degré</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" id="lon_deg" name="lon_deg" value="0" min="0" max="180"/>
+                                    <span class="input-group-text"><b>°</b></span>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <label class="form-label" for="lon_min">Minutes</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" id="lon_min" name="lon_min" value="0" min="0" max="60"/>
+                                    <span class="input-group-text"><b>'</b></span>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <label class="form-label" for="lon_sec">Secondes</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" id="lon_sec" name="lon_sec" value="0" min="0" max="60"/>
+                                    <span class="input-group-text"><b>"</b></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <label class="form-label" for="latitude">Longitude</label>
+                                <div class="btn-group" name="latitude" role="group" aria-label="Basic radio toggle button group">
                                     <input class="btn-check" type="radio" id="lon_radio_o" name="lon_radio" value="O" autocomplete="off" checked/>
                                     <label class="btn btn-outline-primary" for="lon_radio_o">Ouest</label>
 
                                     <input class="btn-check" type="radio" id="lon_radio_e" name="lon_radio" value="E" autocomplete="off"/>
                                     <label class="btn btn-outline-primary" for="lon_radio_e">Est</label> 
                                 </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="form-label" for="lon_deg">Degré :</label>
-                                <input class="form-control" type="number" id="lon_deg" name="lon_deg" value="0"/>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="form-label" for="lon_min">Minutes :</label>
-                                <input class="form-control" type="number" id="lon_min" name="lon_min" value="0"/>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="form-label" for="lon_sec">Secondes :</label>
-                                <input class="form-control" type="number" id="lon_sec" name="lon_sec" value="0"/>
                             </div>
                         </form>
                         <!-- End - Longitude -->
@@ -153,8 +173,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button id="cancelCoordinates" class="btn btn-danger">Annuler</button>
-                        <button id="validateCoordinates" class="btn btn-success">Valider</button>
+                        <button id="cancelCoordinates" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                        <button id="validateCoordinates" class="btn btn-success" data-bs-dismiss="modal">Valider</button>
                     </div>
                 </div>
             </div>
