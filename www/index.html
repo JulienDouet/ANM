@@ -11,62 +11,64 @@
         <script type="text/javascript" src="./js/map.js"></script>
     </head>
     <body>
-        <!-- Topbar -->
-        <nav class="navbar fixed-top navbar-light bg-light">
-            <div class="topbar-container">
-                <a class="navbar-brand" href="#">
-                    &nbsp;&nbsp;Assistance Navigation Maritime
-                </a>
-                <span data-bs-toggle="modal" data-bs-target="#coordinatesModal">
-                    <button
-                        class="btn btn-primary"
-                        data-bs-toggle="tooltip"
-                        title="Gérer les coordonnées"
-                    >
-                        <i class="fas fa-map-marked-alt fa-lg"></i>
-                    </button>
-                </span>
-                <span data-bs-toggle="modal" data-bs-target="#amerModal">
-                    <button
-                        class="btn btn-primary"
-                        data-bs-toggle="tooltip"
-                        title="Placer un amer"
-                    >
-                        <i class="fas fa-life-ring fa-lg"></i>
-                    </button>
-                </span>
-                <span data-bs-toggle="modal">
-                    <button
-                        class="btn btn-primary disabled pointer"
-                        data-bs-toggle="tooltip"
-                        title="Tracer une route"
-                    >
-                        <i class="fas fa-pencil-ruler fa-lg"></i>
-                    </button>
-                </span>
-                <span data-bs-toggle="modal" data-bs-target=".helpModal">
-                    <button
-                        class="btn btn-primary"
-                        data-bs-toggle="tooltip"
-                        title="Aide"
-                    >
-                        <i class="fas fa-question fa-lg"></i>
-                    </button>
-                </span>
-            </div>
-        </nav>
-        <!-- End topbar -->
-
-        <!-- Map -->
-        <div>
-            <table
-                cellspacing="0"
-                cellpadding="0"
-                style="border: none"
-                id="map"
-            ></table>
-        </div>
-        <!-- End map -->
+        <header class="py-4">
+            <!-- Topbar -->
+            <nav class="navbar fixed-top navbar-light bg-light">
+                <div class="topbar-container">
+                    <a class="navbar-brand" href="#">
+                        &nbsp;&nbsp;Assistance Navigation Maritime
+                    </a>
+                    <span data-bs-toggle="modal" data-bs-target="#coordinatesModal">
+                        <button
+                            class="btn btn-primary"
+                            data-bs-toggle="tooltip"
+                            title="Gérer les coordonnées"
+                        >
+                            <i class="fas fa-map-marked-alt fa-lg"></i>
+                        </button>
+                    </span>
+                    <span data-bs-toggle="modal" data-bs-target="#amerModal">
+                        <button
+                            class="btn btn-primary"
+                            data-bs-toggle="tooltip"
+                            title="Placer un amer"
+                        >
+                            <i class="fas fa-life-ring fa-lg"></i>
+                        </button>
+                    </span>
+                    <span data-bs-toggle="modal">
+                        <button
+                            class="btn btn-primary disabled pointer"
+                            data-bs-toggle="tooltip"
+                            title="Tracer une route"
+                        >
+                            <i class="fas fa-pencil-ruler fa-lg"></i>
+                        </button>
+                    </span>
+                    <span data-bs-toggle="modal" data-bs-target=".helpModal">
+                        <button
+                            class="btn btn-primary"
+                            data-bs-toggle="tooltip"
+                            title="Aide"
+                        >
+                            <i class="fas fa-question fa-lg"></i>
+                        </button>
+                    </span>
+                </div>
+            </nav>
+            <!-- End topbar -->
+        </header>
+        <main class="py-2">
+            <section style="position: relative;">
+                <!-- Map -->
+                <div id="map-container">
+                    <table id="map" cellspacing="0" cellpadding="0" style="border: none"></table>
+                </div>
+                <canvas id="mapCanvas" class="canvas-style"></canvas>
+                <!-- End map -->
+            </section>
+        </main>
+        
 
         <!-- Modals -->
         <div

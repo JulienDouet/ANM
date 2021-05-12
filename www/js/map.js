@@ -1,6 +1,8 @@
 $(() => {
     const map = $("#map");
     const validateCoordinates = $("#validateCoordinates");
+    const canvas = document.getElementById("mapCanvas");
+    const table = document.getElementById("map");
 
     // tooltip initializer
     $("body").tooltip({ selector: "[data-toggle=tooltip]" });
@@ -179,7 +181,22 @@ $(() => {
      */
     validateCoordinates.click(() => {
         const mapData = gatherFormParams();
+        
         const formattedMapData = formatMapData(mapData);
         renderMap(formattedMapData);
+        setTimeout(() => { displayCanvas(); }, 500);
     });
+
+
+
+    const displayCanvas = () => {
+        
+        var ctx = canvas.getContext("2d");
+        ctx.moveTo(0, 0);
+        ctx.lineTo(200, 100);
+        ctx.stroke();
+        canvas.height = table.offsetHeight;
+        canvas.width = table.offsetWidth;
+        canvas.style.visibility = "visible";
+    }
 });
