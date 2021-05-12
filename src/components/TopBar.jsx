@@ -40,27 +40,21 @@ export const TopBar = () => {
                     <OverlayTrigger
                         placement="bottom"
                         overlay={renderTooltip("Gérer les coordonnées")}
-                    ></OverlayTrigger>
-                    <Button variant="primary" disabled>
-                        <FontAwesomeIcon icon={faPencilRuler} size="lg" />
-                    </Button>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Gérer les coordonnées")}
-                    ></OverlayTrigger>
+                    >
+                        <Button variant="primary">
+                            <FontAwesomeIcon icon={faPencilRuler} size="lg" />
+                        </Button>
+                    </OverlayTrigger>
                 </span>
                 <span data-toggle="modal" data-target=".helpModal">
                     <OverlayTrigger
                         placement="bottom"
                         overlay={renderTooltip("Gérer les coordonnées")}
-                    ></OverlayTrigger>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faQuestion} size="lg" />
-                    </Button>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Gérer les coordonnées")}
-                    ></OverlayTrigger>
+                    >
+                        <Button variant="primary">
+                            <FontAwesomeIcon icon={faQuestion} size="lg" />
+                        </Button>
+                    </OverlayTrigger>
                 </span>
             </div>
         </Nav>
