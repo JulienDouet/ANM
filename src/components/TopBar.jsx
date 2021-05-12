@@ -1,47 +1,68 @@
-import { Button, Nav } from "react-bootstrap"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLifeRing, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
+import { Button, Nav, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faLifeRing,
+    faMapMarkedAlt,
+    faPencilRuler,
+    faQuestion
+} from "@fortawesome/free-solid-svg-icons";
 
+const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
 export const TopBar = () => {
     return (
-        <Nav className="navbar fixed-top navbar-light bg-light">
+        <Nav className="navbar fixed-top navbar-dark bg-dark">
             <div className="topbar-container">
+                <a class="navbar-brand" href="#">
+                    &nbsp;&nbsp;Assistance Navigation Maritime
+                </a>
                 <span data-toggle="modal" data-target=".coordinatesModal">
-                    <Button
-                        variant="primary"
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Gérer les coordonnées")}
                     >
-                        <FontAwesomeIcon icon={faMapMarkedAlt} size="lg" />
-                    </Button>
+                        <Button variant="primary">
+                            <FontAwesomeIcon icon={faMapMarkedAlt} size="lg" />
+                        </Button>
+                    </OverlayTrigger>
                 </span>
                 <span data-toggle="modal" data-target=".amerModal">
-                    <Button
-                        className="btn btn-info"
-                        data-toggle="tooltip"
-                        title="Placer un amer"
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Gérer les coordonnées")}
                     >
-                        <i className="fas fa-life-ring fa-lg"></i>
-                    </Button>
+                        <Button variant="primary">
+                            <FontAwesomeIcon icon={faLifeRing} size="lg" />
+                        </Button>
+                    </OverlayTrigger>
                 </span>
                 <span data-toggle="modal">
-                    <Button
-                        className="btn btn-info disabled pointer"
-                        data-toggle="tooltip"
-                        title="Tracer une route"
-                    >
-                        <i className="fas fa-pencil-ruler fa-lg"></i>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Gérer les coordonnées")}
+                    ></OverlayTrigger>
+                    <Button variant="primary" disabled>
+                        <FontAwesomeIcon icon={faPencilRuler} size="lg" />
                     </Button>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Gérer les coordonnées")}
+                    ></OverlayTrigger>
                 </span>
                 <span data-toggle="modal" data-target=".helpModal">
-                    <Button
-                        className="btn btn-info"
-                        data-toggle="tooltip"
-                        title="Aide"
-                    >
-                        <i className="fas fa-question fa-lg"></i>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Gérer les coordonnées")}
+                    ></OverlayTrigger>
+                    <Button variant="primary">
+                        <FontAwesomeIcon icon={faQuestion} size="lg" />
                     </Button>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Gérer les coordonnées")}
+                    ></OverlayTrigger>
                 </span>
             </div>
         </Nav>
-    )
-}
+    );
+};

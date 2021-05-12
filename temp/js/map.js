@@ -1,32 +1,41 @@
 $(() => {
     const map = $("#map");
     const validateCoordinates = $("#validateCoordinates");
-    const cancelCoordinates = $("#cancelCoordinates");
 
     // tooltip initializer
     $("body").tooltip({ selector: "[data-toggle=tooltip]" });
 
-    /// utils ///
-
+    // utils
     /**
-     * Fonction permettant de convertir des degrés en numéro de Tile 
-     * (celle du centre de la carte en l'occurrence) pour préparer 
-     * les appels à l'API OpenStreetMap et OpenSeaMap
+     * Fonction permettant de convertir des degrés en numéro Tile pour préparer 
+     * les appels à l'API l'API OpenStreetMap et OpenSeaMap
      * @param {Le zoom que l'on veut appliquer à la carte} zoom 
-     * @param {Le degré de latitude} degLatitude 
-     * @param {Le degré de longitude} degLongitude 
-     * @returns Un tableau avec les 2 paramètres nécessaires aux appels 
-     * de l'API OpenStreetMap et OpenSeaMap
+     * @param {Le degré de latitude} lat_deg 
+     * @param {Le degré de longitude} lon_deg 
+     * @returns Un tableau avec les 3 paramètres nécessaires aux appels l'API OpenStreetMap et OpenSeaMap
      */
-    const getCenterTile = (zoom, degLatitude, degLongitude) => [
-        parseInt(((degLongitude + 180.0) / 360.0) * 2.0 ** zoom),
-        parseInt(
-            ((1.0 -
-                Math.asinh(Math.tan(degLatitude * (Math.PI / 180))) / Math.PI) /
-                2.0) *
-                2.0 ** zoom
-        )
-    ];
+    function convertDegToNum(zoom, lat_deg, lon_deg) {
+        var lat_rad = convertDegToRad(lat_deg);
+
+        var n = Math.pow(2.0, zoom);
+
+        var xtile = parseInt(((lon_deg + 180.0) / 360.0) * n);
+        var ytile = parseInt(
+            ((1.0 - Math.asinh(Math.tan(lat_rad)) / Math.PI) / 2.0) * n
+        );
+
+        return [zoom, xtile, ytile];
+    }
+    
+    /**
+     * Fonction permettant de convertir un degré en radians
+     * @param {Le degré à convertir} degrees 
+     * @returns Le radian correspondant au degré
+     */
+    function convertDegToRad(degrees) {
+        var pi = Math.PI;
+        return degrees * (pi / 180);
+    }
 
     /**
      * Fonction permettant de convertir des DMS (Degré, Minutes, Secondes) en DD (Degré Decimaux)
@@ -34,27 +43,28 @@ $(() => {
      * @param {La longitude à convertir en DD} longitude 
      * @returns Les coordonnées DMS converties en DD
      */
-    const convertToDecimalDegre = (latitude, longitude) => {
-        const decimalDegreLatitude =
+    const convertDMSToDD = (latitude, longitude) => {
+        // traitement latitude
+        latitude_dd =
             parseInt(latitude.deg) +
             (latitude.min * 60 + parseInt(latitude.sec)) / 3600;
-        const decimalDegreLongitude =
+
+        if (latitude.orientation == "S") {
+            latitude_dd = -latitude_dd;
+        }
+
+        // traitement longitude
+
+        longitude_dd =
             parseInt(longitude.deg) +
             (longitude.min * 60 + parseInt(longitude.sec)) / 3600;
 
-        return {
-            decimalDegreLatitude:
-                latitude.orientation === "S"
-                    ? -decimalDegreLatitude
-                    : decimalDegreLatitude,
-            decimalDegreLongitude:
-                longitude.orientation === "O"
-                    ? -decimalDegreLongitude
-                    : decimalDegreLongitude
-        };
-    };
+        if (longitude.orientation == "O") {
+            longitude_dd = -longitude_dd;
+        }
 
-    /// core functions ///
+        return [latitude_dd, longitude_dd];
+    };
 
     /**
      * Fonction permettant de récupérer toutes les valeurs des champs du formulaire
@@ -76,37 +86,48 @@ $(() => {
                 min: $("#lon_min")[0].value,
                 sec: $("#lon_sec")[0].value
             },
-            zoom: parseInt($("#zoom")[0].value),
-            size: parseInt($("#size")[0].value)
+            zoom: $("#zoom")[0].value,
+            size: $("#size")[0].value
         };
     };
 
     /**
-     * Fonction permettant de générer les numéros des tiles composant 
-     * la map à construire
-     * @param {Les coordonnées de la taille centrale} centerTileCoords 
-     * @param {Le zoom de la carte} zoom 
-     * @param {La taille de la carte} size 
+     * ??????
+     * @param {Les coordonnées de la taille centrale} num 
+     * @param {La taille de la carte} taille 
      * @returns 
      */
-    const generateTileArray = (centerTileCoords, zoom, size) => {
-        const tileArray = [...Array(size)].map(() => Array(size));
+    function tableau_images(num, taille) {
+        var tab_images = new Array(taille);
+        for (i = 0; i < taille; i++) {
+            tab_images[i] = new Array(taille);
+        }
 
-        const end = (size / 2) >> 0;
-        const start = size % 2 !== 0 ? -end : -(end - 1);
-        const add = size % 2 !== 0 ? end : Math.abs(start);
+        var fin = 0;
+        var debut = 0;
+        var ajout = 0;
 
-        for (let i = start; i <= end; ++i)
-            for (let j = start; j <= end; ++j)
-                tileArray[j + add][i + add] = [
-                    zoom,
-                    centerTileCoords[0] + i,
-                    centerTileCoords[1] + j
+        if (taille % 2 != 0) {
+            fin = (taille / 2) >> 0;
+            debut = -fin;
+            ajout = fin;
+        } else {
+            fin = (taille / 2) >> 0;
+            debut = -(fin - 1);
+            ajout = Math.abs(debut);
+        }
+
+        for (var i = debut; i <= fin; i++) {
+            for (var j = debut; j <= fin; j++) {
+                tab_images[i + ajout][j + ajout] = [
+                    num[0],
+                    num[1] + i,
+                    num[2] + j
                 ];
-
-        return tileArray;
-    };
-
+            }
+        }
+        return tab_images;
+    }
 
     /**
      * 
@@ -116,45 +137,35 @@ $(() => {
     const formatMapData = (data) => {
         const { latitude, longitude, zoom, size } = data;
 
-        const {
-            decimalDegreLatitude,
-            decimalDegreLongitude
-        } = convertToDecimalDegre(latitude, longitude);
+        var deg_decim = convertDMSToDD(latitude, longitude);
+        var num = convertDegToNum(zoom, deg_decim[0], deg_decim[1]);
 
-        const centerTileCoords = getCenterTile(
-            zoom,
-            decimalDegreLatitude,
-            decimalDegreLongitude
-        );
-
-        return generateTileArray(centerTileCoords, zoom, size);
+        return tableau_images(num, size);
     };
-
-    const resetMap = () => map.html("");
 
     /**
      * Fonction permettant d'afficher la carte 
-     * @param {Les valeurs Tiles de chaque image à afficher} mapData 
+     * @param {Les valeurs Tiles de chaque image à afficher} rowList 
      */
-    const renderMap = (mapData) => {
-        resetMap();
-        mapData.forEach((row) => {
+    const renderMap = (rowList) => {
+        map.html("");
+        rowList.forEach((row, j) => {
             map.append("<tr>");
-            row.forEach((cell) => {
+            row.forEach((col, i) => {
                 map.append(
                     "<td style ='background-image: url(https://a.tile.openstreetmap.fr/osmfr/" +
-                        cell[0] +
+                        rowList[i][j][0] +
                         "/" +
-                        cell[1] +
+                        rowList[i][j][1] +
                         "/" +
-                        cell[2] +
+                        rowList[i][j][2] +
                         ".png);'>" +
                         "<img  src='https://tiles.openseamap.org/seamark/" +
-                        cell[0] +
+                        rowList[i][j][0] +
                         "/" +
-                        cell[1] +
+                        rowList[i][j][1] +
                         "/" +
-                        cell[2] +
+                        rowList[i][j][2] +
                         ".png'>" +
                         "</td>"
                 );
@@ -163,25 +174,12 @@ $(() => {
         });
     };
 
-    const closeCoordinatesModal = () => {
-        $(".coordinatesModal").modal("toggle");
-    };
-
-    const closeAmerModal = () => {};
-
-    // event handlers
-
     /**
      * Ecouteur sur le bouton valider qui appelle la fonction d'affichage de la carte
      */
     validateCoordinates.click(() => {
         const mapData = gatherFormParams();
         const formattedMapData = formatMapData(mapData);
-        closeCoordinatesModal();
         renderMap(formattedMapData);
-    });
-
-    cancelCoordinates.click(() => {
-        closeCoordinatesModal();
     });
 });
