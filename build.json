@@ -3,28 +3,6 @@
         "linux": {
             "package": ["deb"],
             "arch": ["x64"]
-        },
-        "windows": {
-            "package": ["zip"],
-            "arch": ["x64"]
-        }
-    },
-    "android": {
-        "debug": {
-            "keystore": "../android.keystore",
-            "storePassword": "android",
-            "alias": "mykey1",
-            "password" : "password",
-            "keystoreType": "",
-            "packageType": "apk"
-        },
-        "release": {
-            "keystore": "../android.keystore",
-            "storePassword": "",
-            "alias": "mykey2",
-            "password" : "password",
-            "keystoreType": "",
-            "packageType": "bundle"
         }
     }
 }
