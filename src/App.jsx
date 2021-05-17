@@ -1,3 +1,4 @@
+import { Canvas } from './components/Canvas';
 import { Map } from "./components/Map";
 import { TopBar } from "./components/TopBar";
 import { Modals } from "./components/Modals";
@@ -15,6 +16,7 @@ export const App = () => {
                 setMapArray={setMapArray}
             />
             <Map mapArray={mapArray} />
+            <Canvas />
         </>
     );
 };
