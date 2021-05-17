@@ -1,6 +1,7 @@
 import "./Canvas.css"
 import React, { useRef, useEffect, useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
+
 export const Canvas = () => {
 
     // const displayCanvas = () => {
@@ -13,48 +14,52 @@ export const Canvas = () => {
     //     canvas.width = table.offsetWidth;
     //     canvas.style.visibility = "visible";
     // }
+
     //Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    this.state = { angle: '', longueur: '' };
+
+    const [angleVal, setAngleVal] = useState("0");
+    const [longueurVal, setLongueurVal] = useState("900");
+
+    const [canvas, setCanvas] = useState({});
+    const [context, setContext] = useState({});
 
     //Canvas
     const canvasRef = useRef(null);
     const regu = -90;
 
+
     useEffect(() => {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-
-        // Récupérer coordonnées clique
-        const drawLine = (event) => {
-            const rect = canvas.getBoundingClientRect();
-            // Variables
-            var x1 = event.clientX - rect.left;;
-            var y1 = event.clientY - rect.top;
-            var r = 900;
-            var angle = 30 - 90;
-            //Our first draw
-            context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(Math.PI * angle / 180), y1 + r * Math.sin(Math.PI * angle / 180));
-            context.stroke();
-        }
-
-        canvas.addEventListener('mousedown', function (e) {
-            setShow(true);
-            // drawLine(e);
-        })
+        setCanvas(canvasRef.current);
+        setContext(canvas.getContext('2d'));
     }, [])
 
+    const [drawLineData, setDrawLineData] = useState({ x1: 0, y1: 0, r: 0, angle: 0 })
+
+    // Dessiner
+    const drawLine = (event) => {
+        context.moveTo(drawLineData.x1, drawLineData.y1);
+        context.lineTo(drawLineData.x1 + drawLineData.r * Math.cos(Math.PI * drawLineData.angle / 180), drawLineData.y1 + drawLineData.r * Math.sin(Math.PI * drawLineData.angle / 180));
+        context.stroke();
+    }
+
+    const setCoordinates = (event) => {
+        setShow(true);
+        const rect = canvas.getBoundingClientRect();
+        setDrawLineData({ x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal, angle: angleVal - regu })
+    }
+
+    // Valider modal
     const handleSubmit = (event) => {
-        alert('Le nom a été soumis : ' + this.state.angle);
+        console.log('Le nom a été soumis : ' + drawLineData);
+        drawLine();
         event.preventDefault();
     }
 
-
     return (
         <div className="py-5">
-            <canvas id="canvas" ref={canvasRef} height="900" width="1500" className="canvas-style"></canvas>
+            <canvas id="canvas" ref={canvasRef} height="900" width="1500" className="canvas-style" onClick={(e) => setCoordinates(e)}></canvas>
             <Modal show={show} onSubmit={handleSubmit} onHide={handleClose} size="sm" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Relever l'amer</Modal.Title>
@@ -66,7 +71,8 @@ export const Canvas = () => {
                     <Form.Control
                         className="mb-2 mr-sm-2"
                         id="angle"
-                        value={this.state.angle}
+                        value={angleVal}
+                        onChange={(e) => setAngleVal(e.target.value)}
                         type="number"
                         placeholder="Angle"
                     />
@@ -76,7 +82,8 @@ export const Canvas = () => {
                     <Form.Control
                         className="mb-2 mr-sm-2"
                         id="longueur"
-                        value={this.state.longueur}
+                        value={longueurVal}
+                        onChange={(e) => setLongueurVal(e.target.value)}
                         type="number"
                         placeholder="Longueur"
                     />
