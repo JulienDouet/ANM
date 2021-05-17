@@ -22,38 +22,33 @@ export const Canvas = () => {
     const [angleVal, setAngleVal] = useState("0");
     const [longueurVal, setLongueurVal] = useState("900");
 
-    const [canvas, setCanvas] = useState({});
-    const [context, setContext] = useState({});
+    const [drawLineData, setDrawLineData] = useState({ x1: 0, y1: 0, r: 0, angle: 0 })
 
     //Canvas
     const canvasRef = useRef(null);
     const regu = -90;
 
-
-    useEffect(() => {
-        setCanvas(canvasRef.current);
-        setContext(canvas.getContext('2d'));
-    }, [])
-
-    const [drawLineData, setDrawLineData] = useState({ x1: 0, y1: 0, r: 0, angle: 0 })
-
-    // Dessiner
-    const drawLine = (event) => {
+    // Récupérer coordonnées clique
+    const drawLine = () => {
+        const context = canvasRef.current.getContext('2d')
         context.moveTo(drawLineData.x1, drawLineData.y1);
         context.lineTo(drawLineData.x1 + drawLineData.r * Math.cos(Math.PI * drawLineData.angle / 180), drawLineData.y1 + drawLineData.r * Math.sin(Math.PI * drawLineData.angle / 180));
         context.stroke();
     }
 
+    useEffect(() => {
+        drawLine();
+    }, [])
+
     const setCoordinates = (event) => {
         setShow(true);
-        const rect = canvas.getBoundingClientRect();
+        const rect = canvasRef.current.getBoundingClientRect();
         setDrawLineData({ x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal, angle: angleVal - regu })
     }
 
-    // Valider modal
     const handleSubmit = (event) => {
-        console.log('Le nom a été soumis : ' + drawLineData);
-        drawLine();
+        console.log('Le nom a été soumis : ' + drawLineData.angle);
+        drawLine(event);
         event.preventDefault();
     }
 
@@ -92,7 +87,7 @@ export const Canvas = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Annuler
                 </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button type="submit" variant="primary" onClick={handleClose}>
                         Valider le marquage
                 </Button>
                 </Modal.Footer>
