@@ -2,13 +2,11 @@ import "./Canvas.css"
 import React, { useRef, useEffect, useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 
+
+const DEFAULT_ANGLE = 90;
+
 export const Canvas = () => {
-
-    // const displayCanvas = () => {
-
-    //     var ctx = canvas.getContext("2d");
-    //     ctx.moveTo(0, 0);
-    //     ctx.lineTo(200, 100);
+    
     //     ctx.stroke();
     //     canvas.height = table.offsetHeight;
     //     canvas.width = table.offsetWidth;
@@ -20,13 +18,12 @@ export const Canvas = () => {
     const handleClose = () => setShow(false);
 
     const [angleVal, setAngleVal] = useState("0");
-    const [longueurVal, setLongueurVal] = useState("900");
+    const [longueurVal, setLongueurVal] = useState("200");
 
-    const [drawLineData, setDrawLineData] = useState({ x1: 0, y1: 0, r: 0, angle: 0 })
+    const [drawLineData, setDrawLineData] = useState({ x1: 0, y1: 0, r: 0, angle: 0 - DEFAULT_ANGLE })
 
     //Canvas
     const canvasRef = useRef(null);
-    const regu = -90;
 
     // Récupérer coordonnées clique
     const drawLine = () => {
@@ -36,27 +33,31 @@ export const Canvas = () => {
         context.stroke();
     }
 
-    useEffect(() => {
-        drawLine();
-    }, [])
-
     const setCoordinates = (event) => {
         setShow(true);
         const rect = canvasRef.current.getBoundingClientRect();
-        setDrawLineData({ x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal, angle: angleVal - regu })
+        setDrawLineData({ ...drawLineData,  x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal });
+
     }
 
-    const handleSubmit = (event) => {
-        console.log('Le nom a été soumis : ' + drawLineData.angle);
-        drawLine(event);
-        event.preventDefault();
+    useEffect(() => {
+        setDrawLineData({ ...drawLineData, angle: angleVal - DEFAULT_ANGLE });
+    }, [angleVal]);
+
+    useEffect(() => {
+        setDrawLineData({ ...drawLineData, r: longueurVal });
+    }, [longueurVal]);
+
+    const handleOnSubmit = (event) => {
+        drawLine();
+        handleClose();
     }
 
     return (
-        <div className="py-5">
-            <canvas id="canvas" ref={canvasRef} height="900" width="1500" className="canvas-style" onClick={(e) => setCoordinates(e)}></canvas>
-            <Modal show={show} onSubmit={handleSubmit} onHide={handleClose} size="sm" centered>
-                <Modal.Header closeButton>
+        <>
+            <canvas id="canvas" ref={canvasRef} height="900" width="1500" className="canvas-style mt-5" onClick={(e) => setCoordinates(e)}></canvas>
+            <Modal show={show} onHide={handleClose} size="sm" centered>
+                <Modal.Header>
                     <Modal.Title>Relever l'amer</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -87,12 +88,11 @@ export const Canvas = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Annuler
                 </Button>
-                    <Button type="submit" variant="primary" onClick={handleClose}>
+                    <Button variant="primary" onClick={handleOnSubmit}>
                         Valider le marquage
                 </Button>
                 </Modal.Footer>
             </Modal>
-        </div>
-
+        </>
     );
 };
