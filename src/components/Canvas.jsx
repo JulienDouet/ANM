@@ -2,7 +2,7 @@ import "./Canvas.css"
 import React, { useRef, useEffect, useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 export const Canvas = () => {
-
+/*
     // const displayCanvas = () => {
 
     //     var ctx = canvas.getContext("2d");
@@ -92,5 +92,7 @@ export const Canvas = () => {
             </Modal>
         </div>
 
-    );
+    );*/
+
+    return <></>;
 };

@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState,useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { isBetween } from "../helpers/helpers";
 import { generateMapArray } from "../helpers/GenerateMap";
 
 export const Modals = (props) => {
     const { settingsModal, setMapArray } = props;
     const [showSettings, setShowSettings] = settingsModal;
+
+    const a = useRef(null);
+    console.log(a.current);
 
     // Latitude
     const [latDeg, setLatDeg] = useState("0");
@@ -60,10 +64,8 @@ export const Modals = (props) => {
                                 className="form-control"
                                 type="number"
                                 id="latDeg"
-                                min="0"
-                                max="60"
                                 value={latDeg}
-                                onChange={(e) => setLatDeg(e.target.value)}
+                                onChange={(e) => isBetween(e.target.value, -90, 90) && setLatDeg(e.target.value)}
                             />
                             <span className="input-group-text">
                                 <b>°</b>
@@ -79,10 +81,8 @@ export const Modals = (props) => {
                                 className="form-control"
                                 type="number"
                                 id="latMin"
-                                min="0"
-                                max="60"
                                 value={latMin}
-                                onChange={(e) => setLatMin(e.target.value)}
+                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLatMin(e.target.value)}
                             />
                             <span className="input-group-text">
                                 <b>'</b>
@@ -98,10 +98,8 @@ export const Modals = (props) => {
                                 className="form-control"
                                 type="number"
                                 id="latSec"
-                                min="0"
-                                max="60"
                                 value={latSec}
-                                onChange={(e) => setLatSec(e.target.value)}
+                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLatSec(e.target.value)}
                             />
                             <span className="input-group-text">
                                 <b>"</b>
@@ -165,10 +163,8 @@ export const Modals = (props) => {
                                 className="form-control"
                                 type="number"
                                 id="lonDeg"
-                                min="0"
-                                max="180"
                                 value={lonDeg}
-                                onChange={(e) => setLonDeg(e.target.value)}
+                                onChange={(e) => isBetween(e.target.value, -180, 180) && setLonDeg(e.target.value)}
                             />
                             <span className="input-group-text">
                                 <b>°</b>
@@ -184,10 +180,8 @@ export const Modals = (props) => {
                                 className="form-control"
                                 type="number"
                                 id="lonMin"
-                                min="0"
-                                max="60"
                                 value={lonMin}
-                                onChange={(e) => setLonMin(e.target.value)}
+                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLonMin(e.target.value)}
                             />
                             <span className="input-group-text">
                                 <b>'</b>
@@ -203,10 +197,8 @@ export const Modals = (props) => {
                                 className="form-control"
                                 type="number"
                                 id="lonSec"
-                                min="0"
-                                max="60"
                                 value={lonSec}
-                                onChange={(e) => setLonSec(e.target.value)}
+                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLonSec(e.target.value)}
                             />
                             <span className="input-group-text">
                                 <b>"</b>
@@ -270,7 +262,7 @@ export const Modals = (props) => {
                             type="number"
                             id="mapZoom"
                             value={mapZoom}
-                            onChange={(e) => setMapZoom(e.target.value)}
+                            onChange={(e) => isBetween(e.target.value, 6, 18) && setMapZoom(e.target.value)}
                         />
                     </div>
                     <div className="col">
@@ -282,7 +274,7 @@ export const Modals = (props) => {
                             min="2"
                             type="number"
                             value={mapSize}
-                            onChange={(e) => setMapSize(e.target.value)}
+                            onChange={(e) => isBetween(e.target.value, 2, 20) && setMapSize(e.target.value)}
                         />
                     </div>
                 </div>
