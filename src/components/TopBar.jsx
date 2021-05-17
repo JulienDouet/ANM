@@ -1,4 +1,4 @@
-import { Button, Nav, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Button, Navbar, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faLifeRing,
@@ -6,57 +6,53 @@ import {
     faPencilRuler,
     faQuestion
 } from "@fortawesome/free-solid-svg-icons";
+import "./TopBar.css";
 
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
-export const TopBar = () => {
+export const TopBar = (props) => {
+    const { setShowSettings } = props;
+
+    const handleShowSettings = () => setShowSettings(true);
     return (
-        <Nav className="navbar fixed-top navbar-dark bg-dark">
+        <Navbar sticky="top" className="navbar-dark" bg="dark">
             <div className="topbar-container">
-                <a class="navbar-brand" href="#">
+                <a className="navbar-brand" href="#">
                     &nbsp;&nbsp;Assistance Navigation Maritime
                 </a>
-                <span data-toggle="modal" data-target=".coordinatesModal">
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Gérer les coordonnées")}
-                    >
-                        <Button variant="primary">
-                            <FontAwesomeIcon icon={faMapMarkedAlt} size="lg" />
-                        </Button>
-                    </OverlayTrigger>
-                </span>
-                <span data-toggle="modal" data-target=".amerModal">
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Gérer les coordonnées")}
-                    >
-                        <Button variant="primary">
-                            <FontAwesomeIcon icon={faLifeRing} size="lg" />
-                        </Button>
-                    </OverlayTrigger>
-                </span>
-                <span data-toggle="modal">
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Gérer les coordonnées")}
-                    >
-                        <Button variant="primary">
-                            <FontAwesomeIcon icon={faPencilRuler} size="lg" />
-                        </Button>
-                    </OverlayTrigger>
-                </span>
-                <span data-toggle="modal" data-target=".helpModal">
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Gérer les coordonnées")}
-                    >
-                        <Button variant="primary">
-                            <FontAwesomeIcon icon={faQuestion} size="lg" />
-                        </Button>
-                    </OverlayTrigger>
-                </span>
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={renderTooltip("Gérer les coordonnées")}
+                >
+                    <Button variant="primary" onClick={handleShowSettings}>
+                        <FontAwesomeIcon icon={faMapMarkedAlt} size="lg" />
+                    </Button>
+                </OverlayTrigger>
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={renderTooltip("Placer un amer")}
+                >
+                    <Button variant="primary" className="spacedButton">
+                        <FontAwesomeIcon icon={faLifeRing} size="lg" />
+                    </Button>
+                </OverlayTrigger>
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={renderTooltip("Tracer une route")}
+                >
+                    <Button variant="primary" className="spacedButton">
+                        <FontAwesomeIcon icon={faPencilRuler} size="lg" />
+                    </Button>
+                </OverlayTrigger>
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={renderTooltip("Aide")}
+                >
+                    <Button variant="primary" className="spacedButton">
+                        <FontAwesomeIcon icon={faQuestion} size="lg" />
+                    </Button>
+                </OverlayTrigger>
             </div>
-        </Nav>
+        </Navbar>
     );
 };
