@@ -1,6 +1,14 @@
+
+var fs = require('fs'),
+    request = require('request'),
+    shelljs = require('shelljs');
+
 $(() => {
     const map = $("#map");
     const validateCoordinates = $("#validateCoordinates");
+
+    const chargeCard = $("#chargeCard");
+    const validerCarte = $("#validerCarte");
 
     // tooltip initializer
     $("body").tooltip({ selector: "[data-toggle=tooltip]" });
@@ -108,11 +116,14 @@ $(() => {
         return tableau_images(num, size);
     };
 
-    const renderMap = (rowList) => {
+    const renderMap = (rowList,titre_carte) => {
         map.html("");
         rowList.forEach((row, j) => {
             map.append("<tr>");
             row.forEach((col, i) => {
+              var openstreetmap = 'https://a.tile.openstreetmap.fr/osmfr/'+rowList[i][j][0] + '/' + rowList[i][j][1] + '/' + rowList[i][j][2] + '.png';
+              var openseamap = 'https://tiles.openseamap.org/seamark/'+rowList[i][j][0] + '/' + rowList[i][j][1] + '/' + rowList[i][j][2] + '.png';
+
                 map.append(
                     "<td style ='background-image: url(https://a.tile.openstreetmap.fr/osmfr/" +
                         rowList[i][j][0] +
@@ -130,14 +141,103 @@ $(() => {
                         ".png'>" +
                         "</td>"
                 );
+
+                download(openstreetmap, 'cartes/'+titre_carte+'/openstreetmap/'+i+'_'+j+'.png', function(){
+                  //console.log('done');
+                });
+
+                download(openseamap, 'cartes/'+titre_carte+'/openseamap/'+i+'_'+j+'.png', function(){
+                  //console.log('done');
+                });
             });
+
+
             map.append("</tr>");
         });
     };
+    var download = function(uri, filename, callback){
+      request.head(uri, function(err, res, body){
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+      });
+    };
 
     validateCoordinates.click(() => {
+
+      var titre_carte = $("#titre_carte").val();
+      var zoom_carte = $("#zoom").val();
+      var size_carte = $("#size").val();
+
+      var data_file = "cartes/"+titre_carte+"/informations.txt";
+      var content_file = "zoom="+zoom_carte+":size="+size_carte;
+      console.log(data_file);
+      shelljs.mkdir('-p','cartes/'+titre_carte+'/openstreetmap');
+      shelljs.mkdir('-p','cartes/'+titre_carte+'/openseamap');
+
+      fs.writeFile(data_file, content_file, (err) => {
+          if (err) throw err;
+
+          console.log("The file was succesfully saved!");
+      });
+
         const mapData = gatherFormParams();
         const formattedMapData = formatMapData(mapData);
-        renderMap(formattedMapData);
+        renderMap(formattedMapData,titre_carte);
+
+
+    });
+
+
+    chargeCard.click(() => {
+
+      let dirname = '/home/etudiant/Documents/ANM/';
+      let folder = dirname+'cartes';
+      let listCard = $("#listCard");
+
+
+        fs.readdir(folder, (err, files) => {
+          files.forEach(file => {
+            listCard.append('<div><input type="radio" id="'+file+'" name="saveCarte" value="'+file+'"><label for="'+file+'">'+file+'</label></div>');
+          });
+        });
+
+    });
+
+
+    validerCarte.click(() => {
+      let dirname = '/home/etudiant/Documents/ANM/';
+
+      const cardName = $("input[name='saveCarte']").val();
+      const dataFilePath = 'cartes/'+cardName+'/informations.txt';
+
+      fs.readFile(dataFilePath, 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }
+
+
+        let dataFile = data;
+
+
+        const zoomCarte = dataFile.split(':')[0].split('=')[1]
+        const sizeCarte = dataFile.split(':')[1].split('=')[1]
+
+        for(let i = 0; i<sizeCarte; i++){
+          map.append("<tr>");
+
+            for(let j = 0; j<sizeCarte; j++){
+
+
+                map.append(
+                    "<td style ='background-image: url(" + dirname + "/cartes/"+cardName+"/openstreetmap/" + j + "_" + i + ".png);'>"+
+                    "<img  src='"+dirname+"/cartes/"+cardName+"/openseamap/"+j+"_"+i+".png'></td>"
+                );
+
+            }
+
+        }
+
+      });
+
+
     });
 });
