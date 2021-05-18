@@ -16,7 +16,6 @@ export const App = () => {
                 setMapArray={setMapArray}
             />
             <Map mapArray={mapArray} />
-            <Canvas />
         </>
     );
 };
