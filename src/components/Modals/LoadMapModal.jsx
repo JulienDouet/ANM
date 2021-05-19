@@ -4,14 +4,23 @@ const fs = require("fs");
 const request = require("request");
 const shelljs = require("shelljs");
 
+/**
+ * TODO :
+ * Quand on valide une coordonnées, cela rajoute à savedMaps, le nom de la carte,
+ * on a un useEffect qui watch mapArray, et qui save le mapArray dans les dossiers
+ * Faire la lecture quand on clique sur une map
+ *
+ */
+
 // TODO à changer
 const DIRNAME = "/home/etudiant/Documents/ANM/";
+const FOLDER = DIRNAME + "cartes";
 
 export const LoadMapModal = (props) => {
     const { show } = props;
     const [showLoadMap, setShowLoadMap] = show;
-    const [mapList, setMapList] = useState([]);
     const handleCloseLoadMap = () => setShowLoadMap(false);
+    const [savedMaps, setSavedMaps] = useState([]);
 
     const download = (uri, filename, callback) => {
         request.head(uri, function (err, res, body) {
@@ -21,7 +30,7 @@ export const LoadMapModal = (props) => {
         });
     };
 
-    validateCoordinates.click(() => {
+    /*validateCoordinates.click(() => {
         var titre_carte = $("#titre_carte").val();
         var zoom_carte = $("#zoom").val();
         var size_carte = $("#size").val();
@@ -41,31 +50,18 @@ export const LoadMapModal = (props) => {
         const mapData = gatherFormParams();
         const formattedMapData = formatMapData(mapData);
         renderMap(formattedMapData, titre_carte);
+    });*/
+
+    // Charge toutes les cartes enregistrées dans le disque
+    useEffect(() => {
+        fs.readdir(FOLDER, (_, fileList) => {
+            fileList.forEach((file) => {
+                setSavedMaps([...savedMaps, file]);
+            });
+        });
     });
 
-    useEffect(() => {
-        if (!!showLoadMap) {
-            let folder = DIRNAME + "cartes";
-
-            fs.readdir(folder, (err, files) => {
-                files.forEach((file) => {
-                    listCard.append(
-                        '<div><input type="radio" id="' +
-                            file +
-                            '" name="saveCarte" value="' +
-                            file +
-                            '"><label for="' +
-                            file +
-                            '">' +
-                            file +
-                            "</label></div>"
-                    );
-                });
-            });
-        }
-    }, [showLoadMap]);
-
-    chargeCard.click(() => {});
+    /*chargeCard.click(() => {});
 
     const handleValidate = () => {
         const cardName = $("input[name='saveCarte']").val();
@@ -108,7 +104,7 @@ export const LoadMapModal = (props) => {
                 }
             }
         });
-    };
+    };*/
 
     return (
         <Modal show={showLoadMap} onHide={handleCloseLoadMap} size="lg">
@@ -116,8 +112,8 @@ export const LoadMapModal = (props) => {
                 <Modal.Title>Charger une carte</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {mapList.map((map) => {
-                    return <></>;
+                {savedMaps.map((mapName) => {
+                    return <span>{mapName}</span>;
                 })}
             </Modal.Body>
             <Modal.Footer>
