@@ -4,16 +4,19 @@ import {
     faLifeRing,
     faMapMarkedAlt,
     faPencilRuler,
-    faQuestion
+    faQuestion,
+    faSave
 } from "@fortawesome/free-solid-svg-icons";
 import "./TopBar.css";
 
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
 export const TopBar = (props) => {
-    const { setShowSettings } = props;
+    const { setShowSettings, setShowLoadMap } = props;
 
     const handleShowSettings = () => setShowSettings(true);
+    const handleShowLoadMap = () => setShowLoadMap(true);
+
     return (
         <Navbar sticky="top" className="navbar-dark" bg="dark">
             <div className="topbar-container">
@@ -26,6 +29,14 @@ export const TopBar = (props) => {
                 >
                     <Button variant="primary" onClick={handleShowSettings}>
                         <FontAwesomeIcon icon={faMapMarkedAlt} size="lg" />
+                    </Button>
+                </OverlayTrigger>
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={renderTooltip("Charger une carte")}
+                >
+                    <Button variant="primary" onClick={handleShowLoadMap}>
+                        <FontAwesomeIcon icon={faSave} size="lg" />
                     </Button>
                 </OverlayTrigger>
                 <OverlayTrigger
