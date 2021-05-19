@@ -13,6 +13,7 @@ export const LoadMapModal = (props) => {
     const [mapList, setMapList] = useState([]);
     const handleCloseLoadMap = () => setShowLoadMap(false);
 
+    // To call when mapArray changes
     const download = (uri, filename, callback) => {
         request.head(uri, function (err, res, body) {
             request(uri)
@@ -20,6 +21,8 @@ export const LoadMapModal = (props) => {
                 .on("close", callback);
         });
     };
+
+    useEffect(() => {}, [mapArray]);
 
     validateCoordinates.click(() => {
         var titre_carte = $("#titre_carte").val();
