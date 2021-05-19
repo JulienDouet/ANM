@@ -17,11 +17,12 @@ const DIRNAME = "/home/etudiant/Documents/ANM/";
 const FOLDER = DIRNAME + "cartes";
 
 export const LoadMapModal = (props) => {
-    const { show } = props;
+    const { show, mapArray } = props;
     const [showLoadMap, setShowLoadMap] = show;
     const handleCloseLoadMap = () => setShowLoadMap(false);
     const [savedMaps, setSavedMaps] = useState([]);
 
+    // To call when mapArray changes
     const download = (uri, filename, callback) => {
         request.head(uri, function (err, res, body) {
             request(uri)
@@ -29,6 +30,8 @@ export const LoadMapModal = (props) => {
                 .on("close", callback);
         });
     };
+
+    useEffect(() => {}, [mapArray]);
 
     /*validateCoordinates.click(() => {
         var titre_carte = $("#titre_carte").val();

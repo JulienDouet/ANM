@@ -1,7 +1,7 @@
 import "./Map.css";
 
 export const Map = (props) => {
-    const { mapArray } = props;
+    const { mapArray, isStoredMap } = props;
 
     return (
         <div>
@@ -15,11 +15,17 @@ export const Map = (props) => {
                                         <td
                                             key={cellIndex}
                                             style={{
-                                                backgroundImage: `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
+                                                backgroundImage: isStoredMap
+                                                    ? `url(${dirname}/cartes/${cardName}/openstreetmap/${cell[1]}_${cell[2]}.png)`
+                                                    : `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
                                             }}
                                         >
                                             <img
-                                                src={`https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`}
+                                                src={
+                                                    isStoredMap
+                                                        ? `url(${dirname}/cartes/${cardName}/openstreetmap/${cell[1]}_${cell[2]}.png)`
+                                                        : `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`
+                                                }
                                             />
                                         </td>
                                     );

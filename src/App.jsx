@@ -8,6 +8,7 @@ export const App = () => {
     const [showSettings, setShowSettings] = useState(false);
     const [showLoadMap, setShowLoadMap] = useState(false);
     const [mapArray, setMapArray] = useState([]);
+    const [isStoredMap, setIsStoredMap] = useState(false);
 
     return (
         <>
@@ -18,9 +19,10 @@ export const App = () => {
             <Modals
                 settingsModal={[showSettings, setShowSettings]}
                 loadMapModal={[showLoadMap, setShowLoadMap]}
+                isStoredMapState={[isStoredMap, setIsStoredMap]}
                 setMapArray={setMapArray}
             />
-            <Map mapArray={mapArray} />
+            <Map mapArray={mapArray} isStoredMap={isStoredMap} />
         </>
     );
 };
