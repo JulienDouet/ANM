@@ -1,5 +1,5 @@
 import { Canvas } from './components/Canvas';
-import { Map } from "./components/Map";
+import { SeaMap } from "./components/SeaMap";
 import { TopBar } from "./components/TopBar";
 import { Modals } from "./components/Modals";
 import { useState } from "react";
@@ -15,8 +15,8 @@ export const App = () => {
                 settingsModal={[showSettings, setShowSettings]}
                 setMapArray={setMapArray}
             />
-            <Map mapArray={mapArray} />
-            <Canvas />
+            <SeaMap mapArray={mapArray} />
+            {/* <Canvas /> */}
         </>
     );
 };

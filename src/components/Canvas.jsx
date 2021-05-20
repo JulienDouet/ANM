@@ -6,12 +6,6 @@ import { Modal, Button, Form } from 'react-bootstrap'
 const DEFAULT_ANGLE = 90;
 
 export const Canvas = () => {
-    
-    //     ctx.stroke();
-    //     canvas.height = table.offsetHeight;
-    //     canvas.width = table.offsetWidth;
-    //     canvas.style.visibility = "visible";
-    // }
 
     //Modal
     const [show, setShow] = useState(false);
@@ -27,7 +21,7 @@ export const Canvas = () => {
 
     // Récupérer coordonnées clique
     const drawLine = () => {
-        const context = canvasRef.current.getContext('2d')
+        const context = canvasRef.current.getContext('2d');
         context.moveTo(drawLineData.x1, drawLineData.y1);
         context.lineTo(drawLineData.x1 + drawLineData.r * Math.cos(Math.PI * drawLineData.angle / 180), drawLineData.y1 + drawLineData.r * Math.sin(Math.PI * drawLineData.angle / 180));
         context.stroke();
@@ -36,7 +30,7 @@ export const Canvas = () => {
     const setCoordinates = (event) => {
         setShow(true);
         const rect = canvasRef.current.getBoundingClientRect();
-        setDrawLineData({ ...drawLineData,  x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal });
+        setDrawLineData({ ...drawLineData, x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal });
 
     }
 

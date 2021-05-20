@@ -42,6 +42,7 @@ export const Modals = (props) => {
         });
         setMapArray(mapArray);
         setShowSettings(false);
+
     };
 
     return (
