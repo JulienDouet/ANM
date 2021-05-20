@@ -4,7 +4,7 @@ export const Map = (props) => {
     const { mapArray } = props;
 
     return (
-        <div>
+        <div className="pt-5">
             <table cellSpacing="0" cellPadding="0" style={{ border: "none" }}>
                 <tbody>
                     {mapArray.map((row, rowIndex) => {

@@ -1,4 +1,4 @@
-import { useState,useRef } from "react";
+import { useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { isBetween } from "../helpers/helpers";
 import { generateMapArray } from "../helpers/GenerateMap";

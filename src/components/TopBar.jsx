@@ -15,7 +15,7 @@ export const TopBar = (props) => {
 
     const handleShowSettings = () => setShowSettings(true);
     return (
-        <Navbar sticky="top" className="navbar-dark" bg="dark">
+        <Navbar sticky="top" className="navbar-dark" style={{ position: "fixed", width: "100%" }} bg="dark">
             <div className="topbar-container">
                 <a className="navbar-brand" href="#">
                     &nbsp;&nbsp;Assistance Navigation Maritime
