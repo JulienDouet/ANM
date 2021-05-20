@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { isBetween } from "../helpers/helpers";
-import { generateMapArray } from "../helpers/GenerateMap";
+import { isBetween } from "../../helpers/helpers";
+import { generateMapArray } from "../../helpers/GenerateMap";
 
 export const SettingsModal = (props) => {
-    const { show, setMapArray} = props;
+    const { show, setMapArray, mapNameState } = props;
     const [showSettings, setShowSettings] = show;
+    const [mapName, setMapName] = mapNameState;
 
     // Latitude
     const [latDeg, setLatDeg] = useState("0");
@@ -45,7 +46,7 @@ export const SettingsModal = (props) => {
         setShowSettings(false);
     };
 
-     return (
+    return (
         <Modal show={showSettings} onHide={handleCloseSettings} size="lg">
             <Modal.Header>
                 <Modal.Title>Gestion des coordonnées</Modal.Title>
@@ -62,7 +63,10 @@ export const SettingsModal = (props) => {
                                 type="number"
                                 id="latDeg"
                                 value={latDeg}
-                                onChange={(e) => isBetween(e.target.value, -90, 90) && setLatDeg(e.target.value)}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, -90, 90) &&
+                                    setLatDeg(e.target.value)
+                                }
                             />
                             <span className="input-group-text">
                                 <b>°</b>
@@ -79,7 +83,10 @@ export const SettingsModal = (props) => {
                                 type="number"
                                 id="latMin"
                                 value={latMin}
-                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLatMin(e.target.value)}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, 0, 60) &&
+                                    setLatMin(e.target.value)
+                                }
                             />
                             <span className="input-group-text">
                                 <b>'</b>
@@ -96,7 +103,10 @@ export const SettingsModal = (props) => {
                                 type="number"
                                 id="latSec"
                                 value={latSec}
-                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLatSec(e.target.value)}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, 0, 60) &&
+                                    setLatSec(e.target.value)
+                                }
                             />
                             <span className="input-group-text">
                                 <b>"</b>
@@ -161,7 +171,10 @@ export const SettingsModal = (props) => {
                                 type="number"
                                 id="lonDeg"
                                 value={lonDeg}
-                                onChange={(e) => isBetween(e.target.value, -180, 180) && setLonDeg(e.target.value)}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, -180, 180) &&
+                                    setLonDeg(e.target.value)
+                                }
                             />
                             <span className="input-group-text">
                                 <b>°</b>
@@ -178,7 +191,10 @@ export const SettingsModal = (props) => {
                                 type="number"
                                 id="lonMin"
                                 value={lonMin}
-                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLonMin(e.target.value)}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, 0, 60) &&
+                                    setLonMin(e.target.value)
+                                }
                             />
                             <span className="input-group-text">
                                 <b>'</b>
@@ -195,7 +211,10 @@ export const SettingsModal = (props) => {
                                 type="number"
                                 id="lonSec"
                                 value={lonSec}
-                                onChange={(e) => isBetween(e.target.value, 0, 60) && setLonSec(e.target.value)}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, 0, 60) &&
+                                    setLonSec(e.target.value)
+                                }
                             />
                             <span className="input-group-text">
                                 <b>"</b>
@@ -259,7 +278,10 @@ export const SettingsModal = (props) => {
                             type="number"
                             id="mapZoom"
                             value={mapZoom}
-                            onChange={(e) => isBetween(e.target.value, 6, 18) && setMapZoom(e.target.value)}
+                            onChange={(e) =>
+                                isBetween(e.target.value, 6, 18) &&
+                                setMapZoom(e.target.value)
+                            }
                         />
                     </div>
                     <div className="col">
@@ -271,7 +293,10 @@ export const SettingsModal = (props) => {
                             min="2"
                             type="number"
                             value={mapSize}
-                            onChange={(e) => isBetween(e.target.value, 2, 20) && setMapSize(e.target.value)}
+                            onChange={(e) =>
+                                isBetween(e.target.value, 2, 20) &&
+                                setMapSize(e.target.value)
+                            }
                         />
                     </div>
                 </div>
@@ -286,4 +311,4 @@ export const SettingsModal = (props) => {
             </Modal.Footer>
         </Modal>
     );
-}
+};

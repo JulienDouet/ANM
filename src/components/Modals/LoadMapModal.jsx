@@ -6,32 +6,61 @@ const shelljs = require("shelljs");
 
 /**
  * TODO :
- * Quand on valide une coordonnées, cela rajoute à savedMaps, le nom de la carte,
- * on a un useEffect qui watch mapArray, et qui save le mapArray dans les dossiers
+ * Quand on valide une coordonnées, cela rajoute à savedMaps, le nom de la carte, & ça créé le dossier
  * Faire la lecture quand on clique sur une map
- *
  */
 
 // TODO à changer
-const DIRNAME = "/home/etudiant/Documents/ANM/";
+const DIRNAME = "./";
 const FOLDER = DIRNAME + "cartes";
 
 export const LoadMapModal = (props) => {
-    const { show, mapArray } = props;
+    const { show, mapArray, mapName, savedMapsState } = props;
     const [showLoadMap, setShowLoadMap] = show;
+    const [savedMaps, setSavedMaps] = savedMapsState;
     const handleCloseLoadMap = () => setShowLoadMap(false);
-    const [savedMaps, setSavedMaps] = useState([]);
 
     // To call when mapArray changes
     const download = (uri, filename, callback) => {
-        request.head(uri, function (err, res, body) {
+        request.head(uri, () => {
             request(uri)
                 .pipe(fs.createWriteStream(filename))
                 .on("close", callback);
         });
     };
 
-    useEffect(() => {}, [mapArray]);
+    const done = () => console.log("terminado");
+
+    useEffect(() => {});
+
+    useEffect(() => {
+        mapArray.map((row, rowIndex) => {
+            row.map((cell, cellIndex) => {
+                download(
+                    `https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png`,
+                    "cartes/" +
+                        mapName +
+                        "/openstreetmap/" +
+                        rowIndex +
+                        "_" +
+                        cellIndex +
+                        ".png",
+                    done
+                );
+                download(
+                    `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`,
+                    "cartes/" +
+                        mapName +
+                        "/openseamap/" +
+                        rowIndex +
+                        "_" +
+                        cellIndex +
+                        ".png",
+                    done
+                );
+            });
+        });
+    }, [mapArray]);
 
     /*validateCoordinates.click(() => {
         var titre_carte = $("#titre_carte").val();
