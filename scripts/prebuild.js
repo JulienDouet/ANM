@@ -1,7 +1,7 @@
-const path = require('path');
-const { exec } = require('child_process');
-const fs = require('fs');
-const rimraf = require('rimraf');
+const path = require("path");
+const { exec } = require("child_process");
+const fs = require("fs");
+const rimraf = require("rimraf");
 
 function renameOutputFolder(buildFolderPath, outputFolderPath) {
     return new Promise((resolve, reject) => {
@@ -9,7 +9,7 @@ function renameOutputFolder(buildFolderPath, outputFolderPath) {
             if (err) {
                 reject(err);
             } else {
-                resolve('Successfully built!');
+                resolve("Successfully built!");
             }
         });
     });
@@ -25,39 +25,44 @@ function execPostReactBuild(buildFolderPath, outputFolderPath) {
                         return;
                     }
                     renameOutputFolder(buildFolderPath, outputFolderPath)
-                        .then(val => resolve(val))
-                        .catch(e => reject(e));
+                        .then((val) => resolve(val))
+                        .catch((e) => reject(e));
                 });
             } else {
                 renameOutputFolder(buildFolderPath, outputFolderPath)
-                    .then(val => resolve(val))
-                    .catch(e => reject(e));
+                    .then((val) => resolve(val))
+                    .catch((e) => reject(e));
             }
         } else {
-            reject(new Error('build folder does not exist'));
+            reject(new Error("build folder does not exist"));
         }
     });
 }
 
 module.exports = () => {
-    const projectPath = path.resolve(process.cwd(), './node_modules/.bin/react-scripts');
+    const projectPath = path.resolve(
+        process.cwd(),
+        "./node_modules/.bin/react-scripts"
+    );
     return new Promise((resolve, reject) => {
-        exec(`${projectPath} build`,
-            (error) => {
-                if (error) {
-                    console.error(error);
-                    reject(error);
-                    return;
-                }
-                execPostReactBuild(path.resolve(__dirname, '../build/'), path.join(__dirname, '../www/'))
-                    .then((s) => {
-                        console.log(s);
-                        resolve(s);
-                    })
-                    .catch((e) => {
-                        console.error(e);
-                        reject(e);
-                    });
-            });
+        exec(`${projectPath} build`, (error) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            execPostReactBuild(
+                path.resolve(__dirname, "../build/"),
+                path.join(__dirname, "../www/")
+            )
+                .then((s) => {
+                    console.log(s);
+                    resolve(s);
+                })
+                .catch((e) => {
+                    console.error(e);
+                    reject(e);
+                });
+        });
     });
 };

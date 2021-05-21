@@ -4,8 +4,9 @@
     "width": 1900,
     "maximize": true,
     "webPreferences": {
-      "nodeIntegration": false,
-      "devTools": false
+      "nodeIntegration": true,
+      "devTools": false,
+      "experimentalModules": true
     }
   }
 }

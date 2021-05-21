@@ -4,7 +4,8 @@ import { isBetween } from "../../helpers/helpers";
 import { generateMapArray } from "../../helpers/GenerateMap";
 
 export const SettingsModal = (props) => {
-    const { show, setMapArray, mapNameState } = props;
+    const { show, setMapArray, mapNameState, savedMapsState } = props;
+    const [savedMaps, setSavedMaps] = savedMapsState;
     const [showSettings, setShowSettings] = show;
     const [mapName, setMapName] = mapNameState;
 
@@ -43,6 +44,8 @@ export const SettingsModal = (props) => {
             size: parseInt(mapSize)
         });
         setMapArray(mapArray);
+        if (!savedMaps.find((savedMap) => savedMap === mapName))
+            setSavedMaps([...savedMaps, mapName]);
         setShowSettings(false);
     };
 
@@ -52,6 +55,23 @@ export const SettingsModal = (props) => {
                 <Modal.Title>Gestion des coordonnées</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <div className="row g-3 align-items-end" noValidate>
+                    <div className="col">
+                        <label className="form-label" htmlFor="mapName">
+                            Nom de la carte :
+                        </label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            id="mapName"
+                            value={mapName}
+                            onChange={(e) => setMapName(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <hr className="my-4" />
+
                 <div className="row g-3 align-items-end" noValidate>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="latDeg">

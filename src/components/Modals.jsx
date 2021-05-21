@@ -3,24 +3,25 @@ import { SettingsModal } from "./Modals/SettingsModal";
 import { LoadMapModal } from "./Modals/LoadMapModal";
 
 export const Modals = (props) => {
-    const { settingsModal, loadMapModal, setMapArray, isStoredMapState } =
+    const { settingsModal, loadMapModal, mapArrayState, isStoredMapState } =
         props;
     const [mapName, setMapName] = useState("");
     const [savedMaps, setSavedMaps] = useState([]);
-
+    const [mapArray, setMapArray] = mapArrayState;
     return (
         <>
             <LoadMapModal
                 show={loadMapModal}
-                setMapArray={setMapArray}
+                mapArrayState={[mapArray, setMapArray]}
                 isStoredMapState={isStoredMapState}
-                mapName={mapName}
+                mapNameState={[mapName, setMapName]}
                 savedMapsState={[savedMaps, setSavedMaps]}
             />
             <SettingsModal
                 show={settingsModal}
                 setMapArray={setMapArray}
                 mapNameState={[mapName, setMapName]}
+                savedMapsState={[savedMaps, setSavedMaps]}
             />
         </>
     );

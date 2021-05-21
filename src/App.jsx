@@ -20,7 +20,7 @@ export const App = () => {
                 settingsModal={[showSettings, setShowSettings]}
                 loadMapModal={[showLoadMap, setShowLoadMap]}
                 isStoredMapState={[isStoredMap, setIsStoredMap]}
-                setMapArray={setMapArray}
+                mapArrayState={[mapArray, setMapArray]}
             />
             <Map mapArray={mapArray} isStoredMap={isStoredMap} />
         </>

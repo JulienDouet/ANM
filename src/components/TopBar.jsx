@@ -35,7 +35,11 @@ export const TopBar = (props) => {
                     placement="bottom"
                     overlay={renderTooltip("Charger une carte")}
                 >
-                    <Button variant="primary" onClick={handleShowLoadMap}>
+                    <Button
+                        variant="primary"
+                        className="spacedButton"
+                        onClick={handleShowLoadMap}
+                    >
                         <FontAwesomeIcon icon={faSave} size="lg" />
                     </Button>
                 </OverlayTrigger>
