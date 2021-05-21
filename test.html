@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <canvas id="myCanvas" width="3000" height="1500" style="border:1px solid #d3d3d3;">
+        Your browser does not support the HTML5 canvas tag.</canvas>
+
+    <script>
+
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        ctx.beginPath();
+
+        function drawPoint(x, y, color) {
+            ctx.fillStyle = color || 'black';
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
+            ctx.fill();
+        };
+
+        class Point {
+            constructor(x, y) {
+                this._x = x;
+                this._y = y;
+            }
+
+            get x() { return this._x; }
+            get y() { return this._y; }
+
+            getCoef(pt2) {
+                return (pt2.y - this._y) / (pt2.x - this._x);
+            }
+
+            getMedian(pt1, pt2) {
+                let x = (pt1.x + pt2.x) / 2;
+                let y = (pt1.y + pt2.y) / 2;
+
+                return new Line(this, new Point(x, y));
+            }
+        }
+
+        class Line {
+            constructor(pt1, pt2) {
+                this._coef = pt1.getCoef(pt2);
+                this._origin = pt1.y - (this._coef * pt1.x);
+            }
+
+            get coef() { return this._coef; }
+            get origin() { return this._origin; }
+
+            getValue(x) {
+                return this._coef * x + this._origin;
+            }
+
+            getIntersection(line, color) {
+                let x = Math.abs((line.origin - this._origin) / (line.coef - this._coef));
+                let y = this._coef * x + this._origin;
+                drawPoint(x, y, color);
+                return new Point(x, y);
+            }
+
+            draw() {
+                ctx.moveTo(0, this._origin);
+                ctx.lineTo(300, this._origin + (300 * this._coef));
+                ctx.stroke();
+            }
+        }
+
+        let pt1 = new Point(0, 0);
+        let pt2 = new Point(290, 140);
+
+        let pt3 = new Point(70, 0);
+        let pt4 = new Point(100, 290);
+
+        let pt5 = new Point(140, 0);
+        let pt6 = new Point(0, 290);
+
+        // get lines
+        let line1 = new Line(pt1, pt2);
+        let line2 = new Line(pt3, pt4);
+        let line3 = new Line(pt5, pt6);
+
+        // get intersection
+        let pt_intersection1 = line1.getIntersection(line2, "red");
+        let pt_intersection2 = line1.getIntersection(line3, "green");
+        let pt_intersection3 = line2.getIntersection(line3, "blue");
+
+        // get median
+        let line_median1 = pt_intersection1.getMedian(pt_intersection2, pt_intersection3);
+        line_median1.draw();
+        let line_median2 = pt_intersection2.getMedian(pt_intersection1, pt_intersection3);
+        line_median2.draw();
+        let line_median3 = pt_intersection3.getMedian(pt_intersection1, pt_intersection2);
+        line_median3.draw();
+
+        // middle
+        let middle1 = line_median1.getIntersection(line_median2, "yellow");
+        console.log(`middle : x=${middle1.x}, y=${middle1.y}`);
+        let middle2 = line_median1.getIntersection(line_median3, "orange");
+        let middle3 = line_median2.getIntersection(line_median3, "pink");
+
+        ctx.moveTo(pt1.x, pt1.y);
+        ctx.lineTo(pt2.x, pt2.y);
+        ctx.stroke();
+
+        ctx.moveTo(pt3.x, pt3.y);
+        ctx.lineTo(pt4.x, pt4.y);
+        ctx.stroke();
+
+        ctx.moveTo(pt5.x, pt5.y);
+        ctx.lineTo(pt6.x, pt6.y);
+        ctx.stroke();
+
+
+    </script>
+
+</body>
+
+</html>

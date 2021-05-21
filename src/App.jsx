@@ -1,5 +1,5 @@
 import { Canvas } from "./components/Canvas";
-import { Map } from "./components/Map";
+import { SeaMap } from "./components/SeaMap";
 import { TopBar } from "./components/TopBar";
 import { Modals } from "./components/Modals";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export const App = () => {
                 isStoredMapState={[isStoredMap, setIsStoredMap]}
                 mapArrayState={[mapArray, setMapArray]}
             />
-            <Map mapArray={mapArray} isStoredMap={isStoredMap} />
+            <SeaMap mapArray={mapArray} isStoredMap={isStoredMap} />
             <Canvas />
         </>
     );
