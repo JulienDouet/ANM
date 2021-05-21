@@ -304,41 +304,6 @@ export const SettingsModal = (props) => {
 
                 <hr className="my-4" />
 
-                <div className="row">
-                    <div className="col">
-                        <label className="form-label" htmlFor="mapZoom">
-                            Zoom :
-                        </label>
-                        <input
-                            className="form-control"
-                            type="number"
-                            id="mapZoom"
-                            value={mapZoom}
-                            onChange={(e) =>
-                                isBetween(e.target.value, 6, 18) &&
-                                setMapZoom(e.target.value)
-                            }
-                        />
-                    </div>
-                    <div className="col">
-                        <label className="form-label" htmlFor="mapSize">
-                            Taille de la carte :
-                        </label>
-                        <input
-                            className="form-control"
-                            min="2"
-                            type="number"
-                            value={mapSize}
-                            onChange={(e) =>
-                                isBetween(e.target.value, 2, 20) &&
-                                setMapSize(e.target.value)
-                            }
-                        />
-                    </div>
-                </div>
-
-                <hr className="my-4" />
-
                 <div className="row g-3 align-items-end" noValidate>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="latDistDeg">
