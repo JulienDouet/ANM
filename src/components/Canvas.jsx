@@ -1,8 +1,8 @@
-import "./Canvas.css"
-import React, { useRef, useEffect, useState } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
-import image from '../regle-cras.png';
-import { degToRadian } from '../helpers/helpers'
+import "./Canvas.css";
+import React, { useRef, useEffect, useState } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
+import image from "../regle-cras.png";
+import { degToRadian } from "../helpers/helpers";
 
 // Valeur pour prendre le nord en référence comme 0°
 const DEFAULT_ANGLE = 90;
@@ -10,7 +10,6 @@ const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 
 export const Canvas = () => {
-
     //Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -24,45 +23,54 @@ export const Canvas = () => {
     const [declinaison, setDeclinaison] = useState("0");
 
     // Donnée pour tracer le trait
-    const [drawLineData, setDrawLineData] = useState({ x1: 0, y1: 0, r: 0, angle: 0 - DEFAULT_ANGLE })
+    const [drawLineData, setDrawLineData] = useState({
+        x1: 0,
+        y1: 0,
+        r: 0,
+        angle: 0 - DEFAULT_ANGLE
+    });
 
     //Canvas
     const canvasRef = useRef(null);
 
     // Récupérer coordonnées clique
     /**
-     * 
+     *
      */
     const drawLine = () => {
-        const context = canvasRef.current.getContext('2d');
+        const context = canvasRef.current.getContext("2d");
         context.moveTo(drawLineData.x1, drawLineData.y1);
-        context.lineTo(drawLineData.x1 + drawLineData.r * Math.cos(Math.PI * drawLineData.angle / 180), drawLineData.y1 + drawLineData.r * Math.sin(Math.PI * drawLineData.angle / 180));
+        context.lineTo(
+            drawLineData.x1 +
+                drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180),
+            drawLineData.y1 +
+                drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)
+        );
         context.stroke();
-    }
+    };
 
     const drawPoint = (x, y, color) => {
-        const context = canvasRef.current.getContext('2d');
-        context.fillStyle = color || 'black';
+        const context = canvasRef.current.getContext("2d");
+        context.fillStyle = color || "black";
         context.beginPath();
         context.arc(x, y, 5, 0, 2 * Math.PI, true);
         context.fill();
     };
 
     /**
-     * 
+     *
      */
     // Règle de cras
     // Pour obtenir le milieu de la règle : -(regle.width / 2)
     // Pour obtenir le point 0 du rapporteur (rouge) : CALIBRAGE_ZERO_ROUGE * regle.height
     // Pour obtenir le point 0 du rapporteur (noir) : CALIBRAGE_ZERO_NOIR * regle.height
     const drawAndPlaceCRA = () => {
-
         // var regle = document.createElement('img');
         var regle = new Image();
         regle.src = image;
-        regle.alt = 'alt text';
+        regle.alt = "alt text";
 
-        const context = canvasRef.current.getContext('2d');
+        const context = canvasRef.current.getContext("2d");
 
         regle.onload = function () {
             context.save();
@@ -70,30 +78,40 @@ export const Canvas = () => {
             context.rotate(degToRadian(angleVal - DEFAULT_ANGLE));
 
             if (angleVal >= 180) {
-                context.drawImage(regle, - (regle.width / 2), 0);
-            }
-            else {
-                context.drawImage(regle, - (regle.width / 2), 0);
+                context.drawImage(regle, -(regle.width / 2), 0);
+            } else {
+                context.drawImage(regle, -(regle.width / 2), 0);
             }
 
             context.restore();
         };
-
-    }
+    };
 
     /**
-     * 
-     * @param {L'évènement} event 
+     *
+     * @param {L'évènement} event
      */
     const setCoordinates = (event) => {
         setShow(true);
+        console.log({ show });
         const rect = canvasRef.current.getBoundingClientRect();
-        setDrawLineData({ ...drawLineData, x1: event.clientX - rect.left, y1: event.clientY - rect.top, r: longueurVal });
-
-    }
+        setDrawLineData({
+            ...drawLineData,
+            x1: event.clientX - rect.left,
+            y1: event.clientY - rect.top,
+            r: longueurVal
+        });
+    };
 
     useEffect(() => {
-        setDrawLineData({ ...drawLineData, angle: parseInt(angleVal, 10) + parseInt(deviation, 10) + parseInt(declinaison, 10) - DEFAULT_ANGLE });
+        setDrawLineData({
+            ...drawLineData,
+            angle:
+                parseInt(angleVal, 10) +
+                parseInt(deviation, 10) +
+                parseInt(declinaison, 10) -
+                DEFAULT_ANGLE
+        });
     }, [angleVal]);
 
     useEffect(() => {
@@ -104,20 +122,25 @@ export const Canvas = () => {
         drawLine();
         drawAndPlaceCRA();
         handleClose();
-    }
+    };
 
     return (
         <>
-            <canvas id="canvas" ref={canvasRef} height="900" width="1500" className="canvas-style mt-5" onClick={(e) => setCoordinates(e)}></canvas>
+            <canvas
+                id="canvas"
+                ref={canvasRef}
+                height="900"
+                width="1500"
+                className="canvas-style mt-5"
+                onClick={(e) => setCoordinates(e)}
+            ></canvas>
 
             <Modal show={show} onHide={handleClose} size="sm" centered>
                 <Modal.Header>
                     <Modal.Title>Relever l'amer</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Label htmlFor="angle">
-                        Angle
-                    </Form.Label>
+                    <Form.Label htmlFor="angle">Angle</Form.Label>
                     <Form.Control
                         className="mb-2 mr-sm-2"
                         id="angle"
@@ -126,9 +149,7 @@ export const Canvas = () => {
                         type="number"
                         placeholder="Angle"
                     />
-                    <Form.Label htmlFor="longueur">
-                        Longueur
-                    </Form.Label>
+                    <Form.Label htmlFor="longueur">Longueur</Form.Label>
                     <Form.Control
                         className="mb-2 mr-sm-2"
                         id="longueur"
@@ -148,9 +169,7 @@ export const Canvas = () => {
                         type="number"
                         placeholder="Déclinaison"
                     />
-                    <Form.Label htmlFor="deviation">
-                        Déviation (d)
-                    </Form.Label>
+                    <Form.Label htmlFor="deviation">Déviation (d)</Form.Label>
                     <Form.Control
                         className="mb-2 mr-sm-2"
                         id="deviation"
@@ -163,10 +182,10 @@ export const Canvas = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Annuler
-                </Button>
+                    </Button>
                     <Button variant="primary" onClick={handleOnSubmit}>
                         Valider le marquage
-                </Button>
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>

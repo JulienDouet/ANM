@@ -23,6 +23,7 @@ export const App = () => {
                 mapArrayState={[mapArray, setMapArray]}
             />
             <Map mapArray={mapArray} isStoredMap={isStoredMap} />
+            <Canvas />
         </>
     );
 };
