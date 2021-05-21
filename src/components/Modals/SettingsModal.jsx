@@ -4,7 +4,13 @@ import { isBetween } from "../../helpers/helpers";
 import { generateMapArray } from "../../helpers/GenerateMap";
 
 export const SettingsModal = (props) => {
-    const { show, setMapArray, mapNameState, savedMapsState } = props;
+    const {
+        show,
+        setMapArray,
+        mapNameState,
+        savedMapsState,
+        setMapSettingsData
+    } = props;
     const [savedMaps, setSavedMaps] = savedMapsState;
     const [showSettings, setShowSettings] = show;
     const [mapName, setMapName] = mapNameState;
@@ -30,8 +36,7 @@ export const SettingsModal = (props) => {
     const [latDistMin, setLatDistMin] = useState("0");
 
     // Footer
-    const [mapZoom, setMapZoom] = useState("10");
-    const [mapSize, setMapSize] = useState("6");
+    const [mapZoom, setMapZoom] = useState("13");
 
     const handleCloseSettings = () => setShowSettings(false);
     const applySettings = () => {
@@ -56,8 +61,30 @@ export const SettingsModal = (props) => {
                 deg: latDistDeg,
                 min: latDistMin
             },
-            zoom: parseInt(mapZoom),
-            size: parseInt(mapSize)
+            zoom: parseInt(mapZoom)
+        });
+        setMapSettingsData({
+            latitude: {
+                deg: latDeg,
+                min: latMin,
+                sec: latSec,
+                orientation: latRad
+            },
+            longitude: {
+                deg: lonDeg,
+                min: lonMin,
+                sec: lonSec,
+                orientation: lonRad
+            },
+            longitudeDistance: {
+                deg: lonDistDeg,
+                min: lonDistMin
+            },
+            latitudeDistance: {
+                deg: latDistDeg,
+                min: latDistMin
+            },
+            zoom: parseInt(mapZoom)
         });
         setMapArray(mapArray);
         if (!savedMaps.find((savedMap) => savedMap === mapName))
@@ -415,21 +442,6 @@ export const SettingsModal = (props) => {
                             <option value="17">1:4 000</option>
                             <option value="18">1:2 000</option>
                         </select>
-                    </div>
-                    <div className="col">
-                        <label className="form-label" htmlFor="mapSize">
-                            Taille de la carte :
-                        </label>
-                        <input
-                            className="form-control"
-                            min="2"
-                            type="number"
-                            value={mapSize}
-                            onChange={(e) =>
-                                isBetween(e.target.value, 2, 20) &&
-                                setMapSize(e.target.value)
-                            }
-                        />
                     </div>
                 </div>
             </Modal.Body>

@@ -1,16 +1,8 @@
 export const generateMapArray = (data) => {
-    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom, size } = data;
-
-    console.log(data);
+    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom } = data;
 
     const { decimalDegreLatitude, decimalDegreLongitude, decimalDegreLatitudeDistance, decimalDegreLongitudeDistance } =
         convertToDecimalDegre(latitude, longitude,latitudeDistance, longitudeDistance);
-
-
-    console.log(decimalDegreLatitude);
-    console.log(decimalDegreLongitude);
-    console.log(decimalDegreLatitudeDistance);
-    console.log(decimalDegreLongitudeDistance);
 
     const centerTileCoords = getCenterTile(
         zoom,
@@ -19,7 +11,6 @@ export const generateMapArray = (data) => {
         decimalDegreLatitudeDistance,
         decimalDegreLongitudeDistance
     );
-    console.log(centerTileCoords);
 
     const beginLastCoords = getBeginLastTile(
         zoom,
@@ -28,8 +19,7 @@ export const generateMapArray = (data) => {
         decimalDegreLatitudeDistance,
         decimalDegreLongitudeDistance
     );
-    console.log(beginLastCoords);
-    return generateTileArray(centerTileCoords, beginLastCoords, zoom, size);
+    return generateTileArray(centerTileCoords, beginLastCoords, zoom);
 };
 
 /**
@@ -129,10 +119,9 @@ const convertToDecimalDegre = (latitude, longitude, latitudeDistance, longitudeD
  * Créé le tableau contenant les coordonnées de toutes les tiles
  * @param {Les coordonnées de la taille centrale} centerTileCoords
  * @param {Le zoom de la carte} zoom
- * @param {La taille de la carte} size
  * @returns
  */
-const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
+const generateTileArray = (centerTileCoords, beginLastCoords, zoom) => {
 
 
 
@@ -150,18 +139,8 @@ const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
     const latitudeDistance = (sizeLatitude / 2) >> 0;
     const longitudeDistance = (sizeLongitude / 2) >> 0;
 
-
-    console.log(beginLatTile+ ' ' + beginLongTile);
-    console.log(lastLatTile+ ' ' + lastLongTile);
-
-    /*
-    const end = (size / 2) >> 0;
-    const start = size % 2 !== 0 ? -end : -(end - 1);
-    const add = size % 2 !== 0 ? end : Math.abs(start);
-    */
     for (let i = beginLongTile; i <= lastLongTile; ++i){
         for (let j = lastLatTile; j <= beginLatTile; ++j){
-          console.log((j - lastLatTile) + ' ' + (i - beginLongTile));
             tileArray[j - lastLatTile][i - beginLongTile] = [
                 zoom,
                  i,
