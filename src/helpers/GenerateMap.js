@@ -1,16 +1,35 @@
 export const generateMapArray = (data) => {
-    const { latitude, longitude, zoom, size } = data;
+    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom, size } = data;
 
-    const { decimalDegreLatitude, decimalDegreLongitude } =
-        convertToDecimalDegre(latitude, longitude);
+    console.log(data);
+
+    const { decimalDegreLatitude, decimalDegreLongitude, decimalDegreLatitudeDistance, decimalDegreLongitudeDistance } =
+        convertToDecimalDegre(latitude, longitude,latitudeDistance, longitudeDistance);
+
+
+    console.log(decimalDegreLatitude);
+    console.log(decimalDegreLongitude);
+    console.log(decimalDegreLatitudeDistance);
+    console.log(decimalDegreLongitudeDistance);
 
     const centerTileCoords = getCenterTile(
         zoom,
         decimalDegreLatitude,
-        decimalDegreLongitude
+        decimalDegreLongitude,
+        decimalDegreLatitudeDistance,
+        decimalDegreLongitudeDistance
     );
+    console.log(centerTileCoords);
 
-    return generateTileArray(centerTileCoords, zoom, size);
+    const beginLastCoords = getBeginLastTile(
+        zoom,
+        decimalDegreLatitude,
+        decimalDegreLongitude,
+        decimalDegreLatitudeDistance,
+        decimalDegreLongitudeDistance
+    );
+    console.log(beginLastCoords);
+    return generateTileArray(centerTileCoords, beginLastCoords, zoom, size);
 };
 
 /**
@@ -21,14 +40,52 @@ export const generateMapArray = (data) => {
  * @param {Le degré de longitude} degLongitude
  * @returns Un tableau avec les 2 paramètres nécessaires aux appels l'API OpenStreetMap et OpenSeaMap
  */
-const getCenterTile = (zoom, degLatitude, degLongitude) => [
-    parseInt(((degLongitude + 180.0) / 360.0) * 2.0 ** zoom),
+const getCenterTile = (zoom, degLatitude, degLongitude, degLatDist, degLongDist) => [
     parseInt(
         ((1.0 - Math.asinh(Math.tan(degLatitude * (Math.PI / 180))) / Math.PI) /
             2.0) *
             2.0 ** zoom
-    )
+    ),
+    parseInt(((degLongitude + 180.0) / 360.0) * 2.0 ** zoom),
+    parseInt(
+        ((1.0 - Math.asinh(Math.tan(degLatDist * (Math.PI / 180))) / Math.PI) /
+            2.0) *
+            2.0 ** zoom
+    ),
+    parseInt(((degLongDist + 180.0) / 360.0) * 2.0 ** zoom)
+
 ];
+
+const getBeginLastTile = (zoom, degLatitude, degLongitude, degLatDist, degLongDist) => {
+
+  const beginLatDegree = degLatitude - degLatDist;
+  const beginLongDegree = degLongitude - degLongDist;
+
+  const lastLatDegree = degLatitude + degLatDist;
+  const lastLongDegree = degLongitude + degLongDist;
+
+
+
+  const beginLatTile = parseInt(
+          ((1.0 - Math.asinh(Math.tan(beginLatDegree * (Math.PI / 180))) / Math.PI) /
+              2.0) *
+              2.0 ** zoom
+      );
+
+  const beginLongTile = parseInt(((beginLongDegree + 180.0) / 360.0) * 2.0 ** zoom);
+
+
+  const lastLatTile = parseInt(
+          ((1.0 - Math.asinh(Math.tan(lastLatDegree * (Math.PI / 180))) / Math.PI) /
+              2.0) *
+              2.0 ** zoom
+      );
+
+  const lastLongTile = parseInt(((lastLongDegree + 180.0) / 360.0) * 2.0 ** zoom);
+
+return [beginLatTile, beginLongTile, lastLatTile, lastLongTile];
+};
+
 
 /**
  * Fonction permettant de convertir des DMS (Degré, Minutes, Secondes) en DD (Degré Decimaux)
@@ -36,13 +93,22 @@ const getCenterTile = (zoom, degLatitude, degLongitude) => [
  * @param {La longitude à convertir en DD} longitude
  * @returns Les coordonnées DMS converties en DD
  */
-const convertToDecimalDegre = (latitude, longitude) => {
+const convertToDecimalDegre = (latitude, longitude, latitudeDistance, longitudeDistance) => {
     const decimalDegreLatitude =
         parseInt(latitude.deg) +
         (latitude.min * 60 + parseInt(latitude.sec)) / 3600;
     const decimalDegreLongitude =
         parseInt(longitude.deg) +
         (longitude.min * 60 + parseInt(longitude.sec)) / 3600;
+
+    const decimalDegreLatitudeDistance =
+        parseInt(latitudeDistance.deg) +
+        (latitudeDistance.min * 60)/3600;
+
+    const decimalDegreLongitudeDistance =
+        parseInt(longitudeDistance.deg) +
+        (longitudeDistance.min * 60)/3600;
+
 
     return {
         decimalDegreLatitude:
@@ -52,7 +118,10 @@ const convertToDecimalDegre = (latitude, longitude) => {
         decimalDegreLongitude:
             longitude.orientation === "O"
                 ? -decimalDegreLongitude
-                : decimalDegreLongitude
+                : decimalDegreLongitude,
+        decimalDegreLatitudeDistance,
+        decimalDegreLongitudeDistance
+
     };
 };
 
@@ -63,20 +132,42 @@ const convertToDecimalDegre = (latitude, longitude) => {
  * @param {La taille de la carte} size
  * @returns
  */
-const generateTileArray = (centerTileCoords, zoom, size) => {
-    const tileArray = [...Array(size)].map(() => Array(size));
+const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
 
+
+
+    const beginLatTile = beginLastCoords[0];
+    const beginLongTile = beginLastCoords[1];
+
+    const lastLatTile = beginLastCoords[2];
+    const lastLongTile = beginLastCoords[3];
+
+    const sizeLatitude = beginLatTile - lastLatTile ;
+    const sizeLongitude = lastLongTile - beginLongTile ;
+
+    const tileArray = [...Array(sizeLatitude + 1)].map(() => Array(sizeLongitude + 1));
+
+    const latitudeDistance = (sizeLatitude / 2) >> 0;
+    const longitudeDistance = (sizeLongitude / 2) >> 0;
+
+
+    console.log(beginLatTile+ ' ' + beginLongTile);
+    console.log(lastLatTile+ ' ' + lastLongTile);
+
+    /*
     const end = (size / 2) >> 0;
     const start = size % 2 !== 0 ? -end : -(end - 1);
     const add = size % 2 !== 0 ? end : Math.abs(start);
-
-    for (let i = start; i <= end; ++i)
-        for (let j = start; j <= end; ++j)
-            tileArray[j + add][i + add] = [
+    */
+    for (let i = beginLongTile; i <= lastLongTile; ++i){
+        for (let j = lastLatTile; j <= beginLatTile; ++j){
+          console.log((j - lastLatTile) + ' ' + (i - beginLongTile));
+            tileArray[j - lastLatTile][i - beginLongTile] = [
                 zoom,
-                centerTileCoords[0] + i,
-                centerTileCoords[1] + j
+                 i,
+                 j
             ];
-
+          }
+        }
     return tileArray;
 };

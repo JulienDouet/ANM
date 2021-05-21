@@ -1,5 +1,5 @@
 import "./Map.css";
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 // Grille
 const drawLine = (canvasGraticuleRef) => {
@@ -26,7 +26,7 @@ export const Map = (props) => {
 
     useEffect(() => {
         drawLine(canvasGraticuleRef);
-    }, [])
+    }, []);
 
     return (
         <div className="pt-5">

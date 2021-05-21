@@ -21,6 +21,14 @@ export const SettingsModal = (props) => {
     const [lonSec, setLonSec] = useState("0");
     const [lonRad, setLonRad] = useState("O");
 
+    // Distance Longitude
+    const [lonDistDeg, setLonDistDeg] = useState("0");
+    const [lonDistMin, setLonDistMin] = useState("0");
+
+    // Distance Latitude
+    const [latDistDeg, setLatDistDeg] = useState("0");
+    const [latDistMin, setLatDistMin] = useState("0");
+
     // Footer
     const [mapZoom, setMapZoom] = useState("10");
     const [mapSize, setMapSize] = useState("6");
@@ -39,6 +47,14 @@ export const SettingsModal = (props) => {
                 min: lonMin,
                 sec: lonSec,
                 orientation: lonRad
+            },
+            longitudeDistance: {
+                deg: lonDistDeg,
+                min: lonDistMin
+            },
+            latitudeDistance: {
+                deg: latDistDeg,
+                min: latDistMin
             },
             zoom: parseInt(mapZoom),
             size: parseInt(mapSize)
@@ -303,6 +319,137 @@ export const SettingsModal = (props) => {
                                 setMapZoom(e.target.value)
                             }
                         />
+                    </div>
+                    <div className="col">
+                        <label className="form-label" htmlFor="mapSize">
+                            Taille de la carte :
+                        </label>
+                        <input
+                            className="form-control"
+                            min="2"
+                            type="number"
+                            value={mapSize}
+                            onChange={(e) =>
+                                isBetween(e.target.value, 2, 20) &&
+                                setMapSize(e.target.value)
+                            }
+                        />
+                    </div>
+                </div>
+
+                <hr className="my-4" />
+
+                <div className="row g-3 align-items-end" noValidate>
+                    <div className="col-sm">
+                        <label className="form-label" htmlFor="latDistDeg">
+                            Degré latitude
+                        </label>
+                        <div className="input-group">
+                            <input
+                                className="form-control"
+                                type="number"
+                                id="latDistDeg"
+                                value={latDistDeg}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, -180, 180) &&
+                                    setLatDistDeg(e.target.value)
+                                }
+                            />
+                            <span className="input-group-text">
+                                <b>°</b>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="col-sm">
+                        <label className="form-label" htmlFor="latDistMin">
+                            Minutes latitude
+                        </label>
+                        <div className="input-group">
+                            <input
+                                className="form-control"
+                                type="number"
+                                id="latDistMin"
+                                value={latDistMin}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, 0, 60) &&
+                                    setLatDistMin(e.target.value)
+                                }
+                            />
+                            <span className="input-group-text">
+                                <b>'</b>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr className="my-4" />
+
+                <div className="row g-3 align-items-end" noValidate>
+                    <div className="col-sm">
+                        <label className="form-label" htmlFor="lonDistDeg">
+                            Degré longitude
+                        </label>
+                        <div className="input-group">
+                            <input
+                                className="form-control"
+                                type="number"
+                                id="lonDistDeg"
+                                value={lonDistDeg}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, -180, 180) &&
+                                    setLonDistDeg(e.target.value)
+                                }
+                            />
+                            <span className="input-group-text">
+                                <b>°</b>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="col-sm">
+                        <label className="form-label" htmlFor="lonDistMin">
+                            Minutes longitude
+                        </label>
+                        <div className="input-group">
+                            <input
+                                className="form-control"
+                                type="number"
+                                id="lonDistMin"
+                                value={lonDistMin}
+                                onChange={(e) =>
+                                    isBetween(e.target.value, 0, 60) &&
+                                    setLonDistMin(e.target.value)
+                                }
+                            />
+                            <span className="input-group-text">
+                                <b>'</b>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr className="my-4" />
+
+                <div className="row">
+                    <div className="col">
+                        <label className="form-label" htmlFor="mapZoom">
+                            Zoom :
+                        </label>
+                        <select
+                            className="form-control"
+                            id="mapZoom"
+                            value={mapZoom}
+                            onChange={(e) => setMapZoom(e.target.value)}
+                        >
+                            <option value="10">1:500 000</option>
+                            <option value="11">1:250 000</option>
+                            <option value="12">1:150 000</option>
+                            <option value="13">1:70 000</option>
+                            <option value="14">1:35 000</option>
+                            <option value="15">1:15 000</option>
+                            <option value="16">1:8 000</option>
+                            <option value="17">1:4 000</option>
+                            <option value="18">1:2 000</option>
+                        </select>
                     </div>
                     <div className="col">
                         <label className="form-label" htmlFor="mapSize">
