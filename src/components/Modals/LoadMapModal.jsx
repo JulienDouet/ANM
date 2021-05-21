@@ -1,11 +1,11 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
-const fs = window.require("fs");
+/*const fs = window.require("fs");
 console.log({ fs });
 const request = require("request");
 console.log({ request });
 const shelljs = require("shelljs");
-console.log({ shelljs });
+console.log({ shelljs });*/
 
 /**
  * TODO :
@@ -18,7 +18,14 @@ const DIRNAME = "./";
 const FOLDER = DIRNAME + "cartes";
 
 export const LoadMapModal = (props) => {
-    const { show, mapArrayState, mapNameState, savedMapsState } = props;
+    const {
+        show,
+        mapArrayState,
+        mapNameState,
+        savedMapsState,
+        isStoredMapState
+    } = props;
+    const [isStoredMap, setIsStoredMapName] = isStoredMapState;
     const [mapName, setMapName] = mapNameState;
     const [mapArray, setMapArray] = mapArrayState;
     const [showLoadMap, setShowLoadMap] = show;
@@ -36,7 +43,7 @@ export const LoadMapModal = (props) => {
 
     const done = () => console.log("terminado");
 
-    /*useEffect(() => {
+    useEffect(() => {
         mapArray.map((row, rowIndex) => {
             row.map((cell, cellIndex) => {
                 download(
@@ -63,8 +70,23 @@ export const LoadMapModal = (props) => {
                 );
             });
         });
-    }, [mapArray]);*/
+    }, [mapArray]);
 
+    useEffect(() => {
+        console.log(mapArray);
+        if (mapArray.length) {
+            var data_file = "cartes/" + mapName + "/informations.txt";
+            var content_file = "zoom=" + mapArray[0][0][0];
+            //fs.mkdir("-p", "cartes/" + mapName + "/openstreetmap");
+            //fs.mkdir("-p", "cartes/" + mapName + "/openseamap");
+        }
+
+        /*await fs.writeFile(data_file, content_file, (err) => {
+            if (err) throw err;
+
+            console.log("The file was succesfully saved!");
+        });*/
+    }, [savedMaps]);
     /*validateCoordinates.click(() => {
         var titre_carte = $("#titre_carte").val();
         var zoom_carte = $("#zoom").val();
@@ -89,8 +111,8 @@ export const LoadMapModal = (props) => {
 
     // Charge toutes les cartes enregistrées dans le disque
     useEffect(() => {
-        console.log(fs);
-        /*fs.readdir(FOLDER, (_, fileList) => {
+        /*console.log(fs);
+        fs.readdir(FOLDER, (_, fileList) => {
             fileList.forEach((file) => {
                 setSavedMaps([...savedMaps, file]);
             });
@@ -143,7 +165,10 @@ export const LoadMapModal = (props) => {
     };*/
 
     const handleValidate = () => {
-        console.log(savedMaps);
+        /*console.log(savedMaps);
+        console.log(mapName);
+*/
+        handleCloseLoadMap();
     };
 
     return (
@@ -171,7 +196,11 @@ export const LoadMapModal = (props) => {
                 <Button variant="danger" onClick={handleCloseLoadMap}>
                     Annuler
                 </Button>
-                <Button variant="success" onClick={handleValidate}>
+                <Button
+                    variant="success"
+                    disabled={!savedMaps.length}
+                    onClick={handleValidate}
+                >
                     Valider Carte
                 </Button>
             </Modal.Footer>
