@@ -40,7 +40,7 @@ export const Canvas = () => {
         context.stroke();
     }
 
-    function drawPoint(x, y, color) {
+    const drawPoint = (x, y, color) => {
         const context = canvasRef.current.getContext('2d');
         context.fillStyle = color || 'black';
         context.beginPath();
@@ -53,23 +53,32 @@ export const Canvas = () => {
      */
     // Règle de cras
     // Pour obtenir le milieu de la règle : -(regle.width / 2)
-    // Pour obtenir le point 0 du rapporteur (rouge) : -0.0845 * regle.height
-    // Pour obtenir le point 0 du rapporteur (noir) : -0.9155 * regle.height
+    // Pour obtenir le point 0 du rapporteur (rouge) : CALIBRAGE_ZERO_ROUGE * regle.height
+    // Pour obtenir le point 0 du rapporteur (noir) : CALIBRAGE_ZERO_NOIR * regle.height
     const drawAndPlaceCRA = () => {
-        const x = 500;
-        const y = 500;
 
-        const context = canvasRef.current.getContext('2d');
-        context.save();
-        var regle = document.createElement('img');
+        // var regle = document.createElement('img');
+        var regle = new Image();
         regle.src = image;
         regle.alt = 'alt text';
 
-        context.translate(x, y);
-        context.rotate(degToRadian(angleVal - DEFAULT_ANGLE));
-        context.drawImage(regle, - (regle.width / 2), CALIBRAGE_ZERO_ROUGE * regle.height);
+        const context = canvasRef.current.getContext('2d');
 
-        context.restore();
+        regle.onload = function () {
+            context.save();
+            context.translate(drawLineData.x1, drawLineData.y1);
+            context.rotate(degToRadian(angleVal - DEFAULT_ANGLE));
+
+            if (angleVal >= 180) {
+                context.drawImage(regle, - (regle.width / 2), 0);
+            }
+            else {
+                context.drawImage(regle, - (regle.width / 2), 0);
+            }
+
+            context.restore();
+        };
+
     }
 
     /**
@@ -93,7 +102,6 @@ export const Canvas = () => {
 
     const handleOnSubmit = (event) => {
         drawLine();
-        drawPoint(500, 500, "red");
         drawAndPlaceCRA();
         handleClose();
     }
