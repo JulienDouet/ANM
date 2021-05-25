@@ -1,5 +1,5 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 /*const fs = window.require("fs");
 console.log({ fs });
 const request = require("request");
@@ -73,7 +73,6 @@ export const LoadMapModal = (props) => {
     }, [mapArray]);
 
     useEffect(() => {
-        console.log(mapArray);
         if (mapArray.length) {
             var data_file = "cartes/" + mapName + "/informations.txt";
             var content_file = "zoom=" + mapArray[0][0][0];

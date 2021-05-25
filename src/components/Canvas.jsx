@@ -92,7 +92,6 @@ export const Canvas = (props) => {
      */
     const setCoordinates = (event) => {
         setShow(true);
-        console.log({ show });
         const rect = amerCanvasRef.current.getBoundingClientRect();
         setDrawLineData({
             ...drawLineData,
