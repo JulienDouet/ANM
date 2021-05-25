@@ -1,6 +1,9 @@
 import "./SeaMap.css";
 import React, { useRef } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
+import { convertToDecimalDegre } from "../helpers/GenerateMap";
+import { deg_to_dms } from "../helpers/GenerateMap";
+
 
 // Récupérer coordonnées clique
 /*const drawLine = (tableRef, canvasGraticuleRef, scrollContainerRef) => {
@@ -21,9 +24,27 @@ import ScrollContainer from "react-indiana-drag-scroll";
 };*/
 
 // Grille
-const drawLine = (tableRef, canvasGraticuleRef) => {
+const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData) => {
     const context = canvasGraticuleRef.current.getContext("2d");
     const canvasGraticule = canvasGraticuleRef.current;
+
+    const latitude = mapSettingsData.latitude;
+    const longitude = mapSettingsData.longitude;
+
+    const latitudeDistance = mapSettingsData.latitudeDistance;
+    const longitudeDistance = mapSettingsData.longitudeDistance;
+
+    const zoom = mapSettingsData.zoom;
+
+    const longitudeString = longitude.deg + '° ' + longitude.min + '\' ' + longitude.sec + '" ' + longitude.orientation ;
+
+
+    const {decimalDegreLatitude, decimalDegreLongitude, decimalDegreLatitudeDistance, decimalDegreLongitudeDistance} =  convertToDecimalDegre(latitude, longitude,latitudeDistance, longitudeDistance);
+
+
+    const diffDegLongitude = decimalDegreLongitude - decimalDegreLongitudeDistance;
+    const diffDegLatitude = decimalDegreLatitude + decimalDegreLatitudeDistance;
+
 
     canvasGraticule.height = tableRef.current.offsetHeight;
     canvasGraticule.width = tableRef.current.offsetWidth;
@@ -31,24 +52,37 @@ const drawLine = (tableRef, canvasGraticuleRef) => {
         canvasGraticule.height > canvasGraticule.width
             ? canvasGraticule.width
             : canvasGraticule.height;
-
-    context.moveTo(size / 2, 0);
+    console.log(tableRef.current.offsetHeight);
+    console.log(tableRef.current.offsetWidth);
+    console.log(size);
+    var height = tableRef.current.offsetHeight;
+    var width = tableRef.current.offsetWidth;
+  /*  context.moveTo(size / 2, 0);
     context.lineTo(size / 2, 1536);
     context.stroke();
     context.font = "15px Arial";
-    context.fillText("43° 20' 00''", size / 2, 20);
+    */
+  //  context.fillText(longitudeString, size / 2, 20);
 
-    for (var i = 0; i < canvasGraticule.width; i += size / 2 / 5) {
+    var longitudeDegDepart = diffDegLongitude;
+    for (var i = 0; i < width; i += width / 2 / 6) {
         context.moveTo(i, 0);
-        context.lineTo(i, canvasGraticule.height);
+        context.lineTo(i, height);
         context.stroke();
+        context.font = "15px Arial";
+        context.fillText(deg_to_dms(longitudeDegDepart,true),i, 20);
+        longitudeDegDepart += (decimalDegreLongitudeDistance/6);
     }
 
-    // for (var i = 0; i < canvasGraticule.height; i += 450) {
-    //     context.moveTo(0, i);
-    //     context.lineTo(canvasGraticule.width, i);
-    //     context.stroke();
-    // }
+   var latitudeDegDepart = diffDegLatitude;
+   for (var i = 0; i < height; i += height / 2 / 6 ) {
+      context.moveTo(0, i);
+      context.lineTo(width, i);
+      context.stroke();
+      context.font = "15px Arial";
+      context.fillText(deg_to_dms(latitudeDegDepart,false),10, i);
+      latitudeDegDepart -= (decimalDegreLatitudeDistance/6);
+     }
 };
 
 export const SeaMap = (props) => {
@@ -61,7 +95,7 @@ export const SeaMap = (props) => {
     const tableRef = useRef(null);
 
     return (
-        <div>
+        <div className="pt-5">
             <canvas
                 ref={canvasGraticuleRef}
                 className="canvas-style-gaticule mt-5"
@@ -96,7 +130,8 @@ export const SeaMap = (props) => {
                                                     )
                                                         drawLine(
                                                             tableRef,
-                                                            canvasGraticuleRef
+                                                            canvasGraticuleRef,
+                                                            mapSettingsData
                                                         );
                                                 }}
                                                 src={`https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`}

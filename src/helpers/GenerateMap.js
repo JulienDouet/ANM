@@ -1,8 +1,10 @@
 export const generateMapArray = (data) => {
-    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom } = data;
+    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom, size } = data;
+
 
     const { decimalDegreLatitude, decimalDegreLongitude, decimalDegreLatitudeDistance, decimalDegreLongitudeDistance } =
         convertToDecimalDegre(latitude, longitude,latitudeDistance, longitudeDistance);
+
 
     const centerTileCoords = getCenterTile(
         zoom,
@@ -19,7 +21,8 @@ export const generateMapArray = (data) => {
         decimalDegreLatitudeDistance,
         decimalDegreLongitudeDistance
     );
-    return generateTileArray(centerTileCoords, beginLastCoords, zoom);
+    console.log(beginLastCoords);
+    return generateTileArray(centerTileCoords, beginLastCoords, zoom, size);
 };
 
 /**
@@ -83,7 +86,7 @@ return [beginLatTile, beginLongTile, lastLatTile, lastLongTile];
  * @param {La longitude à convertir en DD} longitude
  * @returns Les coordonnées DMS converties en DD
  */
-const convertToDecimalDegre = (latitude, longitude, latitudeDistance, longitudeDistance) => {
+export const convertToDecimalDegre = (latitude, longitude, latitudeDistance, longitudeDistance) => {
     const decimalDegreLatitude =
         parseInt(latitude.deg) +
         (latitude.min * 60 + parseInt(latitude.sec)) / 3600;
@@ -119,9 +122,10 @@ const convertToDecimalDegre = (latitude, longitude, latitudeDistance, longitudeD
  * Créé le tableau contenant les coordonnées de toutes les tiles
  * @param {Les coordonnées de la taille centrale} centerTileCoords
  * @param {Le zoom de la carte} zoom
+ * @param {La taille de la carte} size
  * @returns
  */
-const generateTileArray = (centerTileCoords, beginLastCoords, zoom) => {
+const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
 
 
 
@@ -139,6 +143,13 @@ const generateTileArray = (centerTileCoords, beginLastCoords, zoom) => {
     const latitudeDistance = (sizeLatitude / 2) >> 0;
     const longitudeDistance = (sizeLongitude / 2) >> 0;
 
+
+
+    /*
+    const end = (size / 2) >> 0;
+    const start = size % 2 !== 0 ? -end : -(end - 1);
+    const add = size % 2 !== 0 ? end : Math.abs(start);
+    */
     for (let i = beginLongTile; i <= lastLongTile; ++i){
         for (let j = lastLatTile; j <= beginLatTile; ++j){
             tileArray[j - lastLatTile][i - beginLongTile] = [
@@ -150,3 +161,19 @@ const generateTileArray = (centerTileCoords, beginLastCoords, zoom) => {
         }
     return tileArray;
 };
+
+
+export function deg_to_dms (dd, isLng) {
+  var dir = dd < 0
+     ? isLng ? 'O' : 'S'
+     : isLng ? 'E' : 'N';
+
+   var absDd = Math.abs(dd);
+   var deg = absDd | 0;
+   var frac = absDd - deg;
+   var min = (frac * 60) | 0;
+   var sec = frac * 3600 - min * 60;
+   // Round it to 2 decimal points.
+   sec = Math.round(sec * 100) / 100;
+   return deg + "°" + min + "'" + sec + '"' + dir;
+}
