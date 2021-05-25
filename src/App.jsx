@@ -2,7 +2,7 @@ import { Canvas } from "./components/Canvas";
 import { SeaMap } from "./components/SeaMap";
 import { TopBar } from "./components/TopBar";
 import { Modals } from "./components/Modals";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export const App = () => {
     const [showSettings, setShowSettings] = useState(false);
@@ -10,6 +10,8 @@ export const App = () => {
     const [mapArray, setMapArray] = useState([]);
     const [isStoredMap, setIsStoredMap] = useState(false);
     const [mapSettingsData, setMapSettingsData] = useState({});
+    const canvasGraticuleRef = useRef(null);
+
     return (
         <>
             <TopBar
@@ -27,7 +29,9 @@ export const App = () => {
                 mapArray={mapArray}
                 isStoredMap={isStoredMap}
                 mapSettingsData={mapSettingsData}
+                canvasGraticuleRef={canvasGraticuleRef}
             />
+            <Canvas canvasGraticuleRef={canvasGraticuleRef} />
         </>
     );
 };
