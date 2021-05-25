@@ -18,12 +18,14 @@ export const App = () => {
         amerCanvas.height = tableRef.current.offsetHeight;
         amerCanvas.width = tableRef.current.offsetWidth;
     };
+    const [amer, setAmer] = useState(false);
 
     return (
         <>
             <TopBar
                 setShowSettings={setShowSettings}
                 setShowLoadMap={setShowLoadMap}
+                amerState={[amer, setAmer]}
             />
             <Modals
                 settingsModal={[showSettings, setShowSettings]}
@@ -38,7 +40,7 @@ export const App = () => {
                 mapSettingsData={mapSettingsData}
                 resizeAmerCanvas={resizeAmerCanvas}
             />
-            <Canvas amerCanvasRef={amerCanvasRef} />
+            <Canvas amerCanvasRef={amerCanvasRef} amer={amer} />
         </>
     );
 };

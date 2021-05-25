@@ -9,8 +9,9 @@ const DEFAULT_ANGLE = 90;
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 
+
 export const Canvas = (props) => {
-    const { amerCanvasRef } = props;
+    const { amerCanvasRef, amer } = props;
 
     //Modal
     const [show, setShow] = useState(false);
@@ -41,9 +42,9 @@ export const Canvas = (props) => {
         context.moveTo(drawLineData.x1, drawLineData.y1);
         context.lineTo(
             drawLineData.x1 +
-                drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180),
+            drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180),
             drawLineData.y1 +
-                drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)
+            drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)
         );
         context.stroke();
     };
@@ -86,21 +87,6 @@ export const Canvas = (props) => {
         };
     };
 
-    /**
-     *
-     * @param {L'évènement} event
-     */
-    const setCoordinates = (event) => {
-        setShow(true);
-        const rect = amerCanvasRef.current.getBoundingClientRect();
-        setDrawLineData({
-            ...drawLineData,
-            x1: event.clientX - rect.left,
-            y1: event.clientY - rect.top,
-            r: longueurVal
-        });
-    };
-
     useEffect(() => {
         setDrawLineData({
             ...drawLineData,
@@ -122,13 +108,31 @@ export const Canvas = (props) => {
         handleClose();
     };
 
+
+    /**
+     *
+     * @param {L'évènement} event
+     */
+    const setCoordinates = (event) => {
+        if (!!amer) {
+            setShow(true);
+            const rect = amerCanvasRef.current.getBoundingClientRect();
+            setDrawLineData({
+                ...drawLineData,
+                x1: event.clientX - rect.left,
+                y1: event.clientY - rect.top,
+                r: longueurVal
+            });
+        }
+    };
+
     return (
         <>
             <canvas
                 id="canvas"
                 ref={amerCanvasRef}
                 className="canvas-style mt-5"
-                onClick={(e) => setCoordinates(e)}
+                onClick={(e) => !!amer && setCoordinates(e)}
             ></canvas>
 
             <Modal show={show} onHide={handleClose} size="sm" centered>
