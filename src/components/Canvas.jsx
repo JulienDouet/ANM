@@ -9,7 +9,9 @@ const DEFAULT_ANGLE = 90;
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 
-export const Canvas = () => {
+export const Canvas = (props) => {
+    const { canvasGraticuleRef } = props;
+
     //Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -104,6 +106,15 @@ export const Canvas = () => {
     };
 
     useEffect(() => {
+        const canvasGraticule = canvasGraticuleRef.current;
+        const canvas = canvasRef.current;
+
+        canvas.height = canvasGraticule.height;
+        canvas.width = canvasGraticule.width;
+        console.log(canvas);
+    }, [canvasGraticuleRef]);
+
+    useEffect(() => {
         setDrawLineData({
             ...drawLineData,
             angle:
@@ -129,8 +140,6 @@ export const Canvas = () => {
             <canvas
                 id="canvas"
                 ref={canvasRef}
-                height="900"
-                width="1500"
                 className="canvas-style mt-5"
                 onClick={(e) => setCoordinates(e)}
             ></canvas>

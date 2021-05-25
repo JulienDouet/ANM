@@ -1,6 +1,5 @@
 import "./SeaMap.css";
 import React, { useRef } from "react";
-import ScrollContainer from "react-indiana-drag-scroll";
 
 // Récupérer coordonnées clique
 /*const drawLine = (tableRef, canvasGraticuleRef, scrollContainerRef) => {
@@ -27,6 +26,7 @@ const drawLine = (tableRef, canvasGraticuleRef) => {
 
     canvasGraticule.height = tableRef.current.offsetHeight;
     canvasGraticule.width = tableRef.current.offsetWidth;
+
     const size =
         canvasGraticule.height > canvasGraticule.width
             ? canvasGraticule.width
@@ -52,16 +52,13 @@ const drawLine = (tableRef, canvasGraticuleRef) => {
 };
 
 export const SeaMap = (props) => {
-    const { mapArray, mapSettingsData } = props;
+    const { mapArray, mapSettingsData, canvasGraticuleRef } = props;
 
-    console.log({ mapSettingsData });
     //Ref
-    const canvasGraticuleRef = useRef(null);
-    const scrollContainerRef = useRef(null);
     const tableRef = useRef(null);
 
     return (
-        <div>
+        <>
             <canvas
                 ref={canvasGraticuleRef}
                 className="canvas-style-gaticule mt-5"
@@ -109,6 +106,6 @@ export const SeaMap = (props) => {
                     })}
                 </tbody>
             </table>
-        </div>
+        </>
     );
 };
