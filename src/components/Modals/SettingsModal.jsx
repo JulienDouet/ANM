@@ -29,11 +29,11 @@ export const SettingsModal = (props) => {
 
     // Distance Longitude
     const [lonDistDeg, setLonDistDeg] = useState("0");
-    const [lonDistMin, setLonDistMin] = useState("0");
+    const [lonDistMin, setLonDistMin] = useState("15");
 
     // Distance Latitude
     const [latDistDeg, setLatDistDeg] = useState("0");
-    const [latDistMin, setLatDistMin] = useState("0");
+    const [latDistMin, setLatDistMin] = useState("15");
 
     // Footer
     const [mapZoom, setMapZoom] = useState("13");
