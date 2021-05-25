@@ -10,7 +10,7 @@ const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 
 export const Canvas = (props) => {
-    const { canvasGraticuleRef } = props;
+    const { amerCanvasRef } = props;
 
     //Modal
     const [show, setShow] = useState(false);
@@ -32,15 +32,12 @@ export const Canvas = (props) => {
         angle: 0 - DEFAULT_ANGLE
     });
 
-    //Canvas
-    const canvasRef = useRef(null);
-
     // Récupérer coordonnées clique
     /**
      *
      */
     const drawLine = () => {
-        const context = canvasRef.current.getContext("2d");
+        const context = amerCanvasRef.current.getContext("2d");
         context.moveTo(drawLineData.x1, drawLineData.y1);
         context.lineTo(
             drawLineData.x1 +
@@ -52,7 +49,7 @@ export const Canvas = (props) => {
     };
 
     const drawPoint = (x, y, color) => {
-        const context = canvasRef.current.getContext("2d");
+        const context = amerCanvasRef.current.getContext("2d");
         context.fillStyle = color || "black";
         context.beginPath();
         context.arc(x, y, 5, 0, 2 * Math.PI, true);
@@ -72,7 +69,7 @@ export const Canvas = (props) => {
         regle.src = image;
         regle.alt = "alt text";
 
-        const context = canvasRef.current.getContext("2d");
+        const context = amerCanvasRef.current.getContext("2d");
 
         regle.onload = function () {
             context.save();
@@ -96,7 +93,7 @@ export const Canvas = (props) => {
     const setCoordinates = (event) => {
         setShow(true);
         console.log({ show });
-        const rect = canvasRef.current.getBoundingClientRect();
+        const rect = amerCanvasRef.current.getBoundingClientRect();
         setDrawLineData({
             ...drawLineData,
             x1: event.clientX - rect.left,
@@ -104,15 +101,6 @@ export const Canvas = (props) => {
             r: longueurVal
         });
     };
-
-    useEffect(() => {
-        const canvasGraticule = canvasGraticuleRef.current;
-        const canvas = canvasRef.current;
-
-        canvas.height = canvasGraticule.height;
-        canvas.width = canvasGraticule.width;
-        console.log(canvas);
-    }, [canvasGraticuleRef]);
 
     useEffect(() => {
         setDrawLineData({
@@ -139,7 +127,7 @@ export const Canvas = (props) => {
         <>
             <canvas
                 id="canvas"
-                ref={canvasRef}
+                ref={amerCanvasRef}
                 className="canvas-style mt-5"
                 onClick={(e) => setCoordinates(e)}
             ></canvas>

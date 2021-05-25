@@ -10,7 +10,14 @@ export const App = () => {
     const [mapArray, setMapArray] = useState([]);
     const [isStoredMap, setIsStoredMap] = useState(false);
     const [mapSettingsData, setMapSettingsData] = useState({});
-    const canvasGraticuleRef = useRef(null);
+
+    const amerCanvasRef = useRef(null);
+    const resizeAmerCanvas = (tableRef) => {
+        const amerCanvas = amerCanvasRef.current;
+
+        amerCanvas.height = tableRef.current.offsetHeight;
+        amerCanvas.width = tableRef.current.offsetWidth;
+    };
 
     return (
         <>
@@ -29,9 +36,9 @@ export const App = () => {
                 mapArray={mapArray}
                 isStoredMap={isStoredMap}
                 mapSettingsData={mapSettingsData}
-                canvasGraticuleRef={canvasGraticuleRef}
+                resizeAmerCanvas={resizeAmerCanvas}
             />
-            <Canvas canvasGraticuleRef={canvasGraticuleRef} />
+            <Canvas amerCanvasRef={amerCanvasRef} />
         </>
     );
 };

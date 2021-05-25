@@ -52,10 +52,11 @@ const drawLine = (tableRef, canvasGraticuleRef) => {
 };
 
 export const SeaMap = (props) => {
-    const { mapArray, mapSettingsData, canvasGraticuleRef } = props;
+    const { mapArray, mapSettingsData, resizeAmerCanvas } = props;
 
     //Ref
     const tableRef = useRef(null);
+    const canvasGraticuleRef = useRef(null);
 
     return (
         <>
@@ -66,6 +67,7 @@ export const SeaMap = (props) => {
             <table
                 id="map"
                 ref={tableRef}
+                className="mt-5"
                 cellSpacing="0"
                 cellPadding="0"
                 style={{ border: "none" }}
@@ -81,21 +83,23 @@ export const SeaMap = (props) => {
                                             style={{
                                                 backgroundImage: `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
                                             }}
+                                            onLoad={() => {
+                                                if (
+                                                    cellIndex ==
+                                                        row.length - 1 &&
+                                                    rowIndex ==
+                                                        mapArray.length - 1
+                                                ) {
+                                                    drawLine(
+                                                        tableRef,
+                                                        canvasGraticuleRef
+                                                    );
+                                                    resizeAmerCanvas(tableRef);
+                                                }
+                                            }}
                                         >
                                             <img
                                                 alt=""
-                                                onLoad={() => {
-                                                    if (
-                                                        cellIndex ==
-                                                            row.length - 1 &&
-                                                        rowIndex ==
-                                                            mapArray.length - 1
-                                                    )
-                                                        drawLine(
-                                                            tableRef,
-                                                            canvasGraticuleRef
-                                                        );
-                                                }}
                                                 src={`https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`}
                                             />
                                         </td>
