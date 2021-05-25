@@ -16,14 +16,14 @@ export const SettingsModal = (props) => {
     const [mapName, setMapName] = mapNameState;
 
     // Latitude
-    const [latDeg, setLatDeg] = useState("0");
-    const [latMin, setLatMin] = useState("0");
+    const [latDeg, setLatDeg] = useState("47");
+    const [latMin, setLatMin] = useState("25");
     const [latSec, setLatSec] = useState("0");
     const [latRad, setLatRad] = useState("N");
 
     // Longitude
-    const [lonDeg, setLonDeg] = useState("0");
-    const [lonMin, setLonMin] = useState("0");
+    const [lonDeg, setLonDeg] = useState("2");
+    const [lonMin, setLonMin] = useState("50");
     const [lonSec, setLonSec] = useState("0");
     const [lonRad, setLonRad] = useState("O");
 
@@ -297,22 +297,6 @@ export const SettingsModal = (props) => {
                             <input
                                 className="btn-check"
                                 type="radio"
-                                id="lonRadioO"
-                                value="O"
-                                autoComplete="off"
-                                checked={lonRad === "O"}
-                                onChange={(e) => setLonRad(e.target.value)}
-                            />
-                            <label
-                                className="btn btn-outline-primary"
-                                htmlFor="lonRadioO"
-                            >
-                                Ouest
-                            </label>
-
-                            <input
-                                className="btn-check"
-                                type="radio"
                                 id="lonRadioE"
                                 value="E"
                                 autoComplete="off"
@@ -324,6 +308,21 @@ export const SettingsModal = (props) => {
                                 htmlFor="lonRadioE"
                             >
                                 Est
+                            </label>
+                            <input
+                                className="btn-check"
+                                type="radio"
+                                id="lonRadioO"
+                                value="O"
+                                autoComplete="off"
+                                checked={lonRad === "O"}
+                                onChange={(e) => setLonRad(e.target.value)}
+                            />
+                            <label
+                                className="btn btn-outline-primary"
+                                htmlFor="lonRadioO"
+                            >
+                                Ouest
                             </label>
                         </div>
                     </div>

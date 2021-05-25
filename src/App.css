@@ -1,0 +1,5 @@
+.draggable {
+    cursor: grab;
+    position: absolute;
+    user-select: none;
+}

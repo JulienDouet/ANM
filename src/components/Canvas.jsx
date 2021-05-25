@@ -128,7 +128,6 @@ export const Canvas = (props) => {
                 id="canvas"
                 ref={amerCanvasRef}
                 className="canvas-style mt-5"
-                onClick={(e) => setCoordinates(e)}
             ></canvas>
 
             <Modal show={show} onHide={handleClose} size="sm" centered>
