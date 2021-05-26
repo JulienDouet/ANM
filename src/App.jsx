@@ -9,9 +9,13 @@ export const App = () => {
     const [showSettings, setShowSettings] = useState(false);
     const [showLoadMap, setShowLoadMap] = useState(false);
     const [mapArray, setMapArray] = useState([]);
-    const [isStoredMap, setIsStoredMap] = useState(false);
+    const [isStoredMap, setIsStoredMap] = useState(true);
     const [mapSettingsData, setMapSettingsData] = useState({});
-
+    const [mapName, setMapName] = useState("");
+    const [storedMapName, setStoredMapName] = useState("");
+    console.log({ isStoredMap });
+    console.log({ mapName });
+    console.log({ storedMapName });
     const [amer, setAmer] = useState(false);
 
     useEffect(() => {
@@ -77,12 +81,15 @@ export const App = () => {
                 isStoredMapState={[isStoredMap, setIsStoredMap]}
                 mapArrayState={[mapArray, setMapArray]}
                 setMapSettingsData={setMapSettingsData}
+                mapNameState={[mapName, setMapName]}
+                storedMapState={[storedMapName, setStoredMapName]}
             />
             <div id="dragMap" className="draggable">
                 <SeaMap
                     mapArray={mapArray}
                     isStoredMap={isStoredMap}
                     mapSettingsData={mapSettingsData}
+                    storedMapName={storedMapName}
                 />
                 <Canvas amer={amer} mapArray={mapArray} />
             </div>

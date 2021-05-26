@@ -9,7 +9,8 @@ export const SettingsModal = (props) => {
         setMapArray,
         mapNameState,
         savedMapsState,
-        setMapSettingsData
+        setMapSettingsData,
+        setIsStoredMap
     } = props;
     const [savedMaps, setSavedMaps] = savedMapsState;
     const [showSettings, setShowSettings] = show;
@@ -63,6 +64,8 @@ export const SettingsModal = (props) => {
             },
             zoom: parseInt(mapZoom)
         });
+        console.log("changement de isStored à false");
+        setIsStoredMap(false);
         setMapSettingsData({
             latitude: {
                 deg: latDeg,
@@ -84,7 +87,8 @@ export const SettingsModal = (props) => {
                 deg: latDistDeg,
                 min: latDistMin
             },
-            zoom: parseInt(mapZoom)
+            zoom: parseInt(mapZoom),
+            name: mapName
         });
         setMapArray(mapArray);
         if (!savedMaps.find((savedMap) => savedMap === mapName))

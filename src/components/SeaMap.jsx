@@ -87,12 +87,13 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
 };
 
 export const SeaMap = (props) => {
-    const { mapArray, mapSettingsData } = props;
+    const { mapArray, mapSettingsData, isStoredMap, storedMapName } = props;
 
     //Ref
     const tableRef = useRef(null);
     const canvasGraticuleRef = useRef(null);
 
+    console.log(isStoredMap);
     return (
         <div>
             <canvas
@@ -116,23 +117,29 @@ export const SeaMap = (props) => {
                                         cellIndex == row.length - 1 &&
                                         rowIndex == mapArray.length - 1
                                     ) {
-                                        drawLine(
+                                        /*drawLine(
                                             tableRef,
                                             canvasGraticuleRef,
                                             mapSettingsData,
                                             mapArray
-                                        );
+                                        );*/
                                     }
                                     return (
                                         <td
                                             key={cellIndex}
                                             style={{
-                                                backgroundImage: `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
+                                                backgroundImage: isStoredMap
+                                                    ? `../../../cartes/${storedMapName}/openstreetmap/${cell[0]}_${cell[1]}.png`
+                                                    : `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
                                             }}
                                         >
                                             <img
                                                 alt=""
-                                                src={`https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`}
+                                                src={
+                                                    isStoredMap
+                                                        ? `../../../cartes/${storedMapName}/openseamap/${cell[0]}_${cell[1]}.png`
+                                                        : `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`
+                                                }
                                             />
                                         </td>
                                     );

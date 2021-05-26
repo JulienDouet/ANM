@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SettingsModal } from "./Modals/SettingsModal";
 import { LoadMapModal } from "./Modals/LoadMapModal";
+const fs = window.require("fs");
 
 export const Modals = (props) => {
     const {
@@ -8,11 +9,35 @@ export const Modals = (props) => {
         loadMapModal,
         mapArrayState,
         isStoredMapState,
-        setMapSettingsData
+        setMapSettingsData,
+        mapNameState,
+        storedMapState
     } = props;
-    const [mapName, setMapName] = useState("");
+    const [mapName, setMapName] = mapNameState;
     const [savedMaps, setSavedMaps] = useState([]);
     const [mapArray, setMapArray] = mapArrayState;
+    const [hasLoadedMapDir, setHasLoadedMapDir] = useState(false);
+
+    // Charge toutes les cartes enregistrées dans le disque
+    useEffect(() => {
+        if (!hasLoadedMapDir) {
+            const loadStoredMaps = async () => {
+                const localMapArray = [];
+                await fs.readdir("cartes/", (_, fileList) => {
+                    console.log({ fileList });
+                    fileList.forEach((file) => {
+                        localMapArray.push(file);
+                    });
+                });
+                console.log({ localMapArray });
+                setSavedMaps(localMapArray);
+            };
+            loadStoredMaps();
+            setHasLoadedMapDir(true);
+        }
+    }, [hasLoadedMapDir]);
+    const [isStoredMap, setIsStoredMap] = isStoredMapState;
+
     return (
         <>
             <LoadMapModal
@@ -21,6 +46,7 @@ export const Modals = (props) => {
                 isStoredMapState={isStoredMapState}
                 mapNameState={[mapName, setMapName]}
                 savedMapsState={[savedMaps, setSavedMaps]}
+                storedMapState={storedMapState}
             />
             <SettingsModal
                 setMapSettingsData={setMapSettingsData}
@@ -28,6 +54,7 @@ export const Modals = (props) => {
                 setMapArray={setMapArray}
                 mapNameState={[mapName, setMapName]}
                 savedMapsState={[savedMaps, setSavedMaps]}
+                setIsStoredMap={setIsStoredMap}
             />
         </>
     );
