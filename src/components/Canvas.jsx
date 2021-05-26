@@ -96,6 +96,29 @@ export const Canvas = (props) => {
         };
     };
 
+
+    /**
+     *
+     * @param {L'évènement} event
+     */
+    const setCoordinates = (event) => {
+        setShow(true);
+        const rect = amerCanvasRef.current.getBoundingClientRect();
+        setDrawLineData({
+            ...drawLineData,
+            x1: event.clientX - rect.left,
+            y1: event.clientY - rect.top,
+            r: longueurVal
+        });
+        console.log(event.clientX+ ' '+event.clientY);
+        console.log(rect.left+ ' ' + rect.top);
+    };
+
+    const temp = (e,r) => {
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.left;
+    }
+
     useEffect(() => {
         setDrawLineData({
             ...drawLineData,
