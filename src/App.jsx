@@ -23,35 +23,44 @@ export const App = () => {
     useEffect(() => {
         let x = 0;
         let y = 0;
+        let html = document.documentElement;
         const ele = document.getElementById("dragMap");
-        const mouseDownHandler = function (e) {
-            // Get the current mouse position
+        const mouseDownHandler = (e) => {
             x = e.clientX;
             y = e.clientY;
-
-            // Attach the listeners to `document`
             document.addEventListener("mousemove", mouseMoveHandler);
             document.addEventListener("mouseup", mouseUpHandler);
             ele.style.cursor = "grabbing";
             ele.style.userSelect = "none";
         };
 
-        const mouseMoveHandler = function (e) {
-            // How far the mouse has been moved
+        const mouseMoveHandler = (e) => {
+            if (ele.offsetLeft > 0) {
+                ele.style.left = "0px";
+                return;
+            }
+            if (ele.offsetTop > 0) {
+                ele.style.top = "0px";
+                return;
+            }
+            if (html.scrollHeight == html.clientHeight) {
+                ele.style.top = `${ele.offsetTop + 1}px`;
+                return;
+            }
+            if (html.scrollWidth == html.clientWidth) {
+                ele.style.left = `${ele.offsetLeft + 1}px`;
+                return;
+            }
+
             const dx = e.clientX - x;
             const dy = e.clientY - y;
-
-            // Set the position of element
-            ele.style.top = `${ele.offsetTop + dy}px`;
-            ele.style.left = `${ele.offsetLeft + dx}px`;
-
-            // Reassign the position of mouse
+            ele.style.top = `${ele.offsetTop + dy * 0.3}px`;
+            ele.style.left = `${ele.offsetLeft + dx * 0.3}px`;
             x = e.clientX;
             y = e.clientY;
         };
 
-        const mouseUpHandler = function () {
-            // Remove the handlers of `mousemove` and `mouseup`
+        const mouseUpHandler = () => {
             document.removeEventListener("mousemove", mouseMoveHandler);
             document.removeEventListener("mouseup", mouseUpHandler);
             ele.style.cursor = "grab";
