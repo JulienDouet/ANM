@@ -1,11 +1,11 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { useEffect } from "react";
-/*const fs = window.require("fs");
+const fs = window.require("fs");
 console.log({ fs });
 const request = require("request");
 console.log({ request });
 const shelljs = require("shelljs");
-console.log({ shelljs });*/
+console.log({ shelljs });
 
 /**
  * TODO :
@@ -73,18 +73,31 @@ export const LoadMapModal = (props) => {
     }, [mapArray]);
 
     useEffect(() => {
+        console.log(mapArray);
         if (mapArray.length) {
             var data_file = "cartes/" + mapName + "/informations.txt";
             var content_file = "zoom=" + mapArray[0][0][0];
-            //fs.mkdir("-p", "cartes/" + mapName + "/openstreetmap");
-            //fs.mkdir("-p", "cartes/" + mapName + "/openseamap");
+            fs.mkdir("cartes/" + mapName, (err) => {
+                if (err) throw err;
+
+                console.log("The dir street was succesfully created!");
+            });
+            fs.mkdir("cartes/" + mapName + "/openstreetmap", (err) => {
+                if (err) throw err;
+
+                console.log("The dir street was succesfully created!");
+            });
+            fs.mkdir("cartes/" + mapName + "/openseamap", (err) => {
+                if (err) throw err;
+
+                console.log("The dir sea was succesfully created!");
+            });
+            fs.writeFile(data_file, content_file, (err) => {
+                if (err) throw err;
+
+                console.log("The file was succesfully saved!");
+            });
         }
-
-        /*await fs.writeFile(data_file, content_file, (err) => {
-            if (err) throw err;
-
-            console.log("The file was succesfully saved!");
-        });*/
     }, [savedMaps]);
     /*validateCoordinates.click(() => {
         var titre_carte = $("#titre_carte").val();
