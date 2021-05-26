@@ -9,9 +9,8 @@ const DEFAULT_ANGLE = 90;
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 
-
 export const Canvas = (props) => {
-    const { amerCanvasRef, amer } = props;
+    const { mapArray, amer } = props;
 
     //Modal
     const [show, setShow] = useState(false);
@@ -33,6 +32,16 @@ export const Canvas = (props) => {
         angle: 0 - DEFAULT_ANGLE
     });
 
+    const amerCanvasRef = useRef(null);
+    useEffect(() => {
+        if (mapArray.length) {
+            const amerCanvas = amerCanvasRef.current;
+
+            amerCanvas.height = mapArray.length * 256;
+            amerCanvas.width = mapArray[0].length * 256;
+        }
+    }, [mapArray]);
+
     // Récupérer coordonnées clique
     /**
      *
@@ -42,9 +51,9 @@ export const Canvas = (props) => {
         context.moveTo(drawLineData.x1, drawLineData.y1);
         context.lineTo(
             drawLineData.x1 +
-            drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180),
+                drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180),
             drawLineData.y1 +
-            drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)
+                drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)
         );
         context.stroke();
     };
@@ -107,7 +116,6 @@ export const Canvas = (props) => {
         drawAndPlaceCRA();
         handleClose();
     };
-
 
     /**
      *

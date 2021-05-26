@@ -87,7 +87,7 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
 };
 
 export const SeaMap = (props) => {
-    const { mapArray, mapSettingsData, resizeAmerCanvas } = props;
+    const { mapArray, mapSettingsData } = props;
 
     //Ref
     const tableRef = useRef(null);
@@ -112,12 +112,9 @@ export const SeaMap = (props) => {
                         return (
                             <tr key={rowIndex}>
                                 {row.map((cell, cellIndex) => {
-
                                     if (
-                                        cellIndex ==
-                                        row.length - 1 &&
-                                        rowIndex ==
-                                        mapArray.length - 1
+                                        cellIndex == row.length - 1 &&
+                                        rowIndex == mapArray.length - 1
                                     ) {
                                         drawLine(
                                             tableRef,
@@ -125,7 +122,6 @@ export const SeaMap = (props) => {
                                             mapSettingsData,
                                             mapArray
                                         );
-                                        resizeAmerCanvas(tableRef);
                                     }
                                     return (
                                         <td

@@ -1,4 +1,10 @@
-import { Button, Navbar, OverlayTrigger, Tooltip, Toast } from "react-bootstrap";
+import {
+    Button,
+    Navbar,
+    OverlayTrigger,
+    Tooltip,
+    Toast
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faLifeRing,
@@ -8,7 +14,6 @@ import {
     faSave
 } from "@fortawesome/free-solid-svg-icons";
 import "./TopBar.css";
-import { useState } from "react";
 
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
@@ -22,7 +27,12 @@ export const TopBar = (props) => {
 
     return (
         <>
-            <Navbar sticky="top" className="navbar-dark" style={{ position: "fixed", width: "100%" }} bg="dark">
+            <Navbar
+                sticky="top"
+                className="navbar-dark"
+                style={{ position: "fixed", width: "100%" }}
+                bg="dark"
+            >
                 <div className="topbar-container">
                     <a className="navbar-brand" href="#">
                         &nbsp;&nbsp;Assistance Navigation Maritime
@@ -51,9 +61,13 @@ export const TopBar = (props) => {
                         placement="bottom"
                         overlay={renderTooltip("Placer un amer")}
                     >
-                        <Button variant="primary" className="spacedButton" onClick={handleAmerState}>
+                        <Button
+                            variant="primary"
+                            className="spacedButton"
+                            onClick={handleAmerState}
+                        >
                             <FontAwesomeIcon icon={faLifeRing} size="lg" />
-
+                            {!!amer ? " ON" : " OFF"}
                         </Button>
                     </OverlayTrigger>
                     <OverlayTrigger
@@ -75,6 +89,5 @@ export const TopBar = (props) => {
                 </div>
             </Navbar>
         </>
-
     );
 };

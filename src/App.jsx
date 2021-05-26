@@ -11,13 +11,6 @@ export const App = () => {
     const [isStoredMap, setIsStoredMap] = useState(false);
     const [mapSettingsData, setMapSettingsData] = useState({});
 
-    const amerCanvasRef = useRef(null);
-    const resizeAmerCanvas = (tableRef) => {
-        const amerCanvas = amerCanvasRef.current;
-
-        amerCanvas.height = tableRef.current.offsetHeight;
-        amerCanvas.width = tableRef.current.offsetWidth;
-    };
     const [amer, setAmer] = useState(false);
 
     return (
@@ -38,9 +31,8 @@ export const App = () => {
                 mapArray={mapArray}
                 isStoredMap={isStoredMap}
                 mapSettingsData={mapSettingsData}
-                resizeAmerCanvas={resizeAmerCanvas}
             />
-            <Canvas amerCanvasRef={amerCanvasRef} amer={amer} />
+            <Canvas amer={amer} mapArray={mapArray} />
         </>
     );
 };
