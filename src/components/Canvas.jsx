@@ -10,7 +10,7 @@ const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 
 export const Canvas = (props) => {
-    const { amerCanvasRef } = props;
+    const { mapArray, amer } = props;
 
     //Modal
     const [show, setShow] = useState(false);
@@ -31,6 +31,16 @@ export const Canvas = (props) => {
         r: 0,
         angle: 0 - DEFAULT_ANGLE
     });
+
+    const amerCanvasRef = useRef(null);
+    useEffect(() => {
+        if (mapArray.length) {
+            const amerCanvas = amerCanvasRef.current;
+
+            amerCanvas.height = mapArray.length * 256;
+            amerCanvas.width = mapArray[0].length * 256;
+        }
+    }, [mapArray]);
 
     // Récupérer coordonnées clique
     /**
@@ -86,21 +96,6 @@ export const Canvas = (props) => {
         };
     };
 
-    /**
-     *
-     * @param {L'évènement} event
-     */
-    const setCoordinates = (event) => {
-        setShow(true);
-        const rect = amerCanvasRef.current.getBoundingClientRect();
-        setDrawLineData({
-            ...drawLineData,
-            x1: event.clientX - rect.left,
-            y1: event.clientY - rect.top,
-            r: longueurVal
-        });
-    };
-
     useEffect(() => {
         setDrawLineData({
             ...drawLineData,
@@ -122,12 +117,28 @@ export const Canvas = (props) => {
         handleClose();
     };
 
+    /**
+     *
+     * @param {L'évènement} event
+     */
+    const setCoordinates = (event) => {
+        setShow(true);
+        const rect = amerCanvasRef.current.getBoundingClientRect();
+        setDrawLineData({
+            ...drawLineData,
+            x1: event.clientX - rect.left,
+            y1: event.clientY - rect.top,
+            r: longueurVal
+        });
+    };
+
     return (
         <>
             <canvas
                 id="canvas"
                 ref={amerCanvasRef}
                 className="canvas-style mt-5"
+                onClick={(e) => !!amer && setCoordinates(e)}
             ></canvas>
 
             <Modal show={show} onHide={handleClose} size="sm" centered>

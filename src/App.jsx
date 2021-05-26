@@ -12,13 +12,7 @@ export const App = () => {
     const [isStoredMap, setIsStoredMap] = useState(false);
     const [mapSettingsData, setMapSettingsData] = useState({});
 
-    const amerCanvasRef = useRef(null);
-    const resizeAmerCanvas = (tableRef) => {
-        const amerCanvas = amerCanvasRef.current;
-
-        amerCanvas.height = tableRef.current.offsetHeight;
-        amerCanvas.width = tableRef.current.offsetWidth;
-    };
+    const [amer, setAmer] = useState(false);
 
     useEffect(() => {
         let x = 0;
@@ -75,6 +69,7 @@ export const App = () => {
             <TopBar
                 setShowSettings={setShowSettings}
                 setShowLoadMap={setShowLoadMap}
+                amerState={[amer, setAmer]}
             />
             <Modals
                 settingsModal={[showSettings, setShowSettings]}
@@ -88,9 +83,8 @@ export const App = () => {
                     mapArray={mapArray}
                     isStoredMap={isStoredMap}
                     mapSettingsData={mapSettingsData}
-                    resizeAmerCanvas={resizeAmerCanvas}
                 />
-                <Canvas amerCanvasRef={amerCanvasRef} />
+                <Canvas amer={amer} mapArray={mapArray} />
             </div>
         </>
     );

@@ -22,7 +22,7 @@ import { deg_to_dms } from "../helpers/GenerateMap";
 };*/
 
 // Grille
-const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData) => {
+const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
     const context = canvasGraticuleRef.current.getContext("2d");
     const canvasGraticule = canvasGraticuleRef.current;
 
@@ -59,11 +59,11 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData) => {
         decimalDegreLongitude - decimalDegreLongitudeDistance;
     const diffDegLatitude = decimalDegreLatitude + decimalDegreLatitudeDistance;
 
-    canvasGraticule.height = tableRef.current.offsetHeight;
-    canvasGraticule.width = tableRef.current.offsetWidth;
+    canvasGraticule.height = mapArray.length * 256;
+    canvasGraticule.width = mapArray[0].length * 256;
 
-    var height = tableRef.current.offsetHeight;
-    var width = tableRef.current.offsetWidth;
+    var height = mapArray.length * 256;
+    var width = mapArray[0].length * 256;
 
     var longitudeDegDepart = diffDegLongitude;
     for (var i = 0; i < width; i += width / 2 / 6) {
@@ -87,7 +87,7 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData) => {
 };
 
 export const SeaMap = (props) => {
-    const { mapArray, mapSettingsData, resizeAmerCanvas } = props;
+    const { mapArray, mapSettingsData } = props;
 
     //Ref
     const tableRef = useRef(null);
@@ -112,26 +112,22 @@ export const SeaMap = (props) => {
                         return (
                             <tr key={rowIndex}>
                                 {row.map((cell, cellIndex) => {
+                                    if (
+                                        cellIndex == row.length - 1 &&
+                                        rowIndex == mapArray.length - 1
+                                    ) {
+                                        drawLine(
+                                            tableRef,
+                                            canvasGraticuleRef,
+                                            mapSettingsData,
+                                            mapArray
+                                        );
+                                    }
                                     return (
                                         <td
                                             key={cellIndex}
                                             style={{
                                                 backgroundImage: `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
-                                            }}
-                                            onLoad={() => {
-                                                if (
-                                                    cellIndex ==
-                                                        row.length - 1 &&
-                                                    rowIndex ==
-                                                        mapArray.length - 1
-                                                ) {
-                                                    drawLine(
-                                                        tableRef,
-                                                        canvasGraticuleRef,
-                                                        mapSettingsData
-                                                    );
-                                                    resizeAmerCanvas(tableRef);
-                                                }
                                             }}
                                         >
                                             <img
