@@ -1,24 +1,7 @@
 import "./SeaMap.css";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
 import { deg_to_dms } from "../helpers/GenerateMap";
-// Récupérer coordonnées clique
-/*const drawLine = (tableRef, canvasGraticuleRef, scrollContainerRef) => {
-    const context = canvasGraticuleRef.current.getContext("2d");
-    const canvasGraticule = canvasGraticuleRef.current;
-    const scrollContainer = scrollContainerRef.current;
-
-    canvasGraticule.height = tableRef.current.offsetHeight;
-    canvasGraticule.width = tableRef.current.offsetWidth;
-    scrollContainer.height = tableRef.current.offsetHeight;
-    scrollContainer.width = tableRef.current.offsetWidth;
-
-    for (var i = 0; i < canvasGraticule.width; i += 150) {
-        context.moveTo(i, 0);
-        context.lineTo(i, canvasGraticule.height);
-        context.stroke();
-    }
-};*/
 
 // Grille
 const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
@@ -94,10 +77,6 @@ export const SeaMap = (props) => {
 
     return (
         <div>
-            <canvas
-                ref={canvasGraticuleRef}
-                className="canvas-style-gaticule mt-5"
-            ></canvas>
             <table
                 id="map"
                 ref={tableRef}
@@ -112,15 +91,15 @@ export const SeaMap = (props) => {
                             <tr key={rowIndex}>
                                 {row.map((cell, cellIndex) => {
                                     if (
-                                        cellIndex == row.length - 1 &&
-                                        rowIndex == mapArray.length - 1
+                                        cellIndex === row.length - 1 &&
+                                        rowIndex === mapArray.length - 1
                                     ) {
-                                        /*drawLine(
+                                        drawLine(
                                             tableRef,
                                             canvasGraticuleRef,
                                             mapSettingsData,
                                             mapArray
-                                        );*/
+                                        );
                                     }
                                     return (
                                         <td
@@ -152,6 +131,10 @@ export const SeaMap = (props) => {
                     })}
                 </tbody>
             </table>
+            <canvas
+                ref={canvasGraticuleRef}
+                className="canvas-style-gaticule mt-5"
+            ></canvas>
         </div>
     );
 };

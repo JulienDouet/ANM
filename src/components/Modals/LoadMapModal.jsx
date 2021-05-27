@@ -1,17 +1,7 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
 const fs = window.require("fs");
-console.log({ fs });
 const request = require("request");
-console.log({ request });
-const shelljs = require("shelljs");
-console.log({ shelljs });
-
-/**
- * TODO :
- * Quand on valide une coordonnées, cela rajoute à savedMaps, le nom de la carte, & ça créé le dossier
- * Faire la lecture quand on clique sur une map
- */
 
 export const LoadMapModal = (props) => {
     const {
@@ -20,7 +10,8 @@ export const LoadMapModal = (props) => {
         mapNameState,
         savedMapsState,
         isStoredMapState,
-        storedMapState
+        storedMapState,
+        mapSettingsDataState
     } = props;
     const [isStoredMap, setIsStoredMap] = isStoredMapState;
     const [mapName, setMapName] = mapNameState;
@@ -28,21 +19,18 @@ export const LoadMapModal = (props) => {
     const [showLoadMap, setShowLoadMap] = show;
     const [savedMaps, setSavedMaps] = savedMapsState;
     const [storedMapName, setStoredMapName] = storedMapState;
+    const [mapSettingsData, setMapSettingsData] = mapSettingsDataState;
     const [currentlySelectedMapName, setCurrentlySelectedMapName] = useState(
         savedMaps ? savedMaps[0] : ""
     );
     const handleCloseLoadMap = () => setShowLoadMap(false);
 
     // To call when mapArray changes
-    const download = (uri, filename, callback) => {
+    const download = (uri, filename) => {
         request.head(uri, () => {
-            request(uri)
-                .pipe(fs.createWriteStream(filename))
-                .on("close", callback);
+            request(uri).pipe(fs.createWriteStream(filename));
         });
     };
-
-    const done = () => console.log("terminado");
 
     useEffect(() => {
         if (!isStoredMap) {
@@ -56,8 +44,7 @@ export const LoadMapModal = (props) => {
                             rowIndex +
                             "_" +
                             cellIndex +
-                            ".png",
-                        done
+                            ".png"
                     );
                     download(
                         `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`,
@@ -67,8 +54,7 @@ export const LoadMapModal = (props) => {
                             rowIndex +
                             "_" +
                             cellIndex +
-                            ".png",
-                        done
+                            ".png"
                     );
                 });
             });
@@ -82,33 +68,19 @@ export const LoadMapModal = (props) => {
                 var content_file =
                     "zoom=" +
                     mapArray[0][0][0] +
-                    ":latSize=" +
+                    ";latSize=" +
                     mapArray.length +
-                    ":lonSize=" +
-                    mapArray[0].length;
-                await fs.mkdir("cartes/" + mapName, (err) => {
-                    if (err) throw err;
-
-                    console.log("The dir street was succesfully created!");
-                });
+                    ";lonSize=" +
+                    mapArray[0].length +
+                    ";mapSettingsData=" +
+                    JSON.stringify(mapSettingsData);
+                await fs.mkdir("cartes/" + mapName, () => {});
                 await fs.mkdir(
                     "cartes/" + mapName + "/openstreetmap",
-                    (err) => {
-                        if (err) throw err;
-
-                        console.log("The dir street was succesfully created!");
-                    }
+                    () => {}
                 );
-                await fs.mkdir("cartes/" + mapName + "/openseamap", (err) => {
-                    if (err) throw err;
-
-                    console.log("The dir sea was succesfully created!");
-                });
-                await fs.writeFile(data_file, content_file, (err) => {
-                    if (err) throw err;
-
-                    console.log("The file was succesfully saved!");
-                });
+                await fs.mkdir("cartes/" + mapName + "/openseamap", () => {});
+                await fs.writeFile(data_file, content_file, () => {});
             }
         };
         saveCurrentMap();
@@ -118,34 +90,37 @@ export const LoadMapModal = (props) => {
         setCurrentlySelectedMapName(savedMaps[0]);
     }, [savedMaps]);
 
-    console.log(currentlySelectedMapName);
-    const handleValidate = (selectedMapName) => {
-        console.log(selectedMapName);
-        setStoredMapName(selectedMapName);
+    const handleValidate = () => {
+        if (currentlySelectedMapName) {
+            setStoredMapName(currentlySelectedMapName);
 
-        const dataFilePath = "cartes/" + selectedMapName + "/informations.txt";
+            const dataFilePath =
+                "cartes/" + currentlySelectedMapName + "/informations.txt";
 
-        fs.readFile(dataFilePath, "utf8", function (err, data) {
-            if (err) {
-                return console.log(err);
-            }
-
-            let zoom = data.split(":")[0].split("=")[1];
-            let latSize = data.split(":")[1].split("=")[1];
-            let lonSize = data.split(":")[2].split("=")[1];
-
-            const newMapArray = [];
-            for (let i = 0; i <= latSize - 1; ++i) {
-                newMapArray[i] = [];
-                for (let j = 0; j <= lonSize - 1; ++j) {
-                    newMapArray[i][j] = [i, j];
+            fs.readFile(dataFilePath, "utf8", function (err, data) {
+                if (err) {
+                    return;
                 }
-            }
-            setIsStoredMap(true);
-            setMapArray(newMapArray);
-        });
 
-        handleCloseLoadMap();
+                let latSize = data.split(";")[1].split("=")[1];
+                let lonSize = data.split(";")[2].split("=")[1];
+
+                setMapSettingsData(
+                    JSON.parse(data.split(";")[3].split("=")[1])
+                );
+                const newMapArray = [];
+                for (let i = 0; i <= latSize - 1; ++i) {
+                    newMapArray[i] = [];
+                    for (let j = 0; j <= lonSize - 1; ++j) {
+                        newMapArray[i][j] = [i, j];
+                    }
+                }
+                setIsStoredMap(true);
+                setMapArray(newMapArray);
+            });
+
+            handleCloseLoadMap();
+        }
     };
 
     return (
@@ -165,15 +140,13 @@ export const LoadMapModal = (props) => {
                                 setCurrentlySelectedMapName(e.target.value)
                             }
                         >
-                            {!savedMaps.length ? (
-                                <option>Pas de carte sauvegardée</option>
-                            ) : (
+                            <option selected></option>
+                            {savedMaps.length &&
                                 savedMaps.map((currMapName) => (
                                     <option value={currMapName}>
                                         {currMapName}
                                     </option>
-                                ))
-                            )}
+                                ))}
                         </Form.Control>
                     </Form.Group>
                 </Form>
@@ -184,8 +157,8 @@ export const LoadMapModal = (props) => {
                 </Button>
                 <Button
                     variant="success"
-                    disabled={!savedMaps.length}
-                    onClick={() => handleValidate(currentlySelectedMapName)}
+                    disabled={!savedMaps.length || !currentlySelectedMapName}
+                    onClick={handleValidate}
                 >
                     Valider Carte
                 </Button>

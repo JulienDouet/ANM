@@ -9,13 +9,14 @@ export const Modals = (props) => {
         loadMapModal,
         mapArrayState,
         isStoredMapState,
-        setMapSettingsData,
+        mapSettingsDataState,
         mapNameState,
         storedMapState
     } = props;
     const [mapName, setMapName] = mapNameState;
     const [savedMaps, setSavedMaps] = useState([]);
     const [mapArray, setMapArray] = mapArrayState;
+    const [mapSettingsData, setMapSettingsData] = mapSettingsDataState;
     const [hasLoadedMapDir, setHasLoadedMapDir] = useState(false);
 
     // Charge toutes les cartes enregistrées dans le disque
@@ -24,14 +25,12 @@ export const Modals = (props) => {
             const loadStoredMaps = async () => {
                 const localMapArray = [];
                 await fs.readdir("cartes/", (_, fileList) => {
-                    console.log({ fileList });
                     if (fileList.length) {
                         fileList.forEach((file) => {
                             localMapArray.push(file);
                         });
                     }
                 });
-                console.log({ localMapArray });
                 setSavedMaps(localMapArray);
             };
             loadStoredMaps();
@@ -49,6 +48,7 @@ export const Modals = (props) => {
                 mapNameState={[mapName, setMapName]}
                 savedMapsState={[savedMaps, setSavedMaps]}
                 storedMapState={storedMapState}
+                mapSettingsDataState={mapSettingsDataState}
             />
             <SettingsModal
                 setMapSettingsData={setMapSettingsData}
