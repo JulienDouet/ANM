@@ -1,4 +1,5 @@
 import { Canvas } from "./components/Canvas";
+import { Route  } from "./components/Route";
 import { SeaMap } from "./components/SeaMap";
 import { TopBar } from "./components/TopBar";
 import { Modals } from "./components/Modals";
@@ -13,6 +14,7 @@ export const App = () => {
     const [mapSettingsData, setMapSettingsData] = useState({});
 
     const [amer, setAmer] = useState(false);
+    const [route, setRoute] = useState(false);
 
     useEffect(() => {
         let x = 0;
@@ -70,6 +72,7 @@ export const App = () => {
                 setShowSettings={setShowSettings}
                 setShowLoadMap={setShowLoadMap}
                 amerState={[amer, setAmer]}
+                routeState={[route, setRoute]}
             />
             <Modals
                 settingsModal={[showSettings, setShowSettings]}
@@ -85,7 +88,9 @@ export const App = () => {
                     mapSettingsData={mapSettingsData}
                 />
               <Canvas amer={amer} mapArray={mapArray} mapSettingsData={mapSettingsData} />
-            </div>
+              <Route route={route} mapArray={mapArray} mapSettingsData={mapSettingsData} />
+
+          </div>
         </>
     );
 };

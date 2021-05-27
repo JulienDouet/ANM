@@ -18,12 +18,13 @@ import "./TopBar.css";
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
 export const TopBar = (props) => {
-    const { setShowSettings, setShowLoadMap, amerState } = props;
+    const { setShowSettings, setShowLoadMap, amerState, routeState} = props;
     const [amer, setAmer] = amerState;
-
+    const [route, setRoute] = routeState;
     const handleShowSettings = () => setShowSettings(true);
     const handleShowLoadMap = () => setShowLoadMap(true);
     const handleAmerState = () => setAmer(!amer);
+    const handleRouteState = () => setRoute(!route);
 
     return (
         <>
@@ -74,8 +75,13 @@ export const TopBar = (props) => {
                         placement="bottom"
                         overlay={renderTooltip("Tracer une route")}
                     >
-                        <Button variant="primary" className="spacedButton">
+                        <Button variant="primary" className="spacedButton"
+                          onClick={handleRouteState}
+
+                          >
                             <FontAwesomeIcon icon={faPencilRuler} size="lg" />
+                              {!!route ? " ON" : " OFF"}
+
                         </Button>
                     </OverlayTrigger>
                     <OverlayTrigger
