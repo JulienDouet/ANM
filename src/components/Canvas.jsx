@@ -12,6 +12,9 @@ const CALIBRAGE_ZERO_NOIR = -0.9155;
 var tabPoints = [];
 var tabLignes = [];
 var tabPositions = [];
+const tabColor = ["red", "green", "blue", "yellow", "marron", "black", "orange", "purple", "cyan", "magenta", "pink"];
+var color = tabColor[0];
+var compteurColor = 0;
 
 class Point {
     constructor(x, y) {
@@ -41,7 +44,7 @@ class Line {
         this._pt1 = pt1;
         this._pt2 = pt2;
     }
-
+    color
     get coef() { return this._coef; }
     get origin() { return this._origin; }
     get pt1() { return this._pt1; }
@@ -92,11 +95,12 @@ export const Canvas = (props) => {
     /**
      *
      */
-    const drawLine = (ligne) => {
+    const drawLine = (ligne, color) => {
         const context = amerCanvasRef.current.getContext("2d");
 
         context.beginPath();
 
+        context.strokeStyle = color;
         context.lineWidth = 5;
         context.moveTo(ligne.pt1.x, ligne.pt1.y);
         context.lineTo(ligne.pt2.x, ligne.pt2.y);
@@ -104,12 +108,12 @@ export const Canvas = (props) => {
         context.stroke();
     };
 
-    const drawPoint = (x, y, color) => {
+    const drawPoint = (x, y, colorPoint) => {
         const context = amerCanvasRef.current.getContext("2d");
 
         context.beginPath();
 
-        context.fillStyle = color || "black";
+        context.fillStyle = colorPoint || "black";
         context.arc(x, y, 5, 0, 2 * Math.PI, true);
         context.fill();
 
@@ -125,7 +129,7 @@ export const Canvas = (props) => {
             // Dessiner point intersection + Label avec coordonnées
             drawPoint(position.x, position.y, 'red');
             const context = amerCanvasRef.current.getContext("2d");
-            //context.beginPath();
+            context.beginPath();
             context.fillStyle = "#000000"
             context.rect(position.x, position.y, 160, 25);
             context.fill();
@@ -138,11 +142,10 @@ export const Canvas = (props) => {
 
     const drawLinesFromArray = () => {
         for (var i = 0; i < tabLignes.length; i++) {
-            // Tous les 3 Lignes
-            drawLine(tabLignes[i]);
-            if (i % 2 == 0) {
-
+            if (tabLignes.length % 3 == 0) {
+                color = getColor();
             }
+            drawLine(tabLignes[i], color);
         }
     }
 
@@ -195,6 +198,9 @@ export const Canvas = (props) => {
         };
     };
 
+    const getColor = () => {
+        return tabColor[compteurColor++ % tabColor.length];
+    }
 
     const trouverMilieu = (line1, line2, line3) => {
 
@@ -225,12 +231,9 @@ export const Canvas = (props) => {
             y1: event.clientY - rect.top,
             r: longueurVal
         });
-        //temp(event,rect);
     };
-    const temp = (x, y, xtab, ytab) => {
 
-        //const xtab = mapArray[0].length*256;
-        //const ytab = mapArray.length*256;
+    const temp = (x, y, xtab, ytab) => {
 
         const latitude = mapSettingsData.latitude;
         const longitude = mapSettingsData.longitude;
@@ -310,7 +313,12 @@ export const Canvas = (props) => {
         var p2Y = drawLineData.y1 + drawLineData.r * Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
         var ligne = new Line(new Point(p1X, p1Y), new Point(p2X, p2Y));
         tabLignes.push(ligne);
-        drawLine(ligne);
+
+        if (tabLignes.length % 3 == 0) {
+            color = getColor();
+        }
+
+        drawLine(ligne, color);
         redrawCanvas();
         drawAndPlaceCRA();
         handleClose();
