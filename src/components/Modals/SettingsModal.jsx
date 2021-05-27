@@ -121,6 +121,9 @@ export const SettingsModal = (props) => {
 
                 <hr className="my-4" />
 
+                <div className="row">
+                    <label>Coordonnées Latitude : </label>
+                </div>
                 <div className="row g-3 align-items-end" noValidate>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="latDeg">
@@ -183,9 +186,6 @@ export const SettingsModal = (props) => {
                         </div>
                     </div>
                     <div className="col-sm-2">
-                        <label className="form-label" htmlFor="latitude">
-                            Latitude
-                        </label>
                         <div
                             name="latitude"
                             className="btn-group"
@@ -229,6 +229,9 @@ export const SettingsModal = (props) => {
 
                 <hr className="my-4" />
 
+                <div className="row">
+                    <label>Coordonnées Longitude :</label>
+                </div>
                 <div className="row g-3 align-items-end" noValidate>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="lonDeg">
@@ -291,9 +294,6 @@ export const SettingsModal = (props) => {
                         </div>
                     </div>
                     <div className="col-sm-2">
-                        <label className="form-label" htmlFor="latitude">
-                            Longitude
-                        </label>
                         <div
                             className="btn-group"
                             name="latitude"
@@ -336,10 +336,13 @@ export const SettingsModal = (props) => {
 
                 <hr className="my-4" />
 
+                <div className="row">
+                    <label>Rayon Latitude : </label>
+                </div>
                 <div className="row g-3 align-items-end" noValidate>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="latDistDeg">
-                            Degré latitude
+                            Degré
                         </label>
                         <div className="input-group">
                             <input
@@ -348,7 +351,7 @@ export const SettingsModal = (props) => {
                                 id="latDistDeg"
                                 value={latDistDeg}
                                 onChange={(e) =>
-                                    isBetween(e.target.value, -180, 180) &&
+                                    isBetween(e.target.value, -45, 45) &&
                                     setLatDistDeg(e.target.value)
                                 }
                             />
@@ -359,7 +362,7 @@ export const SettingsModal = (props) => {
                     </div>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="latDistMin">
-                            Minutes latitude
+                            Minutes
                         </label>
                         <div className="input-group">
                             <input
@@ -381,10 +384,13 @@ export const SettingsModal = (props) => {
 
                 <hr className="my-4" />
 
+                <div className="row">
+                    <label>Rayon Longitude : </label>
+                </div>
                 <div className="row g-3 align-items-end" noValidate>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="lonDistDeg">
-                            Degré longitude
+                            Degré
                         </label>
                         <div className="input-group">
                             <input
@@ -393,7 +399,7 @@ export const SettingsModal = (props) => {
                                 id="lonDistDeg"
                                 value={lonDistDeg}
                                 onChange={(e) =>
-                                    isBetween(e.target.value, -180, 180) &&
+                                    isBetween(e.target.value, -90, 90) &&
                                     setLonDistDeg(e.target.value)
                                 }
                             />
@@ -404,7 +410,7 @@ export const SettingsModal = (props) => {
                     </div>
                     <div className="col-sm">
                         <label className="form-label" htmlFor="lonDistMin">
-                            Minutes longitude
+                            Minutes
                         </label>
                         <div className="input-group">
                             <input
