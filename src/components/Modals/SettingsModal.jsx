@@ -9,7 +9,8 @@ export const SettingsModal = (props) => {
         setMapArray,
         mapNameState,
         savedMapsState,
-        setMapSettingsData
+        setMapSettingsData,
+        setIsStoredMap
     } = props;
     const [savedMaps, setSavedMaps] = savedMapsState;
     const [showSettings, setShowSettings] = show;
@@ -40,56 +41,61 @@ export const SettingsModal = (props) => {
 
     const handleCloseSettings = () => setShowSettings(false);
     const applySettings = () => {
-        const mapArray = generateMapArray({
-            latitude: {
-                deg: latDeg,
-                min: latMin,
-                sec: latSec,
-                orientation: latRad
-            },
-            longitude: {
-                deg: lonDeg,
-                min: lonMin,
-                sec: lonSec,
-                orientation: lonRad
-            },
-            longitudeDistance: {
-                deg: lonDistDeg,
-                min: lonDistMin
-            },
-            latitudeDistance: {
-                deg: latDistDeg,
-                min: latDistMin
-            },
-            zoom: parseInt(mapZoom)
-        });
-        setMapSettingsData({
-            latitude: {
-                deg: latDeg,
-                min: latMin,
-                sec: latSec,
-                orientation: latRad
-            },
-            longitude: {
-                deg: lonDeg,
-                min: lonMin,
-                sec: lonSec,
-                orientation: lonRad
-            },
-            longitudeDistance: {
-                deg: lonDistDeg,
-                min: lonDistMin
-            },
-            latitudeDistance: {
-                deg: latDistDeg,
-                min: latDistMin
-            },
-            zoom: parseInt(mapZoom)
-        });
-        setMapArray(mapArray);
-        if (!savedMaps.find((savedMap) => savedMap === mapName))
+        if (!savedMaps.find((savedMap) => savedMap === mapName)) {
             setSavedMaps([...savedMaps, mapName]);
-        setShowSettings(false);
+            const mapArray = generateMapArray({
+                latitude: {
+                    deg: latDeg,
+                    min: latMin,
+                    sec: latSec,
+                    orientation: latRad
+                },
+                longitude: {
+                    deg: lonDeg,
+                    min: lonMin,
+                    sec: lonSec,
+                    orientation: lonRad
+                },
+                longitudeDistance: {
+                    deg: lonDistDeg,
+                    min: lonDistMin
+                },
+                latitudeDistance: {
+                    deg: latDistDeg,
+                    min: latDistMin
+                },
+                zoom: parseInt(mapZoom)
+            });
+            setIsStoredMap(false);
+            setMapSettingsData({
+                latitude: {
+                    deg: latDeg,
+                    min: latMin,
+                    sec: latSec,
+                    orientation: latRad
+                },
+                longitude: {
+                    deg: lonDeg,
+                    min: lonMin,
+                    sec: lonSec,
+                    orientation: lonRad
+                },
+                longitudeDistance: {
+                    deg: lonDistDeg,
+                    min: lonDistMin
+                },
+                latitudeDistance: {
+                    deg: latDistDeg,
+                    min: latDistMin
+                },
+                zoom: parseInt(mapZoom),
+                name: mapName
+            });
+            setMapArray(mapArray);
+            setShowSettings(false);
+        } else {
+            alert("Une carte possédant ce nom existe déjà");
+        }
     };
 
     return (

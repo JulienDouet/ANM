@@ -41,7 +41,11 @@ export const TopBar = (props) => {
                         placement="bottom"
                         overlay={renderTooltip("Gérer les coordonnées")}
                     >
-                        <Button variant="primary" onClick={handleShowSettings}>
+                        <Button
+                            variant="primary"
+                            disabled={!navigator.onLine}
+                            onClick={navigator.onLine && handleShowSettings}
+                        >
                             <FontAwesomeIcon icon={faMapMarkedAlt} size="lg" />
                         </Button>
                     </OverlayTrigger>

@@ -1,21 +1,7 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { useEffect } from "react";
-/*const fs = window.require("fs");
-console.log({ fs });
+import { useEffect, useState } from "react";
+const fs = window.require("fs");
 const request = require("request");
-console.log({ request });
-const shelljs = require("shelljs");
-console.log({ shelljs });*/
-
-/**
- * TODO :
- * Quand on valide une coordonnées, cela rajoute à savedMaps, le nom de la carte, & ça créé le dossier
- * Faire la lecture quand on clique sur une map
- */
-
-// TODO à changer
-const DIRNAME = "./";
-const FOLDER = DIRNAME + "cartes";
 
 export const LoadMapModal = (props) => {
     const {
@@ -23,151 +9,118 @@ export const LoadMapModal = (props) => {
         mapArrayState,
         mapNameState,
         savedMapsState,
-        isStoredMapState
+        isStoredMapState,
+        storedMapState,
+        mapSettingsDataState
     } = props;
-    const [isStoredMap, setIsStoredMapName] = isStoredMapState;
+    const [isStoredMap, setIsStoredMap] = isStoredMapState;
     const [mapName, setMapName] = mapNameState;
     const [mapArray, setMapArray] = mapArrayState;
     const [showLoadMap, setShowLoadMap] = show;
     const [savedMaps, setSavedMaps] = savedMapsState;
+    const [storedMapName, setStoredMapName] = storedMapState;
+    const [mapSettingsData, setMapSettingsData] = mapSettingsDataState;
+    const [currentlySelectedMapName, setCurrentlySelectedMapName] = useState(
+        savedMaps ? savedMaps[0] : ""
+    );
     const handleCloseLoadMap = () => setShowLoadMap(false);
 
     // To call when mapArray changes
-    const download = (uri, filename, callback) => {
-        /*request.head(uri, () => {
-            request(uri)
-                .pipe(fs.createWriteStream(filename))
-                .on("close", callback);
-        });*/
+    const download = (uri, filename) => {
+        request.head(uri, () => {
+            request(uri).pipe(fs.createWriteStream(filename));
+        });
     };
 
-    const done = () => console.log("terminado");
-
     useEffect(() => {
-        mapArray.map((row, rowIndex) => {
-            row.map((cell, cellIndex) => {
-                download(
-                    `https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png`,
-                    "cartes/" +
-                        mapName +
-                        "/openstreetmap/" +
-                        rowIndex +
-                        "_" +
-                        cellIndex +
-                        ".png",
-                    done
-                );
-                download(
-                    `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`,
-                    "cartes/" +
-                        mapName +
-                        "/openseamap/" +
-                        rowIndex +
-                        "_" +
-                        cellIndex +
-                        ".png",
-                    done
-                );
+        if (!isStoredMap) {
+            mapArray.map((row, rowIndex) => {
+                row.map((cell, cellIndex) => {
+                    download(
+                        `https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png`,
+                        "cartes/" +
+                            mapName +
+                            "/openstreetmap/" +
+                            rowIndex +
+                            "_" +
+                            cellIndex +
+                            ".png"
+                    );
+                    download(
+                        `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`,
+                        "cartes/" +
+                            mapName +
+                            "/openseamap/" +
+                            rowIndex +
+                            "_" +
+                            cellIndex +
+                            ".png"
+                    );
+                });
             });
-        });
+        }
     }, [mapArray]);
 
     useEffect(() => {
-        if (mapArray.length) {
-            var data_file = "cartes/" + mapName + "/informations.txt";
-            var content_file = "zoom=" + mapArray[0][0][0];
-            //fs.mkdir("-p", "cartes/" + mapName + "/openstreetmap");
-            //fs.mkdir("-p", "cartes/" + mapName + "/openseamap");
-        }
-
-        /*await fs.writeFile(data_file, content_file, (err) => {
-            if (err) throw err;
-
-            console.log("The file was succesfully saved!");
-        });*/
+        const saveCurrentMap = async () => {
+            if (mapArray.length) {
+                var data_file = "cartes/" + mapName + "/informations.txt";
+                var content_file =
+                    "zoom=" +
+                    mapArray[0][0][0] +
+                    ";latSize=" +
+                    mapArray.length +
+                    ";lonSize=" +
+                    mapArray[0].length +
+                    ";mapSettingsData=" +
+                    JSON.stringify(mapSettingsData);
+                await fs.mkdir("cartes/" + mapName, () => {});
+                await fs.mkdir(
+                    "cartes/" + mapName + "/openstreetmap",
+                    () => {}
+                );
+                await fs.mkdir("cartes/" + mapName + "/openseamap", () => {});
+                await fs.writeFile(data_file, content_file, () => {});
+            }
+        };
+        saveCurrentMap();
     }, [savedMaps]);
-    /*validateCoordinates.click(() => {
-        var titre_carte = $("#titre_carte").val();
-        var zoom_carte = $("#zoom").val();
-        var size_carte = $("#size").val();
 
-        var data_file = "cartes/" + titre_carte + "/informations.txt";
-        var content_file = "zoom=" + zoom_carte + ":size=" + size_carte;
-        console.log(data_file);
-        shelljs.mkdir("-p", "cartes/" + titre_carte + "/openstreetmap");
-        shelljs.mkdir("-p", "cartes/" + titre_carte + "/openseamap");
-
-        fs.writeFile(data_file, content_file, (err) => {
-            if (err) throw err;
-
-            console.log("The file was succesfully saved!");
-        });
-
-        const mapData = gatherFormParams();
-        const formattedMapData = formatMapData(mapData);
-        renderMap(formattedMapData, titre_carte);
-    });*/
-
-    // Charge toutes les cartes enregistrées dans le disque
     useEffect(() => {
-        /*console.log(fs);
-        fs.readdir(FOLDER, (_, fileList) => {
-            fileList.forEach((file) => {
-                setSavedMaps([...savedMaps, file]);
-            });
-        });*/
-    });
-
-    /*chargeCard.click(() => {});
+        setCurrentlySelectedMapName(savedMaps[0]);
+    }, [savedMaps]);
 
     const handleValidate = () => {
-        const cardName = $("input[name='saveCarte']").val();
-        const dataFilePath = "cartes/" + cardName + "/informations.txt";
+        if (currentlySelectedMapName) {
+            setStoredMapName(currentlySelectedMapName);
 
-        fs.readFile(dataFilePath, "utf8", function (err, data) {
-            if (err) {
-                return console.log(err);
-            }
+            const dataFilePath =
+                "cartes/" + currentlySelectedMapName + "/informations.txt";
 
-            let dataFile = data;
-
-            const zoomCarte = dataFile.split(":")[0].split("=")[1];
-            const sizeCarte = dataFile.split(":")[1].split("=")[1];
-
-            for (let i = 0; i < sizeCarte; i++) {
-                map.append("<tr>");
-
-                for (let j = 0; j < sizeCarte; j++) {
-                    map.append(
-                        "<td style ='background-image: url(" +
-                            DIRNAME +
-                            "/cartes/" +
-                            cardName +
-                            "/openstreetmap/" +
-                            j +
-                            "_" +
-                            i +
-                            ".png);'>" +
-                            "<img  src='" +
-                            DIRNAME +
-                            "/cartes/" +
-                            cardName +
-                            "/openseamap/" +
-                            j +
-                            "_" +
-                            i +
-                            ".png'></td>"
-                    );
+            fs.readFile(dataFilePath, "utf8", function (err, data) {
+                if (err) {
+                    return;
                 }
-            }
-        });
-    };*/
 
-    const handleValidate = () => {
-        /*console.log(savedMaps);
-        console.log(mapName);
-*/
-        handleCloseLoadMap();
+                let latSize = data.split(";")[1].split("=")[1];
+                let lonSize = data.split(";")[2].split("=")[1];
+
+                setMapSettingsData(
+                    JSON.parse(data.split(";")[3].split("=")[1])
+                );
+                const newMapArray = [];
+                for (let i = 0; i <= latSize - 1; ++i) {
+                    newMapArray[i] = [];
+                    for (let j = 0; j <= lonSize - 1; ++j) {
+                        newMapArray[i][j] = [i, j];
+                    }
+                }
+                setIsStoredMap(true);
+                setMapArray(newMapArray);
+            });
+
+            handleCloseLoadMap();
+        }
     };
 
     return (
@@ -179,14 +132,21 @@ export const LoadMapModal = (props) => {
                 <Form>
                     <Form.Group>
                         <Form.Label>Nom</Form.Label>
-                        <Form.Control disabled={!savedMaps.length} as="select">
-                            {!savedMaps.length ? (
-                                <option>Pas de carte sauvegardée</option>
-                            ) : (
+                        <Form.Control
+                            disabled={!savedMaps.length}
+                            as="select"
+                            value={currentlySelectedMapName}
+                            onChange={(e) =>
+                                setCurrentlySelectedMapName(e.target.value)
+                            }
+                        >
+                            <option selected></option>
+                            {savedMaps.length &&
                                 savedMaps.map((currMapName) => (
-                                    <option>{currMapName}</option>
-                                ))
-                            )}
+                                    <option value={currMapName}>
+                                        {currMapName}
+                                    </option>
+                                ))}
                         </Form.Control>
                     </Form.Group>
                 </Form>
@@ -197,7 +157,7 @@ export const LoadMapModal = (props) => {
                 </Button>
                 <Button
                     variant="success"
-                    disabled={!savedMaps.length}
+                    disabled={!savedMaps.length || !currentlySelectedMapName}
                     onClick={handleValidate}
                 >
                     Valider Carte

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SettingsModal } from "./Modals/SettingsModal";
 import { LoadMapModal } from "./Modals/LoadMapModal";
+const fs = window.require("fs");
 
 export const Modals = (props) => {
     const {
@@ -8,11 +9,36 @@ export const Modals = (props) => {
         loadMapModal,
         mapArrayState,
         isStoredMapState,
-        setMapSettingsData
+        mapSettingsDataState,
+        mapNameState,
+        storedMapState
     } = props;
-    const [mapName, setMapName] = useState("");
+    const [mapName, setMapName] = mapNameState;
     const [savedMaps, setSavedMaps] = useState([]);
     const [mapArray, setMapArray] = mapArrayState;
+    const [mapSettingsData, setMapSettingsData] = mapSettingsDataState;
+    const [hasLoadedMapDir, setHasLoadedMapDir] = useState(false);
+
+    // Charge toutes les cartes enregistrées dans le disque
+    useEffect(() => {
+        if (!hasLoadedMapDir) {
+            const loadStoredMaps = async () => {
+                const localMapArray = [];
+                await fs.readdir("cartes/", (_, fileList) => {
+                    if (fileList.length) {
+                        fileList.forEach((file) => {
+                            localMapArray.push(file);
+                        });
+                    }
+                });
+                setSavedMaps(localMapArray);
+            };
+            loadStoredMaps();
+            setHasLoadedMapDir(true);
+        }
+    }, [hasLoadedMapDir]);
+    const [isStoredMap, setIsStoredMap] = isStoredMapState;
+
     return (
         <>
             <LoadMapModal
@@ -21,6 +47,8 @@ export const Modals = (props) => {
                 isStoredMapState={isStoredMapState}
                 mapNameState={[mapName, setMapName]}
                 savedMapsState={[savedMaps, setSavedMaps]}
+                storedMapState={storedMapState}
+                mapSettingsDataState={mapSettingsDataState}
             />
             <SettingsModal
                 setMapSettingsData={setMapSettingsData}
@@ -28,6 +56,7 @@ export const Modals = (props) => {
                 setMapArray={setMapArray}
                 mapNameState={[mapName, setMapName]}
                 savedMapsState={[savedMaps, setSavedMaps]}
+                setIsStoredMap={setIsStoredMap}
             />
         </>
     );
