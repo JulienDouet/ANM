@@ -12,6 +12,7 @@ const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
 var nbrTrait = 0;
 var tabPoints = [];
+var tabLignes = [];
 
 class Point {
     constructor(x, y) {
@@ -86,13 +87,14 @@ export const Canvas = (props) => {
         }
     }, [mapArray]);
 
-    // Récupérer coordonnées clique
     /**
      *
      */
-    const drawLine = () => {
+    const drawLine = (line) => {
         const context = amerCanvasRef.current.getContext("2d");
+
         context.lineWidth = 5;
+
         context.moveTo(drawLineData.x1, drawLineData.y1);
         tabPoints.push(new Point(drawLineData.x1, drawLineData.y1));
 
@@ -104,7 +106,6 @@ export const Canvas = (props) => {
         );
         tabPoints.push(new Point(drawLineData.x1 + drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180), drawLineData.y1 +
             drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)));
-
         context.stroke();
     };
 
@@ -114,7 +115,15 @@ export const Canvas = (props) => {
         context.beginPath();
         context.arc(x, y, 5, 0, 2 * Math.PI, true);
         context.fill();
+        //context.stroke();
     };
+
+    const redrawAmers = () => {
+        for (var i = 2; i < tabPoints.length; i += 3) {
+
+        }
+    }
+
 
     /**
      *
@@ -124,7 +133,6 @@ export const Canvas = (props) => {
     // Pour obtenir le point 0 du rapporteur (rouge) : CALIBRAGE_ZERO_ROUGE * regle.height
     // Pour obtenir le point 0 du rapporteur (noir) : CALIBRAGE_ZERO_NOIR * regle.height
     const drawAndPlaceCRA = () => {
-        // var regle = document.createElement('img');
         var regle = new Image();
         regle.src = image;
         regle.alt = "alt text";
@@ -148,23 +156,19 @@ export const Canvas = (props) => {
 
         const x1 = drawLineData.x1;
         const y1 = drawLineData.y1 - CALIBRAGE_ZERO_NOIR * regle.height;
-        //clearCRA(x1,y1);
         context.clearRect(0, 0, amerCanvasRef.current.width, amerCanvasRef.current.height);
-
-      /*  context.moveTo(0,y1);
-        context.lineTo(mapArray[0].length*256,y1);
-
-        */context.stroke();
+        context.stroke();
         nbrTrait++;
 
         if (nbrTrait >= 3) {
-
             trouverMilieu();
+            nbrTrait = 0;
+            tabPoints = [];
         }
     };
 
 
-    const trouverMilieu = () => {
+    const trouverMilieu = (c) => {
 
         let pt1 = tabPoints[0];
         let pt2 = tabPoints[1];
@@ -190,9 +194,6 @@ export const Canvas = (props) => {
 
         // middle
         let middle1 = line_median1.getIntersection(line_median2);
-        console.log(`middle : x=${middle1.x}, y=${middle1.y}`);
-
-
 
         const xtab = mapArray[0].length * 256;
         const ytab = mapArray.length * 256;
@@ -200,14 +201,13 @@ export const Canvas = (props) => {
         // Dessiner point intersection + Label avec coordonnées
         drawPoint(middle1.x, middle1.y, 'red');
         const context = amerCanvasRef.current.getContext("2d");
-        context.beginPath();
+        //context.beginPath();
         context.fillStyle = "#000000"
         context.rect(middle1.x, middle1.y, 160, 25);
         context.fill();
         context.fillStyle = "#FFFFFF";
         context.fillText(temp(middle1.x, middle1.y, xtab, ytab), middle1.x + 10, middle1.y + 20);
-
-        console.log(temp(middle1.x, middle1.y, xtab, ytab));
+        context.stroke();
     };
 
     /**
@@ -267,8 +267,6 @@ export const Canvas = (props) => {
     useEffect(() => {
         if (amerCanvasRef) {
 
-
-
             amerCanvasRef.current.addEventListener('mousemove', e => {
                 if (mapArray.length > 1 && (e.clientX % 2 === 0 || e.clientY % 2 === 0)) {
                     const rect = amerCanvasRef.current.getBoundingClientRect();
@@ -303,6 +301,11 @@ export const Canvas = (props) => {
     }, [longueurVal]);
 
     const handleOnSubmit = (event) => {
+        var p1X = drawLineData.x1;
+        var p1Y = drawLineData.y1;
+        var p2X = drawLineData.x1 + drawLineData.r * Math.cos((Math.PI * (drawLineData.angle + 180)) / 180);
+        var p2Y = drawLineData.y1 + drawLineData.r * Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
+        var ligne = new Line(new Point(p1X, p1Y), new Point(p2X, p2Y));
         drawLine();
         drawAndPlaceCRA();
         handleClose();

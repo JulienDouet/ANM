@@ -2,8 +2,7 @@ import {
     Button,
     Navbar,
     OverlayTrigger,
-    Tooltip,
-    Toast
+    Tooltip
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -86,7 +85,8 @@ export const TopBar = (props) => {
                             <FontAwesomeIcon icon={faQuestion} size="lg" />
                         </Button>
                     </OverlayTrigger>
-                    <label className="ml-auto" style={{color:"red"}} id="coordTest"></label>
+                    &nbsp;
+                    <label className="ml-auto" style={{ color: "white", fontWeight: "bold" }} id="coordTest"></label>
                 </div>
             </Navbar>
         </>
