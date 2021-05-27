@@ -354,15 +354,6 @@ export const Canvas = (props) => {
                         type="number"
                         placeholder="Angle"
                     />
-                    <Form.Label htmlFor="longueur">Longueur</Form.Label>
-                    <Form.Control
-                        className="mb-2 mr-sm-2"
-                        id="longueur"
-                        value={longueurVal}
-                        onChange={(e) => setLongueurVal(e.target.value)}
-                        type="number"
-                        placeholder="Longueur"
-                    />
                     <Form.Label htmlFor="declinaison">
                         Déclinaison (D)
                     </Form.Label>

@@ -439,7 +439,7 @@ export const SettingsModal = (props) => {
                 <div className="row">
                     <div className="col">
                         <label className="form-label" htmlFor="mapZoom">
-                            Zoom :
+                            Échelle :
                         </label>
                         <select
                             className="form-control"
