@@ -17,7 +17,7 @@ const tabColor = [
     "green",
     "blue",
     "yellow",
-    "marron",
+    "brown",
     "black",
     "orange",
     "purple",
