@@ -18,13 +18,13 @@ import "./TopBar.css";
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
 export const TopBar = (props) => {
-    const { setShowSettings, setShowLoadMap, amerState } = props;
+    const { setShowSettings, setShowLoadMap, setShowHelp, amerState } = props;
     const [amer, setAmer] = amerState;
 
     const handleShowSettings = () => setShowSettings(true);
     const handleShowLoadMap = () => setShowLoadMap(true);
+    const handleShowHelp = () => setShowHelp(true);
     const handleAmerState = () => setAmer(!amer);
-
     return (
         <>
             <Navbar
@@ -80,6 +80,18 @@ export const TopBar = (props) => {
                     >
                         <Button variant="primary" className="spacedButton">
                             <FontAwesomeIcon icon={faPencilRuler} size="lg" />
+                        </Button>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={renderTooltip("Aide")}
+                    >
+                        <Button
+                            variant="primary"
+                            className="spacedButton"
+                            onClick={handleShowHelp}
+                        >
+                            <FontAwesomeIcon icon={faQuestion} size="lg" />
                         </Button>
                     </OverlayTrigger>
                     <label

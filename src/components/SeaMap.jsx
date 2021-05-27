@@ -1,7 +1,7 @@
 import "./SeaMap.css";
 import React, { useRef } from "react";
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
-import { deg_to_dms } from "../helpers/GenerateMap";
+import { degToDms } from "../helpers/GenerateMap";
 
 // Grille
 const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {

@@ -1,18 +1,9 @@
 export const generateMapArray = (data) => {
-    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom, size } = data;
+    const { latitude, longitude, latitudeDistance, longitudeDistance, zoom } = data;
 
 
     const { decimalDegreLatitude, decimalDegreLongitude, decimalDegreLatitudeDistance, decimalDegreLongitudeDistance } =
         convertToDecimalDegre(latitude, longitude,latitudeDistance, longitudeDistance);
-
-
-    const centerTileCoords = getCenterTile(
-        zoom,
-        decimalDegreLatitude,
-        decimalDegreLongitude,
-        decimalDegreLatitudeDistance,
-        decimalDegreLongitudeDistance
-    );
 
     const beginLastCoords = getBeginLastTile(
         zoom,
@@ -22,32 +13,8 @@ export const generateMapArray = (data) => {
         decimalDegreLongitudeDistance
     );
     
-    return generateTileArray(centerTileCoords, beginLastCoords, zoom, size);
+    return generateTileArray(beginLastCoords, zoom);
 };
-
-/**
- * Fonction permettant de convertir des degrés en numéro de la Tile centrale pour préparer
- * les appels à l'API OpenStreetMap et OpenSeaMap
- * @param {Le zoom que l'on veut appliquer à la carte} zoom
- * @param {Le degré de latitude} degLatitude
- * @param {Le degré de longitude} degLongitude
- * @returns Un tableau avec les 2 paramètres nécessaires aux appels l'API OpenStreetMap et OpenSeaMap
- */
-const getCenterTile = (zoom, degLatitude, degLongitude, degLatDist, degLongDist) => [
-    parseInt(
-        ((1.0 - Math.asinh(Math.tan(degLatitude * (Math.PI / 180))) / Math.PI) /
-            2.0) *
-            2.0 ** zoom
-    ),
-    parseInt(((degLongitude + 180.0) / 360.0) * 2.0 ** zoom),
-    parseInt(
-        ((1.0 - Math.asinh(Math.tan(degLatDist * (Math.PI / 180))) / Math.PI) /
-            2.0) *
-            2.0 ** zoom
-    ),
-    parseInt(((degLongDist + 180.0) / 360.0) * 2.0 ** zoom)
-
-];
 
 const getBeginLastTile = (zoom, degLatitude, degLongitude, degLatDist, degLongDist) => {
 
@@ -120,12 +87,10 @@ export const convertToDecimalDegre = (latitude, longitude, latitudeDistance, lon
 
 /**
  * Créé le tableau contenant les coordonnées de toutes les tiles
- * @param {Les coordonnées de la taille centrale} centerTileCoords
  * @param {Le zoom de la carte} zoom
- * @param {La taille de la carte} size
  * @returns
  */
-const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
+const generateTileArray = (beginLastCoords, zoom) => {
 
 
 
@@ -140,16 +105,6 @@ const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
 
     const tileArray = [...Array(sizeLatitude + 1)].map(() => Array(sizeLongitude + 1));
 
-    const latitudeDistance = (sizeLatitude / 2) >> 0;
-    const longitudeDistance = (sizeLongitude / 2) >> 0;
-
-
-
-    /*
-    const end = (size / 2) >> 0;
-    const start = size % 2 !== 0 ? -end : -(end - 1);
-    const add = size % 2 !== 0 ? end : Math.abs(start);
-    */
     for (let i = beginLongTile; i <= lastLongTile; ++i){
         for (let j = lastLatTile; j <= beginLatTile; ++j){
             tileArray[j - lastLatTile][i - beginLongTile] = [
@@ -163,17 +118,15 @@ const generateTileArray = (centerTileCoords, beginLastCoords, zoom, size) => {
 };
 
 
-export function deg_to_dms (dd, isLng) {
-  var dir = dd < 0
+export function degToDms (dd, isLng) {
+  const dir = dd < 0
      ? isLng ? 'O' : 'S'
      : isLng ? 'E' : 'N';
 
-   var absDd = Math.abs(dd);
-   var deg = absDd | 0;
-   var frac = absDd - deg;
-   var min = (frac * 60) | 0;
-   var sec = frac * 3600 - min * 60;
-   // Round it to 2 decimal points.
-   sec = Math.round(sec * 100) / 100;
+   const absDd = Math.abs(dd);
+   const deg = absDd | 0;
+   const frac = absDd - deg;
+   const min = (frac * 60) | 0;
+   const sec =  Math.round((frac * 3600 - min * 60)* 100) / 100;
    return deg + "°" + min + "'" + sec + '"' + dir;
 }

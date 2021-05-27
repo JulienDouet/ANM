@@ -24,12 +24,15 @@ export const LoadMapModal = (props) => {
 
     const handleValidate = () => {
         if (currentlySelectedMapName) {
-            const selectedMapIndex = savedMaps.find(
+            const ele = document.getElementById("dragMap");
+            ele.style.left = "0px";
+            ele.style.top = "0px";
+            const selectedMap = savedMaps.find(
                 (map) => map.data.name === currentlySelectedMapName
             );
-            if (selectedMapIndex) {
-                setMapArray(savedMaps[selectedMapIndex].tiles);
-                setMapSettingsData(savedMaps[selectedMapIndex].data);
+            if (selectedMap) {
+                setMapArray(selectedMap.tiles);
+                setMapSettingsData(selectedMap.data);
             }
             handleCloseLoadMap();
         }

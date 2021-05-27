@@ -4,12 +4,14 @@ import { Modal, Button, Form } from "react-bootstrap";
 import image from "../regle-cras.png";
 import { degToRadian } from "../helpers/helpers";
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
-import { deg_to_dms } from "../helpers/GenerateMap";
-import context from "react-bootstrap/esm/AccordionContext";
+import { degToDms } from "../helpers/GenerateMap";
+
 // Valeur pour prendre le nord en référence comme 0°
 const DEFAULT_ANGLE = 90;
+
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
+
 var nbrTrait = 0;
 var tabPoints = [];
 
@@ -288,7 +290,7 @@ export const Canvas = (props) => {
         const resX = (x / xtab) * (x2 - x1) + x1;
         const resY = (y / ytab) * (y2 - y1) + y1;
 
-        return deg_to_dms(resX, true) + "   " + deg_to_dms(resY, false);
+        return degToDms(resX, true) + "   " + degToDms(resY, false);
     };
     useEffect(() => {
         if (amerCanvasRef) {

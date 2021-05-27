@@ -94,7 +94,33 @@ export const SettingsModal = (props) => {
             setMapArray(mapArray);
             setSavedMaps([
                 ...savedMaps,
-                { data: mapSettingsData, tiles: mapArray }
+                {
+                    data: {
+                        latitude: {
+                            deg: latDeg,
+                            min: latMin,
+                            sec: latSec,
+                            orientation: latRad
+                        },
+                        longitude: {
+                            deg: lonDeg,
+                            min: lonMin,
+                            sec: lonSec,
+                            orientation: lonRad
+                        },
+                        longitudeDistance: {
+                            deg: lonDistDeg,
+                            min: lonDistMin
+                        },
+                        latitudeDistance: {
+                            deg: latDistDeg,
+                            min: latDistMin
+                        },
+                        zoom: parseInt(mapZoom),
+                        name: mapName
+                    },
+                    tiles: mapArray
+                }
             ]);
             setShowSettings(false);
         } else {
