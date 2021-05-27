@@ -66,17 +66,23 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
     var width = mapArray[0].length * 256;
 
 
-    context.moveTo(0, height/2);
-    context.lineTo(width, height/2);
-    context.stroke();
+    context.setLineDash([15,5]);
 
-    console.log('Point centrale (en pixel) : '+width/2 + ' ' + height/2);
-    console.log('Point tout à droite (en pixel) : '+width + ' ' + height/2);
+
     var coordCentX = width/2;
     var coordCentY = height/2;
 
     var coordEstX = width;
     var coordEstY = height/2
+
+    var coordOuestX = 0;
+    var coordOuestY = height/2
+
+    var coordNordX = width/2;
+    var coordNordY = 0;
+
+    var coordSudX = width/2;
+    var coordSudY = height;
 
 
     for (var i = coordCentX; i<=coordEstX; i += (coordEstX-coordCentX)/6){
@@ -84,6 +90,24 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
       context.lineTo(i, height);
       context.stroke();
     }
+
+    for (var i = coordOuestX; i<=coordCentX; i += (coordEstX-coordCentX)/6){
+      context.moveTo(i, 0);
+      context.lineTo(i, height);
+      context.stroke();
+    }
+    for (var i = coordCentY; i<=coordSudY; i += (coordSudY-coordCentY)/6){
+      context.moveTo(0, i);
+      context.lineTo(width, i);
+      context.stroke();
+    }
+
+    for (var i = coordNordY; i<=coordCentY; i += (coordSudY-coordCentY)/6){
+      context.moveTo(0, i);
+      context.lineTo(width, i);
+      context.stroke();
+    }
+
     /*
     var longitudeDegDepart = diffDegLongitude;
     for (var i = 0; i < width; i += width / 2 / 6) {

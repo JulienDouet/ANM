@@ -84,7 +84,7 @@ export const App = () => {
                     isStoredMap={isStoredMap}
                     mapSettingsData={mapSettingsData}
                 />
-                <Canvas amer={amer} mapArray={mapArray} />
+              <Canvas amer={amer} mapArray={mapArray} mapSettingsData={mapSettingsData} />
             </div>
         </>
     );

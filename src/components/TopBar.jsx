@@ -86,6 +86,7 @@ export const TopBar = (props) => {
                             <FontAwesomeIcon icon={faQuestion} size="lg" />
                         </Button>
                     </OverlayTrigger>
+                    <label className="ml-auto" style={{color:"red"}} id="coordTest"></label>
                 </div>
             </Navbar>
         </>
