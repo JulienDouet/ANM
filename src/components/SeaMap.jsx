@@ -1,8 +1,7 @@
 import "./SeaMap.css";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
 import { deg_to_dms } from "../helpers/GenerateMap";
-
 // Récupérer coordonnées clique
 /*const drawLine = (tableRef, canvasGraticuleRef, scrollContainerRef) => {
     const context = canvasGraticuleRef.current.getContext("2d");
@@ -93,7 +92,6 @@ export const SeaMap = (props) => {
     const tableRef = useRef(null);
     const canvasGraticuleRef = useRef(null);
 
-    console.log(isStoredMap);
     return (
         <div>
             <canvas
@@ -126,15 +124,20 @@ export const SeaMap = (props) => {
                                     }
                                     return (
                                         <td
+                                            className="mapArrayCell"
                                             key={cellIndex}
-                                            style={{
-                                                backgroundImage: isStoredMap
-                                                    ? `../../../cartes/${storedMapName}/openstreetmap/${cell[0]}_${cell[1]}.png`
-                                                    : `url(https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png)`
-                                            }}
                                         >
                                             <img
                                                 alt=""
+                                                src={
+                                                    isStoredMap
+                                                        ? `../../../cartes/${storedMapName}/openstreetmap/${cell[0]}_${cell[1]}.png`
+                                                        : `https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png`
+                                                }
+                                            />
+                                            <img
+                                                alt=""
+                                                className="overlayed"
                                                 src={
                                                     isStoredMap
                                                         ? `../../../cartes/${storedMapName}/openseamap/${cell[0]}_${cell[1]}.png`

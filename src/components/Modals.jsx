@@ -25,9 +25,11 @@ export const Modals = (props) => {
                 const localMapArray = [];
                 await fs.readdir("cartes/", (_, fileList) => {
                     console.log({ fileList });
-                    fileList.forEach((file) => {
-                        localMapArray.push(file);
-                    });
+                    if (fileList.length) {
+                        fileList.forEach((file) => {
+                            localMapArray.push(file);
+                        });
+                    }
                 });
                 console.log({ localMapArray });
                 setSavedMaps(localMapArray);
