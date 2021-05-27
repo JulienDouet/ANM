@@ -82,15 +82,11 @@ export const TopBar = (props) => {
                             <FontAwesomeIcon icon={faPencilRuler} size="lg" />
                         </Button>
                     </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={renderTooltip("Aide")}
-                    >
-                        <Button variant="primary" className="spacedButton">
-                            <FontAwesomeIcon icon={faQuestion} size="lg" />
-                        </Button>
-                    </OverlayTrigger>
-                    <label className="ml-auto" style={{color:"red"}} id="coordTest"></label>
+                    <label
+                        className="ml-auto"
+                        style={{ color: "red" }}
+                        id="coordTest"
+                    ></label>
                 </div>
             </Navbar>
         </>

@@ -9,9 +9,10 @@ export const SettingsModal = (props) => {
         setMapArray,
         mapNameState,
         savedMapsState,
-        setMapSettingsData,
+        mapSettingsDataState,
         setIsStoredMap
     } = props;
+    const [mapSettingsData, setMapSettingsData] = mapSettingsDataState;
     const [savedMaps, setSavedMaps] = savedMapsState;
     const [showSettings, setShowSettings] = show;
     const [mapName, setMapName] = mapNameState;
@@ -41,8 +42,7 @@ export const SettingsModal = (props) => {
 
     const handleCloseSettings = () => setShowSettings(false);
     const applySettings = () => {
-        if (!savedMaps.find((savedMap) => savedMap === mapName)) {
-            setSavedMaps([...savedMaps, mapName]);
+        if (!savedMaps.find((savedMap) => savedMap.data.name === mapName)) {
             const mapArray = generateMapArray({
                 latitude: {
                     deg: latDeg,
@@ -92,6 +92,10 @@ export const SettingsModal = (props) => {
                 name: mapName
             });
             setMapArray(mapArray);
+            setSavedMaps([
+                ...savedMaps,
+                { data: mapSettingsData, tiles: mapArray }
+            ]);
             setShowSettings(false);
         } else {
             alert("Une carte possédant ce nom existe déjà");

@@ -3,3 +3,9 @@
     position: absolute;
     user-select: none;
 }
+
+.amerPointer {
+    cursor: pointer !important;
+    position: absolute;
+    user-select: none;
+}

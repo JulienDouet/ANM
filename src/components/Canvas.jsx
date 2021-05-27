@@ -19,8 +19,12 @@ class Point {
         this._y = y;
     }
 
-    get x() { return this._x; }
-    get y() { return this._y; }
+    get x() {
+        return this._x;
+    }
+    get y() {
+        return this._y;
+    }
 
     getCoef(pt2) {
         return (pt2.y - this._y) / (pt2.x - this._x);
@@ -37,18 +41,24 @@ class Point {
 class Line {
     constructor(pt1, pt2) {
         this._coef = pt1.getCoef(pt2);
-        this._origin = pt1.y - (this._coef * pt1.x);
+        this._origin = pt1.y - this._coef * pt1.x;
     }
 
-    get coef() { return this._coef; }
-    get origin() { return this._origin; }
+    get coef() {
+        return this._coef;
+    }
+    get origin() {
+        return this._origin;
+    }
 
     getValue(x) {
         return this._coef * x + this._origin;
     }
 
     getIntersection(line) {
-        let x = Math.abs((line.origin - this._origin) / (line.coef - this._coef));
+        let x = Math.abs(
+            (line.origin - this._origin) / (line.coef - this._coef)
+        );
         let y = this._coef * x + this._origin;
         return new Point(x, y);
     }
@@ -98,12 +108,22 @@ export const Canvas = (props) => {
 
         context.lineTo(
             drawLineData.x1 +
-            drawLineData.r * Math.cos((Math.PI * (drawLineData.angle + 180)) / 180),
+                drawLineData.r *
+                    Math.cos((Math.PI * (drawLineData.angle + 180)) / 180),
             drawLineData.y1 +
-            drawLineData.r * Math.sin((Math.PI * (drawLineData.angle + 180)) / 180)
+                drawLineData.r *
+                    Math.sin((Math.PI * (drawLineData.angle + 180)) / 180)
         );
-        tabPoints.push(new Point(drawLineData.x1 + drawLineData.r * Math.cos((Math.PI * drawLineData.angle) / 180), drawLineData.y1 +
-            drawLineData.r * Math.sin((Math.PI * drawLineData.angle) / 180)));
+        tabPoints.push(
+            new Point(
+                drawLineData.x1 +
+                    drawLineData.r *
+                        Math.cos((Math.PI * drawLineData.angle) / 180),
+                drawLineData.y1 +
+                    drawLineData.r *
+                        Math.sin((Math.PI * drawLineData.angle) / 180)
+            )
+        );
 
         context.stroke();
     };
@@ -140,7 +160,6 @@ export const Canvas = (props) => {
                 context.drawImage(regle, -(regle.width / 2), 0);
             } else {
                 context.drawImage(regle, -(regle.width / 2), 0);
-
             }
 
             context.restore();
@@ -149,23 +168,25 @@ export const Canvas = (props) => {
         const x1 = drawLineData.x1;
         const y1 = drawLineData.y1 - CALIBRAGE_ZERO_NOIR * regle.height;
         //clearCRA(x1,y1);
-        context.clearRect(0, 0, amerCanvasRef.current.width, amerCanvasRef.current.height);
+        context.clearRect(
+            0,
+            0,
+            amerCanvasRef.current.width,
+            amerCanvasRef.current.height
+        );
 
-      /*  context.moveTo(0,y1);
+        /*  context.moveTo(0,y1);
         context.lineTo(mapArray[0].length*256,y1);
 
-        */context.stroke();
+        */ context.stroke();
         nbrTrait++;
 
         if (nbrTrait >= 3) {
-
             trouverMilieu();
         }
     };
 
-
     const trouverMilieu = () => {
-
         let pt1 = tabPoints[0];
         let pt2 = tabPoints[1];
 
@@ -183,29 +204,39 @@ export const Canvas = (props) => {
         let pt_intersection2 = line1.getIntersection(line3);
         let pt_intersection3 = line2.getIntersection(line3);
 
-        let line_median1 = pt_intersection1.getMedian(pt_intersection2, pt_intersection3);
-        let line_median2 = pt_intersection2.getMedian(pt_intersection1, pt_intersection3);
-        let line_median3 = pt_intersection3.getMedian(pt_intersection1, pt_intersection2);
-
+        let line_median1 = pt_intersection1.getMedian(
+            pt_intersection2,
+            pt_intersection3
+        );
+        let line_median2 = pt_intersection2.getMedian(
+            pt_intersection1,
+            pt_intersection3
+        );
+        let line_median3 = pt_intersection3.getMedian(
+            pt_intersection1,
+            pt_intersection2
+        );
 
         // middle
         let middle1 = line_median1.getIntersection(line_median2);
         console.log(`middle : x=${middle1.x}, y=${middle1.y}`);
 
-
-
         const xtab = mapArray[0].length * 256;
         const ytab = mapArray.length * 256;
 
         // Dessiner point intersection + Label avec coordonnées
-        drawPoint(middle1.x, middle1.y, 'red');
+        drawPoint(middle1.x, middle1.y, "red");
         const context = amerCanvasRef.current.getContext("2d");
         context.beginPath();
-        context.fillStyle = "#000000"
+        context.fillStyle = "#000000";
         context.rect(middle1.x, middle1.y, 160, 25);
         context.fill();
         context.fillStyle = "#FFFFFF";
-        context.fillText(temp(middle1.x, middle1.y, xtab, ytab), middle1.x + 10, middle1.y + 20);
+        context.fillText(
+            temp(middle1.x, middle1.y, xtab, ytab),
+            middle1.x + 10,
+            middle1.y + 20
+        );
 
         console.log(temp(middle1.x, middle1.y, xtab, ytab));
     };
@@ -226,7 +257,6 @@ export const Canvas = (props) => {
         //temp(event,rect);
     };
     const temp = (x, y, xtab, ytab) => {
-
         //const xtab = mapArray[0].length*256;
         //const ytab = mapArray.length*256;
 
@@ -234,7 +264,6 @@ export const Canvas = (props) => {
         const longitude = mapSettingsData.longitude;
         const latitudeDistance = mapSettingsData.latitudeDistance;
         const longitudeDistance = mapSettingsData.longitudeDistance;
-
 
         const {
             decimalDegreLatitude,
@@ -256,36 +285,30 @@ export const Canvas = (props) => {
 
         const y2 = decimalDegreLatitude - decimalDegreLatitudeDistance;
         const y1 = decimalDegreLatitude + decimalDegreLongitudeDistance;
-        const resX = ((x / xtab) * (x2 - x1) + x1);
-        const resY = ((y / ytab) * (y2 - y1) + y1);
+        const resX = (x / xtab) * (x2 - x1) + x1;
+        const resY = (y / ytab) * (y2 - y1) + y1;
 
-
-
-        return deg_to_dms(resX, true) + '   ' + deg_to_dms(resY, false);
-
+        return deg_to_dms(resX, true) + "   " + deg_to_dms(resY, false);
     };
     useEffect(() => {
         if (amerCanvasRef) {
-
-
-
-            amerCanvasRef.current.addEventListener('mousemove', e => {
-                if (mapArray.length > 1 && (e.clientX % 2 === 0 || e.clientY % 2 === 0)) {
+            amerCanvasRef.current.addEventListener("mousemove", (e) => {
+                if (
+                    mapArray.length > 1 &&
+                    (e.clientX % 2 === 0 || e.clientY % 2 === 0)
+                ) {
                     const rect = amerCanvasRef.current.getBoundingClientRect();
 
                     const xtab = mapArray[0].length * 256;
                     const ytab = mapArray.length * 256;
                     const x = parseInt(Math.abs(e.clientX - rect.left));
                     const y = parseInt(Math.abs(e.clientY - rect.top));
-                    var label = document.getElementById('coordTest');
-                    label.innerHTML = temp(x, y, xtab, ytab);
-
+                    var label = document.getElementById("coordTest");
+                    label.innerHTML = "&nbsp;" + temp(x, y, xtab, ytab);
                 }
-
             });
         }
     });
-
 
     useEffect(() => {
         setDrawLineData({
@@ -307,9 +330,6 @@ export const Canvas = (props) => {
         drawAndPlaceCRA();
         handleClose();
     };
-
-
-
 
     return (
         <>

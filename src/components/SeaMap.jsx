@@ -47,70 +47,61 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
     var height = mapArray.length * 256;
     var width = mapArray[0].length * 256;
 
+    context.setLineDash([15, 5]);
 
-    context.setLineDash([15,5]);
-
-
-    var coordCentX = width/2;
-    var coordCentY = height/2;
+    var coordCentX = width / 2;
+    var coordCentY = height / 2;
 
     var coordEstX = width;
-    var coordEstY = height/2
+    var coordEstY = height / 2;
 
     var coordOuestX = 0;
-    var coordOuestY = height/2
+    var coordOuestY = height / 2;
 
-    var coordNordX = width/2;
+    var coordNordX = width / 2;
     var coordNordY = 0;
 
-    var coordSudX = width/2;
+    var coordSudX = width / 2;
     var coordSudY = height;
 
-
-    for (var i = coordCentX; i<=coordEstX; i += (coordEstX-coordCentX)/6){
-      context.moveTo(i, 0);
-      context.lineTo(i, height);
-      context.stroke();
-    }
-
-    for (var i = coordOuestX; i<=coordCentX; i += (coordEstX-coordCentX)/6){
-      context.moveTo(i, 0);
-      context.lineTo(i, height);
-      context.stroke();
-    }
-    for (var i = coordCentY; i<=coordSudY; i += (coordSudY-coordCentY)/6){
-      context.moveTo(0, i);
-      context.lineTo(width, i);
-      context.stroke();
-    }
-
-    for (var i = coordNordY; i<=coordCentY; i += (coordSudY-coordCentY)/6){
-      context.moveTo(0, i);
-      context.lineTo(width, i);
-      context.stroke();
-    }
-
-    /*
-    var longitudeDegDepart = diffDegLongitude;
-    for (var i = 0; i < width; i += width / 2 / 6) {
+    for (
+        var i = coordCentX;
+        i <= coordEstX;
+        i += (coordEstX - coordCentX) / 6
+    ) {
         context.moveTo(i, 0);
         context.lineTo(i, height);
         context.stroke();
-        context.font = "15px Arial";
-        context.fillText(deg_to_dms(longitudeDegDepart, true), i, 20);
-        longitudeDegDepart += decimalDegreLongitudeDistance / 6;
     }
 
-    var latitudeDegDepart = diffDegLatitude;
-    for (var i = 0; i < height; i += height / 2 / 6) {
+    for (
+        var i = coordOuestX;
+        i <= coordCentX;
+        i += (coordEstX - coordCentX) / 6
+    ) {
+        context.moveTo(i, 0);
+        context.lineTo(i, height);
+        context.stroke();
+    }
+    for (
+        var i = coordCentY;
+        i <= coordSudY;
+        i += (coordSudY - coordCentY) / 6
+    ) {
         context.moveTo(0, i);
         context.lineTo(width, i);
         context.stroke();
-        context.font = "15px Arial";
-        context.fillText(deg_to_dms(latitudeDegDepart, false), 10, i);
-        latitudeDegDepart -= decimalDegreLatitudeDistance / 6;
     }
-    */
+
+    for (
+        var i = coordNordY;
+        i <= coordCentY;
+        i += (coordSudY - coordCentY) / 6
+    ) {
+        context.moveTo(0, i);
+        context.lineTo(width, i);
+        context.stroke();
+    }
 };
 
 export const SeaMap = (props) => {
@@ -153,20 +144,12 @@ export const SeaMap = (props) => {
                                         >
                                             <img
                                                 alt=""
-                                                src={
-                                                    isStoredMap
-                                                        ? `../../../cartes/${storedMapName}/openstreetmap/${cell[0]}_${cell[1]}.png`
-                                                        : `https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png`
-                                                }
+                                                src={`https://a.tile.openstreetmap.fr/osmfr/${cell[0]}/${cell[1]}/${cell[2]}.png`}
                                             />
                                             <img
                                                 alt=""
                                                 className="overlayed"
-                                                src={
-                                                    isStoredMap
-                                                        ? `../../../cartes/${storedMapName}/openseamap/${cell[0]}_${cell[1]}.png`
-                                                        : `https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`
-                                                }
+                                                src={`https://tiles.openseamap.org/seamark/${cell[0]}/${cell[1]}/${cell[2]}.png`}
                                             />
                                         </td>
                                     );

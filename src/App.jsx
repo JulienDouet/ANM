@@ -18,7 +18,7 @@ export const App = () => {
 
     useEffect(() => {
         const ele = document.getElementById("dragMap");
-        if (!hasScrollListener) {
+        if (!hasScrollListener && !amer) {
             let x = 0;
             let y = 0;
             let html = document.documentElement;
@@ -27,40 +27,48 @@ export const App = () => {
                 y = e.clientY;
                 document.addEventListener("mousemove", mouseMoveHandler);
                 document.addEventListener("mouseup", mouseUpHandler);
-                ele.style.cursor = "grabbing";
+                if (!amer) {
+                    ele.style.cursor = "grabbing";
+                }
                 ele.style.userSelect = "none";
             };
 
             const mouseMoveHandler = (e) => {
-                let dx = e.clientX - x;
-                let dy = e.clientY - y;
-                if (
-                    (ele.offsetLeft > 0 && dx > 0) ||
-                    (html.scrollWidth === html.clientWidth && dx < 0)
-                ) {
-                    dx = 0;
-                }
-                if (
-                    (ele.offsetTop > 0 && dy > 0) ||
-                    (html.scrollHeight === html.clientHeight && dy < 0)
-                ) {
-                    dy = 0;
-                }
+                if (!amer) {
+                    let dx = e.clientX - x;
+                    let dy = e.clientY - y;
+                    if (
+                        (ele.offsetLeft > 0 && dx > 0) ||
+                        (html.scrollWidth === html.clientWidth && dx < 0)
+                    ) {
+                        dx = 0;
+                    }
+                    if (
+                        (ele.offsetTop > 0 && dy > 0) ||
+                        (html.scrollHeight === html.clientHeight && dy < 0)
+                    ) {
+                        dy = 0;
+                    }
 
-                ele.style.top = `${ele.offsetTop + dy}px`;
-                ele.style.left = `${ele.offsetLeft + dx}px`;
-                x = e.clientX;
-                y = e.clientY;
+                    ele.style.top = `${ele.offsetTop + dy}px`;
+                    ele.style.left = `${ele.offsetLeft + dx}px`;
+                    x = e.clientX;
+                    y = e.clientY;
+                }
             };
 
             const mouseUpHandler = () => {
                 document.removeEventListener("mousemove", mouseMoveHandler);
                 document.removeEventListener("mouseup", mouseUpHandler);
-                ele.style.cursor = "grab";
+                if (!amer) {
+                    ele.style.cursor = "grab";
+                }
                 ele.style.removeProperty("user-select");
             };
             setHasScrollListener(true);
-            ele.addEventListener("mousedown", mouseDownHandler);
+            if (!amer) {
+                ele.addEventListener("mousedown", mouseDownHandler);
+            }
         }
     });
 
@@ -80,14 +88,18 @@ export const App = () => {
                 mapNameState={[mapName, setMapName]}
                 storedMapState={[storedMapName, setStoredMapName]}
             />
-            <div id="dragMap" className="draggable">
+            <div id="dragMap" className={!!amer ? "amerPointer" : "draggable"}>
                 <SeaMap
                     mapArray={mapArray}
                     isStoredMap={isStoredMap}
                     mapSettingsData={mapSettingsData}
                     storedMapName={storedMapName}
                 />
-              <Canvas amer={amer} mapArray={mapArray} mapSettingsData={mapSettingsData} />
+                <Canvas
+                    amer={amer}
+                    mapArray={mapArray}
+                    mapSettingsData={mapSettingsData}
+                />
             </div>
         </>
     );
