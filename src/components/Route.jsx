@@ -1,12 +1,27 @@
 import "./Route.css";
 import React, { useRef, useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import {getDistanceFromLatLonInKm} from "../helpers/GenerateMap.js"
+import { deg_to_dms_array } from "../helpers/GenerateMap";
+import { deg_to_dms } from "../helpers/GenerateMap";
+
+import { convertToDecimalDegre } from "../helpers/GenerateMap";
 
 export const Route = (props) => {
 
   var nbrPoints = 0 ;
   var arrayPoints = [] ;
   const { mapArray, route ,mapSettingsData } = props;
+
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+
+
+  // Courant
+  const [angleVal, setAngleVal] = useState("0");
+  const [noeudVal, setNoeudVal] = useState("0");
+
 
   const drawPoint = (x, y, color) => {
       const context = routeCanvasRef.current.getContext("2d");
@@ -15,6 +30,47 @@ export const Route = (props) => {
       context.arc(x, y, 5, 0, 2 * Math.PI, true);
       context.fill();
   };
+
+  const pixelsToDegDecimal = (x,y,xtab,ytab) => {
+
+    //const xtab = mapArray[0].length*256;
+    //const ytab = mapArray.length*256;
+
+    const latitude = mapSettingsData.latitude;
+    const longitude = mapSettingsData.longitude;
+    const latitudeDistance = mapSettingsData.latitudeDistance;
+    const longitudeDistance = mapSettingsData.longitudeDistance;
+
+
+    const {
+        decimalDegreLatitude,
+        decimalDegreLongitude,
+        decimalDegreLatitudeDistance,
+        decimalDegreLongitudeDistance
+    } = convertToDecimalDegre(
+        latitude,
+        longitude,
+        latitudeDistance,
+        longitudeDistance
+    );
+
+    const xCent = xtab/2;
+    const yCent = ytab/2;
+
+    const x2 = decimalDegreLongitude+decimalDegreLongitudeDistance;
+    const x1 = decimalDegreLongitude-decimalDegreLongitudeDistance;
+
+    const y2 = decimalDegreLatitude-decimalDegreLatitudeDistance;
+    const y1 = decimalDegreLatitude+decimalDegreLongitudeDistance;
+    const resX = ((x/xtab)*(x2-x1) + x1);
+    const resY = ((y/ytab)*(y2-y1) + y1);
+
+
+    console.log(deg_to_dms(resX,true), ' ', deg_to_dms(resY,false));
+    return [resX,resY];
+
+  };
+
 
   const routeCanvasRef = useRef(null);
 
@@ -33,6 +89,8 @@ export const Route = (props) => {
       let x = event.clientX - rect.left;
       let y = event.clientY - rect.top;
 
+      const xtab = mapArray[0].length*256;
+      const ytab =  mapArray.length*256;
       drawPoint(x,y,'yellow');
 
       nbrPoints ++;
@@ -48,13 +106,31 @@ export const Route = (props) => {
         context.moveTo(x1,y1);
         context.lineTo(x2,y2);
         context.stroke();
+
+        let l1degDec = pixelsToDegDecimal(x1,y1,xtab,ytab);
+        let l2degDec = pixelsToDegDecimal(x2,y2,xtab,ytab);
+
+        let long1 = l1degDec[0];
+        let lat1 = l1degDec[1];
+
+        let long2 = l2degDec[0];
+        let lat2 = l2degDec[1];
+        console.log("Ditance (en KM) : "+getDistanceFromLatLonInKm(lat1,long1,lat2,long1));
+
       }
+
+
+
+
   };
 
   //const context = routeCanvasRef.current.getContext("2d");
+  const handleOnSubmit = (event) => {
 
+  };
   return (
     <>
+    <div id="idRoute">
     <canvas
         id="canvas"
         ref={routeCanvasRef}
@@ -62,6 +138,42 @@ export const Route = (props) => {
         onClick={(e) => !!route && setRoute(e)}
     ></canvas>
 
+
+    <Modal show={show} onHide={handleClose} size="sm" centered>
+        <Modal.Header>
+            <Modal.Title>Tracer route</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <Form.Label htmlFor="angle">Angle</Form.Label>
+            <Form.Control
+                className="mb-2 mr-sm-2"
+                id="angle"
+                value={angleVal}
+                onChange={(e) => setAngleVal(e.target.value)}
+                type="number"
+                placeholder="Angle"
+            />
+          <Form.Label htmlFor="noeud">Noeud</Form.Label>
+            <Form.Control
+                className="mb-2 mr-sm-2"
+                id="noeud"
+                value={noeudVal}
+                onChange={(e) => setNoeudVal(e.target.value)}
+                type="number"
+                placeholder="Noeud"
+            />
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+                Annuler
+            </Button>
+            <Button variant="primary" onClick={handleOnSubmit}>
+                Valider le marquage
+            </Button>
+        </Modal.Footer>
+    </Modal>
+  </div>
     </>
+
   )
 }

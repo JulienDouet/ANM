@@ -18,13 +18,54 @@ import "./TopBar.css";
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
 export const TopBar = (props) => {
+
+      const swap = function(nodeA, nodeB) {
+        const parentA = nodeA.parentNode;
+        const siblingA = nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
+
+        // Move `nodeA` to before the `nodeB`
+        nodeB.parentNode.insertBefore(nodeA, nodeB);
+
+        // Move `nodeB` to before the sibling of `nodeA`
+        parentA.insertBefore(nodeB, siblingA);
+    };
+
     const { setShowSettings, setShowLoadMap, amerState, routeState} = props;
     const [amer, setAmer] = amerState;
     const [route, setRoute] = routeState;
     const handleShowSettings = () => setShowSettings(true);
     const handleShowLoadMap = () => setShowLoadMap(true);
-    const handleAmerState = () => setAmer(!amer);
-    const handleRouteState = () => setRoute(!route);
+    const handleAmerState = () => {
+
+      var elemRoute = document.getElementById('idRoute');
+      var elemCanvas = document.getElementById('idCanvas');
+
+      if (amer === route){
+        setAmer(true);
+      }
+      else{
+      swap(elemCanvas,elemRoute);
+      setAmer(!amer);
+      setRoute(!route)
+    }
+    }
+    const handleRouteState = () => {
+
+      var elemRoute = document.getElementById('idRoute');
+      var elemCanvas = document.getElementById('idCanvas');
+
+      if (amer === route){
+        setRoute(true);
+        swap(elemCanvas,elemRoute);
+
+      }
+      else{
+      setRoute(!route)
+      swap(elemCanvas,elemRoute);
+      setAmer(!amer);
+
+    }
+    };
 
     return (
         <>

@@ -251,13 +251,11 @@ export const Canvas = (props) => {
       const resY = ((y/ytab)*(y2-y1) + y1);
 
 
-
       return deg_to_dms(resX,true)+ '   '+deg_to_dms(resY,false);
 
     };
     useEffect(() => {
       if(amerCanvasRef){
-
 
 
         amerCanvasRef.current.addEventListener('mousemove', e => {
@@ -270,7 +268,6 @@ export const Canvas = (props) => {
               const y = parseInt(Math.abs(e.clientY - rect.top));
               var label = document.getElementById('coordTest');
               label.innerHTML = temp(x,y,xtab,ytab);
-
             }
 
         });
@@ -304,6 +301,7 @@ export const Canvas = (props) => {
 
     return (
         <>
+        <div id="idCanvas">
             <canvas
                 id="canvas"
                 ref={amerCanvasRef}
@@ -364,6 +362,7 @@ export const Canvas = (props) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+          </div>
         </>
     );
 };
