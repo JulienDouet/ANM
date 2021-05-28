@@ -195,7 +195,7 @@ export function deg_to_dms_array (dd, isLng) {
 }
 
 
-export function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+export function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
   /*var R = 6371; // Radius of the earth in km
   var dLat = degToRadian(lat2-lat1);  // deg2rad below
   var dLon = degToRadian(lon2-lon1);
@@ -223,5 +223,5 @@ export function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
   const d = R * c; // in metres
-  return d;
+  return d * 0.000621371 // en miles;
 }
