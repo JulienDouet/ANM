@@ -397,57 +397,61 @@ export const Canvas = (props) => {
 
     return (
         <>
-            <canvas
-                id="canvasAmers"
-                ref={amerCanvasRef}
-                className="canvas-style mt-5"
-                onClick={(e) => !!amer && setCoordinates(e)}
-            ></canvas>
+            <div id="idCanvas">
+                <canvas
+                    id="canvasAmers"
+                    ref={amerCanvasRef}
+                    className="canvas-style mt-5"
+                    onClick={(e) => !!amer && setCoordinates(e)}
+                ></canvas>
 
-            <Modal show={show} onHide={handleClose} size="sm" centered>
-                <Modal.Header>
-                    <Modal.Title>Relever l'amer</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Label htmlFor="angle">Angle</Form.Label>
-                    <Form.Control
-                        className="mb-2 mr-sm-2"
-                        id="angle"
-                        value={angleVal}
-                        onChange={(e) => setAngleVal(e.target.value)}
-                        type="number"
-                        placeholder="Angle"
-                    />
-                    <Form.Label htmlFor="declinaison">
-                        Déclinaison (D)
-                    </Form.Label>
-                    <Form.Control
-                        className="mb-2 mr-sm-2"
-                        id="declinaison"
-                        value={declinaison}
-                        onChange={(e) => setDeclinaison(e.target.value)}
-                        type="number"
-                        placeholder="Déclinaison"
-                    />
-                    <Form.Label htmlFor="deviation">Déviation (d)</Form.Label>
-                    <Form.Control
-                        className="mb-2 mr-sm-2"
-                        id="deviation"
-                        value={deviation}
-                        onChange={(e) => setDeviation(e.target.value)}
-                        type="number"
-                        placeholder="Déviation"
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Annuler
-                    </Button>
-                    <Button variant="primary" onClick={handleOnSubmit}>
-                        Valider le marquage
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                <Modal show={show} onHide={handleClose} size="sm" centered>
+                    <Modal.Header>
+                        <Modal.Title>Relever l'amer</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Label htmlFor="angle">Angle</Form.Label>
+                        <Form.Control
+                            className="mb-2 mr-sm-2"
+                            id="angle"
+                            value={angleVal}
+                            onChange={(e) => setAngleVal(e.target.value)}
+                            type="number"
+                            placeholder="Angle"
+                        />
+                        <Form.Label htmlFor="declinaison">
+                            Déclinaison (D)
+                        </Form.Label>
+                        <Form.Control
+                            className="mb-2 mr-sm-2"
+                            id="declinaison"
+                            value={declinaison}
+                            onChange={(e) => setDeclinaison(e.target.value)}
+                            type="number"
+                            placeholder="Déclinaison"
+                        />
+                        <Form.Label htmlFor="deviation">
+                            Déviation (d)
+                        </Form.Label>
+                        <Form.Control
+                            className="mb-2 mr-sm-2"
+                            id="deviation"
+                            value={deviation}
+                            onChange={(e) => setDeviation(e.target.value)}
+                            type="number"
+                            placeholder="Déviation"
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Annuler
+                        </Button>
+                        <Button variant="primary" onClick={handleOnSubmit}>
+                            Valider le marquage
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
         </>
     );
 };

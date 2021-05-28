@@ -88,14 +88,14 @@ export const HelpModal = (props) => {
                         <div className="col-md-10">
                             &nbsp; Bouton qui affiche si oui(ON) ou non(OFF) le
                             mode de traçage de route est activé. Lorsque ce
-                            dernier l'est, il est possible de cliquer deux fois
-                            sur la carte, à deux endroits différents, pour
-                            spécifier le départ(premier clic) et
-                            l'arrivée(deuxième clic). Une fois cela fait, une
-                            fenêtre va apparaître et il faudra spécifier
-                            certaines variables liées à la navigation. Cela va
-                            donc afficher le courant, la route surface, le cap
-                            vrai ainsi que le cap Compas
+                            dernier l'est, il est possible de cliquer sur la
+                            carte, pour spécifier le point de départ de la
+                            route. Une fois cela fait, une fenêtre va apparaître
+                            et il faudra spécifier certaines variables liées à
+                            la navigation. Une fois le formulaire de la fenêre
+                            validé, cela va tracer différents types de routes,
+                            notamment le courant, la route surface, le cap vrai
+                            ainsi que le cap Compas
                         </div>
                     </div>
                 </p>

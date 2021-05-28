@@ -1,3 +1,4 @@
+import { degToRadian } from "./helpers.js";
 export const generateMapArray = (data) => {
     const { latitude, longitude, latitudeDistance, longitudeDistance, zoom } = data;
 
@@ -129,4 +130,51 @@ export function degToDms (dd, isLng) {
    const min = (frac * 60) | 0;
    const sec =  Math.round((frac * 3600 - min * 60)* 100) / 100;
    return deg + "°" + min + "'" + sec + '"' + dir;
+}
+
+export function deg_to_dms_array (dd, isLng) {
+  var dir = dd < 0
+     ? isLng ? 'O' : 'S'
+     : isLng ? 'E' : 'N';
+
+   var absDd = Math.abs(dd);
+   var deg = absDd | 0;
+   var frac = absDd - deg;
+   var min = (frac * 60) | 0;
+   var sec = frac * 3600 - min * 60;
+   // Round it to 2 decimal points.
+   sec = Math.round(sec * 100) / 100;
+   return [deg, min, sec, dir];
+}
+
+
+export function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
+  /*var R = 6371; // Radius of the earth in km
+  var dLat = degToRadian(lat2-lat1);  // deg2rad below
+  var dLon = degToRadian(lon2-lon1);
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(degToRadian(lat1)) * Math.cos(degToRadian(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c; // Distance in km
+  return d;
+*/
+
+
+
+  const R = 6371e3; // metres
+  const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+  const φ2 = lat2 * Math.PI/180;
+  const Δφ = (lat2-lat1) * Math.PI/180;
+  const Δλ = (lon2-lon1) * Math.PI/180;
+
+  const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  const d = R * c; // in metres
+  return d * 0.000621371 // en miles;
 }

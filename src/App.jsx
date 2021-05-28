@@ -1,4 +1,5 @@
 import { Canvas } from "./components/Canvas";
+import { Route } from "./components/Route";
 import { SeaMap } from "./components/SeaMap";
 import { TopBar } from "./components/TopBar";
 import { Modals } from "./components/Modals";
@@ -17,6 +18,7 @@ export const App = () => {
     const [storedMapName, setStoredMapName] = useState("");
     const [amer, setAmer] = useState(false);
     const [hasScrollListener, setHasScrollListener] = useState(false);
+    const [route, setRoute] = useState(false);
 
     useEffect(() => {
         const ele = document.getElementById("dragMap");
@@ -75,6 +77,7 @@ export const App = () => {
                 setShowLoadMap={setShowLoadMap}
                 setShowHelp={setShowHelp}
                 amerState={[amer, setAmer]}
+                routeState={[route, setRoute]}
             />
             <Modals
                 settingsModal={[showSettings, setShowSettings]}
@@ -93,6 +96,12 @@ export const App = () => {
                     mapSettingsData={mapSettingsData}
                     storedMapName={storedMapName}
                 />
+                <Route
+                    route={route}
+                    mapArray={mapArray}
+                    mapSettingsData={mapSettingsData}
+                />
+
                 <Canvas
                     amer={amer}
                     mapArray={mapArray}

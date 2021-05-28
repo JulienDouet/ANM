@@ -18,13 +18,57 @@ import "./TopBar.css";
 const renderTooltip = (title) => <Tooltip id="button-tooltip">{title}</Tooltip>;
 
 export const TopBar = (props) => {
-    const { setShowSettings, setShowLoadMap, setShowHelp, amerState } = props;
+    const {
+        setShowSettings,
+        setShowLoadMap,
+        setShowHelp,
+        amerState,
+        routeState
+    } = props;
     const [amer, setAmer] = amerState;
 
+    const swap = function (nodeA, nodeB) {
+        const parentA = nodeA.parentNode;
+        const siblingA =
+            nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
+
+        // Move `nodeA` to before the `nodeB`
+        nodeB.parentNode.insertBefore(nodeA, nodeB);
+
+        // Move `nodeB` to before the sibling of `nodeA`
+        parentA.insertBefore(nodeB, siblingA);
+    };
+
+    const [route, setRoute] = routeState;
     const handleShowSettings = () => setShowSettings(true);
     const handleShowLoadMap = () => setShowLoadMap(true);
     const handleShowHelp = () => setShowHelp(true);
-    const handleAmerState = () => setAmer(!amer);
+    const handleAmerState = () => {
+        var elemRoute = document.getElementById("idRoute");
+        var elemCanvas = document.getElementById("idCanvas");
+
+        if (amer === route) {
+            setAmer(true);
+        } else {
+            swap(elemCanvas, elemRoute);
+            setAmer(!amer);
+            setRoute(!route);
+        }
+    };
+    const handleRouteState = () => {
+        var elemRoute = document.getElementById("idRoute");
+        var elemCanvas = document.getElementById("idCanvas");
+
+        if (amer === route) {
+            setRoute(true);
+            swap(elemCanvas, elemRoute);
+        } else {
+            setRoute(!route);
+            swap(elemCanvas, elemRoute);
+            setAmer(!amer);
+        }
+    };
+
     return (
         <>
             <Navbar
@@ -78,8 +122,13 @@ export const TopBar = (props) => {
                         placement="bottom"
                         overlay={renderTooltip("Tracer une route")}
                     >
-                        <Button variant="primary" className="spacedButton">
+                        <Button
+                            variant="primary"
+                            className="spacedButton"
+                            onClick={handleRouteState}
+                        >
                             <FontAwesomeIcon icon={faPencilRuler} size="lg" />
+                            {!!route ? " ON" : " OFF"}
                         </Button>
                     </OverlayTrigger>
                     <OverlayTrigger
