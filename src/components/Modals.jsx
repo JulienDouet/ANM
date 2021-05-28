@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SettingsModal } from "./Modals/SettingsModal";
 import { LoadMapModal } from "./Modals/LoadMapModal";
 
@@ -15,7 +15,6 @@ export const Modals = (props) => {
     const [mapName, setMapName] = mapNameState;
     const [savedMaps, setSavedMaps] = useState([]);
     const [mapArray, setMapArray] = mapArrayState;
-    const [hasLoadedMapDir, setHasLoadedMapDir] = useState(false);
     const [isStoredMap, setIsStoredMap] = isStoredMapState;
 
     return (

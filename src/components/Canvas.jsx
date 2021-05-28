@@ -242,7 +242,14 @@ export const Canvas = (props) => {
         regle.onload = function () {
             context.save();
             context.translate(drawLineData.x1, drawLineData.y1);
-            context.rotate(degToRadian(angleVal - DEFAULT_ANGLE));
+            context.rotate(
+                degToRadian(
+                    parseInt(angleVal, 10) +
+                        parseInt(declinaison, 10) +
+                        parseInt(deviation, 10) -
+                        DEFAULT_ANGLE
+                )
+            );
 
             if (angleVal >= 180) {
                 context.drawImage(regle, -(regle.width / 2), 0);
@@ -324,9 +331,6 @@ export const Canvas = (props) => {
             longitudeDistance
         );
 
-        const xCent = xtab / 2;
-        const yCent = ytab / 2;
-
         const x2 = decimalDegreLongitude + decimalDegreLongitudeDistance;
         const x1 = decimalDegreLongitude - decimalDegreLongitudeDistance;
 
@@ -367,7 +371,7 @@ export const Canvas = (props) => {
                 parseInt(declinaison, 10) -
                 DEFAULT_ANGLE
         });
-    }, [angleVal]);
+    }, [angleVal, declinaison, deviation]);
 
     useEffect(() => {
         setDrawLineData({ ...drawLineData, r: longueurVal });
@@ -387,9 +391,20 @@ export const Canvas = (props) => {
                 Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
         var ligne = new Line(new Point(p1X, p1Y), new Point(p2X, p2Y));
         tabLignes.push(ligne);
-        tabAngles.push(angleVal);
+        tabAngles.push(
+            parseInt(angleVal, 10) +
+                parseInt(declinaison, 10) +
+                parseInt(deviation, 10)
+        );
         drawLine(ligne, color);
-        drawAngle(angleVal, p1X, p1Y, color);
+        drawAngle(
+            parseInt(angleVal, 10) +
+                parseInt(declinaison, 10) +
+                parseInt(deviation, 10),
+            p1X,
+            p1Y,
+            color
+        );
         redrawCanvas();
         drawAndPlaceCRA();
         handleClose();

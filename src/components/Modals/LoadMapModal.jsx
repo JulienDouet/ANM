@@ -1,22 +1,17 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const LoadMapModal = (props) => {
     const {
         show,
         mapArrayState,
-        mapNameState,
         savedMapsState,
-        isStoredMapState,
         storedMapState,
         mapSettingsDataState
     } = props;
-    const [isStoredMap, setIsStoredMap] = isStoredMapState;
-    const [mapName, setMapName] = mapNameState;
     const [mapArray, setMapArray] = mapArrayState;
     const [showLoadMap, setShowLoadMap] = show;
     const [savedMaps, setSavedMaps] = savedMapsState;
-    const [storedMapName, setStoredMapName] = storedMapState;
     const [mapSettingsData, setMapSettingsData] = mapSettingsDataState;
     const [currentlySelectedMapName, setCurrentlySelectedMapName] =
         useState("");

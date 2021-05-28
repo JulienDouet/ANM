@@ -2,12 +2,9 @@ import "./Route.css";
 import React, { useRef, useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { getDistanceFromLatLonInMiles } from "../helpers/GenerateMap.js";
-import { deg_to_dms_array } from "../helpers/GenerateMap";
-import { degToDms } from "../helpers/GenerateMap";
 
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
 var arrayPoints = [];
-var nbrPoints = 0;
 
 var arrayDefLigne = [
     "Route Fond",
@@ -18,7 +15,6 @@ var arrayDefLigne = [
 ];
 
 var distanceMilesRf = 0;
-var degreeRf = 0;
 var distancePixelsRf = 0;
 var distancePixelsReference = 0;
 var distanceMilesReference = 0;
@@ -33,11 +29,10 @@ export const Route = (props) => {
     const [capVal, setCapVal] = useState("0");
     const [angleVal, setAngleVal] = useState("0");
     const [noeudVal, setNoeudVal] = useState("0");
-    const [vitesseFondVal, setVitesseFondVal] = useState("0");
+    const [vitesseFondVal, setVitesseFondVal] = useState("1");
     const [deriveVal, setDeriveVal] = useState("0");
     const [declinaisonVal, setDeclinaisonVal] = useState("0");
     const [deviationVal, setDeviationVal] = useState("0");
-    const [routeArray, setRouteArray] = useState([]);
 
     const drawPoint = (x, y, color, tmpTrajet) => {
         const context = routeCanvasRef.current.getContext("2d");
@@ -54,9 +49,6 @@ export const Route = (props) => {
     };
 
     const pixelsToDegDecimal = (x, y, xtab, ytab) => {
-        //const xtab = mapArray[0].length*256;
-        //const ytab = mapArray.length*256;
-
         const latitude = mapSettingsData.latitude;
         const longitude = mapSettingsData.longitude;
         const latitudeDistance = mapSettingsData.latitudeDistance;
@@ -73,9 +65,6 @@ export const Route = (props) => {
             latitudeDistance,
             longitudeDistance
         );
-
-        const xCent = xtab / 2;
-        const yCent = ytab / 2;
 
         const x2 = decimalDegreLongitude + decimalDegreLongitudeDistance;
         const x1 = decimalDegreLongitude - decimalDegreLongitudeDistance;
@@ -117,7 +106,6 @@ export const Route = (props) => {
         let long1 = l1degDec[0];
         let lat1 = l1degDec[1];
 
-        let long2 = l2degDec[0];
         let lat2 = l2degDec[1];
 
         distancePixelsReference = distanceTwoPoints(x, y, x + 1, y + 1);
@@ -127,29 +115,10 @@ export const Route = (props) => {
             lat2,
             long1
         );
-        let arrayCoordMilesReference = calcLineAngle(
-            x,
-            y,
-            distanceMilesReference,
-            90
-        );
-        let xref = arrayCoordMilesReference[0];
-        let yref = arrayCoordMilesReference[1];
-
-        //let arrayP = [(distanceParcourirVal*xref)/distanceMilesReference,(distanceParcourirVal*yref)/distanceMilesReference]
-
-        //let arrayP = drawLineAngle(x,y,distanceMilesRf+distanceParcourirVal,degreDestVal,context,'blue',1);
-        //arrayPoints.push([arrayP[0],arrayP[1]]);
 
         setShow(true);
     };
 
-    const calcLineAngle = (x, y, long, angle) => {
-        let x2 = x + long * Math.cos((Math.PI * (angle - 90)) / 180);
-        let y2 = y + long * Math.sin((Math.PI * (angle - 90)) / 180);
-
-        return [x2, y2];
-    };
     const drawLineAngle = (
         x,
         y,
@@ -219,7 +188,7 @@ export const Route = (props) => {
         var tmp = Math.pow(10, precision);
         return Math.round(nombre * tmp) / tmp;
     }
-    //const context = routeCanvasRef.current.getContext("2d");
+
     const handleOnSubmit = (event) => {
         const context = routeCanvasRef.current.getContext("2d");
 
@@ -316,14 +285,6 @@ export const Route = (props) => {
         const xtab = mapArray[0].length * 256;
         const ytab = mapArray.length * 256;
         context.clearRect(0, 0, xtab, ytab);
-
-        var distanceMilesRf = 0;
-        var degreeRf = 0;
-        var distancePixelsRf = 0;
-        var distancePixelsReference = 0;
-        var distanceMilesReference = 0;
-
-        var arrayPoints = [];
     };
     return (
         <>
@@ -341,7 +302,7 @@ export const Route = (props) => {
                     </Modal.Header>
                     <Modal.Body>
                         <Form.Label htmlFor="distanceParcourir">
-                            Distance à parcourir
+                            Distance à parcourir (en Miles)
                         </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
@@ -353,7 +314,7 @@ export const Route = (props) => {
                             type="number"
                             placeholder="DistanceParcourir"
                         />
-                        <Form.Label htmlFor="cap">Cap</Form.Label>
+                        <Form.Label htmlFor="cap">Cap (en Degrés)</Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
                             id="cap"
@@ -363,7 +324,7 @@ export const Route = (props) => {
                             placeholder="Cap"
                         />
                         <Form.Label htmlFor="vitesseFond">
-                            Vitesse de Fond
+                            Vitesse de Fond (en Noeuds)
                         </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
@@ -374,7 +335,7 @@ export const Route = (props) => {
                             placeholder="VitesseFond"
                         />
                         <Form.Label htmlFor="angle">
-                            Angle du Courant
+                            Angle du Courant (en Degrés)
                         </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
@@ -385,7 +346,7 @@ export const Route = (props) => {
                             placeholder="Angle"
                         />
                         <Form.Label htmlFor="noeud">
-                            Noeud du Courant
+                            Noeud du Courant (en Noeuds)
                         </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
@@ -395,7 +356,9 @@ export const Route = (props) => {
                             type="number"
                             placeholder="Noeud"
                         />
-                        <Form.Label htmlFor="derive">Dérive</Form.Label>
+                        <Form.Label htmlFor="derive">
+                            Dérive (en Degrés)
+                        </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
                             id="derive"
@@ -405,7 +368,7 @@ export const Route = (props) => {
                             placeholder="Dérive"
                         />
                         <Form.Label htmlFor="declinaison">
-                            Déclinaison
+                            Déclinaison (en Degrés)
                         </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
@@ -415,7 +378,9 @@ export const Route = (props) => {
                             type="number"
                             placeholder="Déclinaison"
                         />
-                        <Form.Label htmlFor="deviation">Déviation</Form.Label>
+                        <Form.Label htmlFor="deviation">
+                            Déviation (en Degrés)
+                        </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
                             id="deviation"

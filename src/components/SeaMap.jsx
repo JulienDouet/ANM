@@ -1,7 +1,6 @@
 import "./SeaMap.css";
 import React, { useRef } from "react";
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
-import { degToDms } from "../helpers/GenerateMap";
 
 // Grille
 const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
@@ -13,18 +12,6 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
 
     const latitudeDistance = mapSettingsData.latitudeDistance;
     const longitudeDistance = mapSettingsData.longitudeDistance;
-
-    const zoom = mapSettingsData.zoom;
-
-    const longitudeString =
-        longitude.deg +
-        "° " +
-        longitude.min +
-        "' " +
-        longitude.sec +
-        '" ' +
-        longitude.orientation;
-
     const {
         decimalDegreLatitude,
         decimalDegreLongitude,
@@ -36,10 +23,6 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
         latitudeDistance,
         longitudeDistance
     );
-
-    const diffDegLongitude =
-        decimalDegreLongitude - decimalDegreLongitudeDistance;
-    const diffDegLatitude = decimalDegreLatitude + decimalDegreLatitudeDistance;
 
     canvasGraticule.height = mapArray.length * 256;
     canvasGraticule.width = mapArray[0].length * 256;
@@ -53,15 +36,11 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
     var coordCentY = height / 2;
 
     var coordEstX = width;
-    var coordEstY = height / 2;
 
     var coordOuestX = 0;
-    var coordOuestY = height / 2;
 
-    var coordNordX = width / 2;
     var coordNordY = 0;
 
-    var coordSudX = width / 2;
     var coordSudY = height;
 
     for (
@@ -105,7 +84,7 @@ const drawLine = (tableRef, canvasGraticuleRef, mapSettingsData, mapArray) => {
 };
 
 export const SeaMap = (props) => {
-    const { mapArray, mapSettingsData, isStoredMap, storedMapName } = props;
+    const { mapArray, mapSettingsData } = props;
 
     //Ref
     const tableRef = useRef(null);
