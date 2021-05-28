@@ -9,7 +9,6 @@ import { deg_to_dms } from "../helpers/GenerateMap";
 const DEFAULT_ANGLE = 90;
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
-var tabPoints = [];
 var tabLignes = [];
 var tabPositions = [];
 const tabColor = [
@@ -60,7 +59,6 @@ class Line {
         this._pt1 = pt1;
         this._pt2 = pt2;
     }
-    color;
     get coef() {
         return this._coef;
     }
@@ -119,6 +117,19 @@ export const Canvas = (props) => {
     }, [mapArray]);
 
     /**
+     * Listener clear canvas
+     */
+    var dropdownClearAmers = document.getElementById("dropdownClearAmers");
+    dropdownClearAmers.addEventListener('click', event => {
+        tabLignes = [];
+        tabPositions = [];
+        color = tabColor[0];
+        compteurColor = 0;
+        const context = amerCanvasRef.current.getContext("2d");
+        context.clearRect(0, 0, amerCanvasRef.current.width, amerCanvasRef.current.height);
+    });
+
+    /**
      *
      */
     const drawLine = (ligne, color) => {
@@ -134,12 +145,13 @@ export const Canvas = (props) => {
         context.stroke();
     };
 
-    const drawPoint = (x, y, colorPoint) => {
+    const drawPoint = (x, y) => {
         const context = amerCanvasRef.current.getContext("2d");
 
         context.beginPath();
 
-        context.fillStyle = colorPoint || "black";
+        context.fillStyle = "red";
+        context.strokeStyle = "red";
         context.arc(x, y, 5, 0, 2 * Math.PI, true);
         context.fill();
 
@@ -150,13 +162,14 @@ export const Canvas = (props) => {
         for (var i = 0; i < tabPositions.length; i++) {
             const xtab = mapArray[0].length * 256;
             const ytab = mapArray.length * 256;
-            var position = tabPositions[tabPositions.length - 1];
+            var position = tabPositions[i];
             // Dessiner point intersection + Label avec coordonnées
-            drawPoint(position.x, position.y, "red");
+            drawPoint(position.x, position.y);
             const context = amerCanvasRef.current.getContext("2d");
             context.beginPath();
+            context.strokeStyle = "#000000";
+            context.rect(position.x, position.y, 180, 25);
             context.fillStyle = "#000000";
-            context.rect(position.x, position.y, 160, 25);
             context.fill();
             context.fillStyle = "#FFFFFF";
             context.fillText(
@@ -252,6 +265,7 @@ export const Canvas = (props) => {
         // middle
         let middle1 = line_median1.getIntersection(line_median2);
         tabPositions.push(middle1);
+        console.log("LENGTH = ", tabPositions.length);
         drawPosition();
     };
 
@@ -299,7 +313,7 @@ export const Canvas = (props) => {
         const resX = (x / xtab) * (x2 - x1) + x1;
         const resY = (y / ytab) * (y2 - y1) + y1;
 
-        return deg_to_dms(resX, true) + "   " + deg_to_dms(resY, false);
+        return deg_to_dms(resY, false) + "\xa0 \xa0" + deg_to_dms(resX, true);
     };
 
     useEffect(() => {
@@ -344,11 +358,11 @@ export const Canvas = (props) => {
         var p2X =
             drawLineData.x1 +
             drawLineData.r *
-                Math.cos((Math.PI * (drawLineData.angle + 180)) / 180);
+            Math.cos((Math.PI * (drawLineData.angle + 180)) / 180);
         var p2Y =
             drawLineData.y1 +
             drawLineData.r *
-                Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
+            Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
         var ligne = new Line(new Point(p1X, p1Y), new Point(p2X, p2Y));
         tabLignes.push(ligne);
 
@@ -361,7 +375,7 @@ export const Canvas = (props) => {
     return (
         <>
             <canvas
-                id="canvas"
+                id="canvasAmers"
                 ref={amerCanvasRef}
                 className="canvas-style mt-5"
                 onClick={(e) => !!amer && setCoordinates(e)}
