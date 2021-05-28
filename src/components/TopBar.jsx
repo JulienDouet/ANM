@@ -3,7 +3,7 @@ import {
     Navbar,
     OverlayTrigger,
     Tooltip,
-    Toast
+    NavDropdown
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -33,7 +33,7 @@ export const TopBar = (props) => {
                 style={{ position: "fixed", width: "100%" }}
                 bg="dark"
             >
-                <div className="topbar-container">
+                <Navbar.Collapse id="basic-navbar-nav">
                     <a className="navbar-brand" href="#">
                         &nbsp;&nbsp;Assistance Navigation Maritime
                     </a>
@@ -94,12 +94,21 @@ export const TopBar = (props) => {
                             <FontAwesomeIcon icon={faQuestion} size="lg" />
                         </Button>
                     </OverlayTrigger>
+                    <NavDropdown title="Effacer">
+                        <NavDropdown.Item id="dropdownClearAmers">
+                            Amers
+                        </NavDropdown.Item>
+                        <NavDropdown.Item id="dropdownClearRoutes">
+                            Routes
+                        </NavDropdown.Item>
+                    </NavDropdown>
+                    &nbsp;
                     <label
                         className="ml-auto"
-                        style={{ color: "red" }}
+                        style={{ color: "white", fontWeight: "bold" }}
                         id="coordTest"
                     ></label>
-                </div>
+                </Navbar.Collapse>
             </Navbar>
         </>
     );

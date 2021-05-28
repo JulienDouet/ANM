@@ -11,9 +11,23 @@ const DEFAULT_ANGLE = 90;
 
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
-
-var nbrTrait = 0;
-var tabPoints = [];
+var tabLignes = [];
+var tabPositions = [];
+const tabColor = [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "brown",
+    "black",
+    "orange",
+    "purple",
+    "cyan",
+    "magenta",
+    "pink"
+];
+var color = tabColor[0];
+var compteurColor = 0;
 
 class Point {
     constructor(x, y) {
@@ -44,13 +58,20 @@ class Line {
     constructor(pt1, pt2) {
         this._coef = pt1.getCoef(pt2);
         this._origin = pt1.y - this._coef * pt1.x;
+        this._pt1 = pt1;
+        this._pt2 = pt2;
     }
-
     get coef() {
         return this._coef;
     }
     get origin() {
         return this._origin;
+    }
+    get pt1() {
+        return this._pt1;
+    }
+    get pt2() {
+        return this._pt2;
     }
 
     getValue(x) {
@@ -92,50 +113,109 @@ export const Canvas = (props) => {
     useEffect(() => {
         if (mapArray.length) {
             const amerCanvas = amerCanvasRef.current;
-
             amerCanvas.height = mapArray.length * 256;
             amerCanvas.width = mapArray[0].length * 256;
         }
     }, [mapArray]);
 
-    // Récupérer coordonnées clique
+    /**
+     * Listener clear canvas
+     */
+    var dropdownClearAmers = document.getElementById("dropdownClearAmers");
+    useEffect(() => {
+        if (dropdownClearAmers) {
+            dropdownClearAmers.addEventListener("click", (event) => {
+                tabLignes = [];
+                tabPositions = [];
+                color = tabColor[0];
+                compteurColor = 0;
+                const context = amerCanvasRef.current.getContext("2d");
+                context.clearRect(
+                    0,
+                    0,
+                    amerCanvasRef.current.width,
+                    amerCanvasRef.current.height
+                );
+            });
+        }
+    }, [dropdownClearAmers]);
+
     /**
      *
      */
-    const drawLine = () => {
+    const drawLine = (ligne, color) => {
         const context = amerCanvasRef.current.getContext("2d");
-        context.lineWidth = 5;
-        context.moveTo(drawLineData.x1, drawLineData.y1);
-        tabPoints.push(new Point(drawLineData.x1, drawLineData.y1));
 
-        context.lineTo(
-            drawLineData.x1 +
-                drawLineData.r *
-                    Math.cos((Math.PI * (drawLineData.angle + 180)) / 180),
-            drawLineData.y1 +
-                drawLineData.r *
-                    Math.sin((Math.PI * (drawLineData.angle + 180)) / 180)
-        );
-        tabPoints.push(
-            new Point(
-                drawLineData.x1 +
-                    drawLineData.r *
-                        Math.cos((Math.PI * drawLineData.angle) / 180),
-                drawLineData.y1 +
-                    drawLineData.r *
-                        Math.sin((Math.PI * drawLineData.angle) / 180)
-            )
-        );
+        context.beginPath();
+
+        context.strokeStyle = color;
+        context.lineWidth = 5;
+        context.moveTo(ligne.pt1.x, ligne.pt1.y);
+        context.lineTo(ligne.pt2.x, ligne.pt2.y);
 
         context.stroke();
     };
 
-    const drawPoint = (x, y, color) => {
+    const drawPoint = (x, y) => {
         const context = amerCanvasRef.current.getContext("2d");
-        context.fillStyle = color || "black";
+
         context.beginPath();
+
+        context.fillStyle = "red";
+        context.strokeStyle = "red";
         context.arc(x, y, 5, 0, 2 * Math.PI, true);
         context.fill();
+
+        context.stroke();
+    };
+
+    const drawPosition = (position) => {
+        for (var i = 0; i < tabPositions.length; i++) {
+            const xtab = mapArray[0].length * 256;
+            const ytab = mapArray.length * 256;
+            var position = tabPositions[i];
+            // Dessiner point intersection + Label avec coordonnées
+            drawPoint(position.x, position.y);
+            const context = amerCanvasRef.current.getContext("2d");
+            context.beginPath();
+            context.strokeStyle = "#000000";
+            context.rect(position.x, position.y, 180, 25);
+            context.fillStyle = "#000000";
+            context.fill();
+            context.fillStyle = "#FFFFFF";
+            context.fillText(
+                temp(position.x, position.y, xtab, ytab),
+                position.x + 10,
+                position.y + 20
+            );
+            context.stroke();
+        }
+    };
+
+    const drawLinesFromArray = () => {
+        for (var i = 0; i < tabLignes.length; i++) {
+            if (i % 3 === 0 && i > 0) {
+                compteurColor++;
+            }
+            color = getColor(compteurColor);
+            drawLine(tabLignes[i], color);
+        }
+    };
+
+    const redrawCanvas = () => {
+        if (tabLignes.length > 1) {
+            const context = amerCanvasRef.current.getContext("2d");
+            context.clearRect(
+                0,
+                0,
+                amerCanvasRef.current.width,
+                amerCanvasRef.current.height
+            );
+            drawLinesFromArray();
+        }
+        if (tabLignes.length >= 3) {
+            drawPosition();
+        }
     };
 
     /**
@@ -146,13 +226,11 @@ export const Canvas = (props) => {
     // Pour obtenir le point 0 du rapporteur (rouge) : CALIBRAGE_ZERO_ROUGE * regle.height
     // Pour obtenir le point 0 du rapporteur (noir) : CALIBRAGE_ZERO_NOIR * regle.height
     const drawAndPlaceCRA = () => {
-        // var regle = document.createElement('img');
         var regle = new Image();
         regle.src = image;
         regle.alt = "alt text";
 
         const context = amerCanvasRef.current.getContext("2d");
-
         regle.onload = function () {
             context.save();
             context.translate(drawLineData.x1, drawLineData.y1);
@@ -165,42 +243,22 @@ export const Canvas = (props) => {
             }
 
             context.restore();
+
+            if (tabLignes.length % 3 == 0) {
+                let line1 = tabLignes[tabLignes.length - 3];
+                let line2 = tabLignes[tabLignes.length - 2];
+                let line3 = tabLignes[tabLignes.length - 1];
+
+                trouverMilieu(line1, line2, line3);
+            }
         };
-
-        const x1 = drawLineData.x1;
-        const y1 = drawLineData.y1 - CALIBRAGE_ZERO_NOIR * regle.height;
-        //clearCRA(x1,y1);
-        context.clearRect(
-            0,
-            0,
-            amerCanvasRef.current.width,
-            amerCanvasRef.current.height
-        );
-
-        /*  context.moveTo(0,y1);
-        context.lineTo(mapArray[0].length*256,y1);
-
-        */ context.stroke();
-        nbrTrait++;
-
-        if (nbrTrait >= 3) {
-            trouverMilieu();
-        }
     };
 
-    const trouverMilieu = () => {
-        let pt1 = tabPoints[0];
-        let pt2 = tabPoints[1];
+    const getColor = (compteur) => {
+        return tabColor[compteur % tabColor.length];
+    };
 
-        let pt3 = tabPoints[2];
-        let pt4 = tabPoints[3];
-
-        let pt5 = tabPoints[4];
-        let pt6 = tabPoints[5];
-
-        let line1 = new Line(pt1, pt2);
-        let line2 = new Line(pt3, pt4);
-        let line3 = new Line(pt5, pt6);
+    const trouverMilieu = (line1, line2, line3) => {
         // get intersection
         let pt_intersection1 = line1.getIntersection(line2);
         let pt_intersection2 = line1.getIntersection(line3);
@@ -214,33 +272,12 @@ export const Canvas = (props) => {
             pt_intersection1,
             pt_intersection3
         );
-        let line_median3 = pt_intersection3.getMedian(
-            pt_intersection1,
-            pt_intersection2
-        );
 
         // middle
         let middle1 = line_median1.getIntersection(line_median2);
-        console.log(`middle : x=${middle1.x}, y=${middle1.y}`);
-
-        const xtab = mapArray[0].length * 256;
-        const ytab = mapArray.length * 256;
-
-        // Dessiner point intersection + Label avec coordonnées
-        drawPoint(middle1.x, middle1.y, "red");
-        const context = amerCanvasRef.current.getContext("2d");
-        context.beginPath();
-        context.fillStyle = "#000000";
-        context.rect(middle1.x, middle1.y, 160, 25);
-        context.fill();
-        context.fillStyle = "#FFFFFF";
-        context.fillText(
-            temp(middle1.x, middle1.y, xtab, ytab),
-            middle1.x + 10,
-            middle1.y + 20
-        );
-
-        console.log(temp(middle1.x, middle1.y, xtab, ytab));
+        tabPositions.push(middle1);
+        console.log("LENGTH = ", tabPositions.length);
+        drawPosition();
     };
 
     /**
@@ -256,12 +293,9 @@ export const Canvas = (props) => {
             y1: event.clientY - rect.top,
             r: longueurVal
         });
-        //temp(event,rect);
     };
-    const temp = (x, y, xtab, ytab) => {
-        //const xtab = mapArray[0].length*256;
-        //const ytab = mapArray.length*256;
 
+    const temp = (x, y, xtab, ytab) => {
         const latitude = mapSettingsData.latitude;
         const longitude = mapSettingsData.longitude;
         const latitudeDistance = mapSettingsData.latitudeDistance;
@@ -290,8 +324,9 @@ export const Canvas = (props) => {
         const resX = (x / xtab) * (x2 - x1) + x1;
         const resY = (y / ytab) * (y2 - y1) + y1;
 
-        return degToDms(resX, true) + "   " + degToDms(resY, false);
+        return degToDms(resY, false) + "\xa0 \xa0" + degToDms(resX, true);
     };
+
     useEffect(() => {
         if (amerCanvasRef) {
             amerCanvasRef.current.addEventListener("mousemove", (e) => {
@@ -328,7 +363,22 @@ export const Canvas = (props) => {
     }, [longueurVal]);
 
     const handleOnSubmit = (event) => {
-        drawLine();
+        compteurColor = 0;
+        var p1X = drawLineData.x1;
+        var p1Y = drawLineData.y1;
+        var p2X =
+            drawLineData.x1 +
+            drawLineData.r *
+                Math.cos((Math.PI * (drawLineData.angle + 180)) / 180);
+        var p2Y =
+            drawLineData.y1 +
+            drawLineData.r *
+                Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
+        var ligne = new Line(new Point(p1X, p1Y), new Point(p2X, p2Y));
+        tabLignes.push(ligne);
+
+        drawLine(ligne, color);
+        redrawCanvas();
         drawAndPlaceCRA();
         handleClose();
     };
@@ -336,7 +386,7 @@ export const Canvas = (props) => {
     return (
         <>
             <canvas
-                id="canvas"
+                id="canvasAmers"
                 ref={amerCanvasRef}
                 className="canvas-style mt-5"
                 onClick={(e) => !!amer && setCoordinates(e)}

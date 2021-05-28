@@ -20,7 +20,7 @@ export const HelpModal = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    La barre de navigation contient 5 Boutons
+                    La barre de navigation contient 4 boutons
                     <br />
                     <hr />
                     <div className="row">
