@@ -33,12 +33,14 @@ export const Route = (props) => {
   const [declinaisonVal, setDeclinaisonVal] = useState("0");
   const [deviationVal, setDeviationVal] = useState("0");
 
-  const drawPoint = (x, y, color) => {
+  const drawPoint = (x, y, color, tmpTrajet) => {
       const context = routeCanvasRef.current.getContext("2d");
       context.fillStyle = color || "black";
       context.beginPath();
       context.arc(x, y, 5, 0, 2 * Math.PI, true);
       context.fill();
+      context.fillText('Temps de trajet (en minutes) : '+Math.round(tmpTrajet),x,y);
+      context.stroke();
   };
 
   const pixelsToDegDecimal = (x,y,xtab,ytab) => {
@@ -103,7 +105,7 @@ export const Route = (props) => {
       arrayPoints.push([x,y]);
       const xtab = mapArray[0].length*256;
       const ytab =  mapArray.length*256;
-      drawPoint(x,y,'yellow');
+      drawPoint(x,y,'yellow',0);
 
       let l1degDec = pixelsToDegDecimal(x,y,xtab,ytab);
       let l2degDec = pixelsToDegDecimal(x+1,y+1,xtab,ytab);
@@ -159,7 +161,7 @@ export const Route = (props) => {
     context.stroke();
     context.fillStyle = couleur;
     let milieu = milieuTwoPoints(x,y,x2,y2);
-    context.fillText('Angle (en Degré) : '+angle+ ' \n Distance (en Miles) : '+long,milieu[0],milieu[1]);
+    context.fillText('Angle (en Degré) : '+Math.round(angle)+ ' \n Distance (en Miles) : '+Math.round(long),milieu[0],milieu[1]);
 
     return [x2,y2];
 
@@ -169,7 +171,7 @@ export const Route = (props) => {
     return Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1),2));
 
   }
-  const drawLine = (x1,y1,x2,y2, context,couleur) => {
+  const drawLine = (x1,y1,x2,y2, context,couleur, angle, long) => {
     context.beginPath();
     context.strokeStyle = couleur;
     context.moveTo(x1,y1);
@@ -178,7 +180,7 @@ export const Route = (props) => {
     context.fillStyle = couleur;
     let milieu = milieuTwoPoints(x1,y1,x2,y2);
 
-    context.fillText('test lol',milieu[0],milieu[1]);
+    context.fillText('Angle (en Degré) : '+Math.round(angle)+ ' \n Distance (en Miles) : '+Math.round(long),milieu[0],milieu[1]);
   }
 
   const milieuTwoPoints = (x1,y1,x2,y2) => {
@@ -204,10 +206,11 @@ export const Route = (props) => {
     let x3 = arrayCoord[0];
     let y3 = arrayCoord[1];
 
-    drawLine(x3,y3,x2,y2,context,'green');
     let degreeRS = (Math.atan2(y2 - y3, x2 - x3) * 180 / Math.PI)+90;
     let distanceRSPixels = distanceTwoPoints(x3,y3,x2,y2);
     let distanceRSMiles = (distanceRSPixels*distanceMilesRf)/distancePixelsRf;
+    drawLine(x3,y3,x2,y2,context,'green',degreeRS,distanceRSMiles);
+
     console.log('Distance RS (en Miles): '+distanceRSMiles)
     console.log('Angle RS (en Degrés): '+degreeRS);
 
@@ -217,11 +220,16 @@ export const Route = (props) => {
     drawLineAngle(x3,y3,distanceRSPixels,degreeCapVrai,context,'brown',1);
 
     let degreeCapCompas = degreeCapVrai - declinaisonVal - deviationVal;
-    let arrayCoordCapCompas = drawLineAngle(x3,y3,distanceRSPixels,degreeCapCompas,context,'yellow',5);
+    let arrayCoordCapCompas = drawLineAngle(x3,y3,distanceRSPixels,degreeCapCompas,context,'purple',5);
     let x4 = arrayCoordCapCompas[0];
     let y4 = arrayCoordCapCompas[1];
+
     console.log('Angle Cap Compas (en Degrés): '+degreeCapCompas);
     console.log('Distance Cap Compas (en Miles): '+distanceRSMiles);
+
+    let dureeTrajet = (distanceRSMiles * 60) / vitesseFondVal;
+    console.log('Durée du trajet (en minutes) : ' + dureeTrajet);
+    drawPoint(x4,y4,'purple',dureeTrajet);
 
     handleClose();
 
@@ -243,7 +251,7 @@ export const Route = (props) => {
         </Modal.Header>
         <Modal.Body>
 
-          <Form.Label htmlFor="vitesseFond">Distance à parcourir</Form.Label>
+          <Form.Label htmlFor="distanceParcourir">Distance à parcourir</Form.Label>
           <Form.Control
               className="mb-2 mr-sm-2"
               id="distanceParcourir"
@@ -252,7 +260,7 @@ export const Route = (props) => {
               type="number"
               placeholder="DistanceParcourir"
           />
-        <Form.Label htmlFor="vitesseFond">Cap</Form.Label>
+        <Form.Label htmlFor="cap">Cap</Form.Label>
           <Form.Control
               className="mb-2 mr-sm-2"
               id="cap"
