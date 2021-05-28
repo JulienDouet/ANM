@@ -5,12 +5,17 @@ import image from "../regle-cras.png";
 import { degToRadian } from "../helpers/helpers";
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
 import { deg_to_dms } from "../helpers/GenerateMap";
+
 // Valeur pour prendre le nord en référence comme 0°
 const DEFAULT_ANGLE = 90;
+
 const CALIBRAGE_ZERO_ROUGE = -0.0845;
 const CALIBRAGE_ZERO_NOIR = -0.9155;
+
 var tabLignes = [];
 var tabPositions = [];
+var tabAngles = [];
+
 const tabColor = [
     "red",
     "green",
@@ -119,15 +124,15 @@ export const Canvas = (props) => {
     /**
      * Listener clear canvas
      */
-    var dropdownClearAmers = document.getElementById("dropdownClearAmers");
-    dropdownClearAmers.addEventListener('click', event => {
-        tabLignes = [];
-        tabPositions = [];
-        color = tabColor[0];
-        compteurColor = 0;
-        const context = amerCanvasRef.current.getContext("2d");
-        context.clearRect(0, 0, amerCanvasRef.current.width, amerCanvasRef.current.height);
-    });
+    // var dropdownClearAmers = document.getElementById("dropdownClearAmers");
+    // dropdownClearAmers.addEventListener('click', event => {
+    //     tabLignes = [];
+    //     tabPositions = [];
+    //     color = tabColor[0];
+    //     compteurColor = 0;
+    //     const context = amerCanvasRef.current.getContext("2d");
+    //     context.clearRect(0, 0, amerCanvasRef.current.width, amerCanvasRef.current.height);
+    // });
 
     /**
      *
@@ -144,6 +149,13 @@ export const Canvas = (props) => {
 
         context.stroke();
     };
+
+    const drawAngle = (angle, x, y, color) => {
+        const context = amerCanvasRef.current.getContext("2d");
+        context.fillStyle = color;
+        context.font = '20px serif';
+        context.fillText(angle + "°", x, y);
+    }
 
     const drawPoint = (x, y) => {
         const context = amerCanvasRef.current.getContext("2d");
@@ -188,6 +200,7 @@ export const Canvas = (props) => {
             }
             color = getColor(compteurColor);
             drawLine(tabLignes[i], color);
+            drawAngle(tabAngles[i], tabLignes[i].pt1.x, tabLignes[i].pt1.y, color)
         }
     };
 
@@ -233,6 +246,10 @@ export const Canvas = (props) => {
 
             context.restore();
 
+            //Tracer un trait au milieu du rapporteur
+            // var ligneMilieuRapporteur = new Line(new Point(0, drawLineData.y1), new Point(mapArray[0].length, drawLineData.y1));
+            // drawLine(ligneMilieuRapporteur, "orange");
+
             if (tabLignes.length % 3 == 0) {
                 let line1 = tabLignes[tabLignes.length - 3];
                 let line2 = tabLignes[tabLignes.length - 2];
@@ -265,7 +282,6 @@ export const Canvas = (props) => {
         // middle
         let middle1 = line_median1.getIntersection(line_median2);
         tabPositions.push(middle1);
-        console.log("LENGTH = ", tabPositions.length);
         drawPosition();
     };
 
@@ -365,8 +381,9 @@ export const Canvas = (props) => {
             Math.sin((Math.PI * (drawLineData.angle + 180)) / 180);
         var ligne = new Line(new Point(p1X, p1Y), new Point(p2X, p2Y));
         tabLignes.push(ligne);
-
+        tabAngles.push(angleVal);
         drawLine(ligne, color);
+        drawAngle(angleVal, p1X, p1Y, color);
         redrawCanvas();
         drawAndPlaceCRA();
         handleClose();
