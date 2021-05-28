@@ -246,6 +246,21 @@ export const Route = (props) => {
     handleClose();
 
   };
+
+  const handleOnSuppr = (event) => {
+    const context = routeCanvasRef.current.getContext("2d");
+    const xtab = mapArray[0].length*256;
+    const ytab =  mapArray.length*256;
+    context.clearRect(0,0,xtab,ytab);
+
+    var distanceMilesRf = 0;
+    var degreeRf = 0;
+    var distancePixelsRf = 0;
+    var distancePixelsReference = 0;
+    var distanceMilesReference = 0;
+
+    var arrayPoints = [];
+  };
   return (
     <>
     <div id="idRoute">
@@ -341,6 +356,9 @@ export const Route = (props) => {
         <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
                 Annuler
+            </Button>
+            <Button variant="secondary" onClick={handleOnSuppr}>
+                Tout supprimer
             </Button>
             <Button variant="primary" onClick={handleOnSubmit}>
                 Valider le marquage
