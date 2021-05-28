@@ -118,27 +118,19 @@ export const Canvas = (props) => {
         }
     }, [mapArray]);
 
-    /**
-     * Listener clear canvas
-     */
-    var dropdownClearAmers = document.getElementById("dropdownClearAmers");
     useEffect(() => {
-        if (dropdownClearAmers) {
-            dropdownClearAmers.addEventListener("click", (event) => {
-                tabLignes = [];
-                tabPositions = [];
-                color = tabColor[0];
-                compteurColor = 0;
-                const context = amerCanvasRef.current.getContext("2d");
-                context.clearRect(
-                    0,
-                    0,
-                    amerCanvasRef.current.width,
-                    amerCanvasRef.current.height
-                );
-            });
-        }
-    }, [dropdownClearAmers]);
+        tabLignes = [];
+        tabPositions = [];
+        color = tabColor[0];
+        compteurColor = 0;
+        const context = amerCanvasRef.current.getContext("2d");
+        context.clearRect(
+            0,
+            0,
+            amerCanvasRef.current.width,
+            amerCanvasRef.current.height
+        );
+    }, [mapSettingsData]);
 
     /**
      *

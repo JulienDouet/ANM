@@ -94,14 +94,6 @@ export const TopBar = (props) => {
                             <FontAwesomeIcon icon={faQuestion} size="lg" />
                         </Button>
                     </OverlayTrigger>
-                    <NavDropdown title="Effacer">
-                        <NavDropdown.Item id="dropdownClearAmers">
-                            Amers
-                        </NavDropdown.Item>
-                        <NavDropdown.Item id="dropdownClearRoutes">
-                            Routes
-                        </NavDropdown.Item>
-                    </NavDropdown>
                     &nbsp;
                     <label
                         className="ml-auto"
