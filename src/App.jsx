@@ -16,13 +16,13 @@ export const App = () => {
     const [mapSettingsData, setMapSettingsData] = useState({});
     const [mapName, setMapName] = useState("Baie de Quiberon");
     const [storedMapName, setStoredMapName] = useState("");
-    const [amer, setAmer] = useState(false);
+    const [amer, setAmer] = useState(true);
     const [hasScrollListener, setHasScrollListener] = useState(false);
     const [route, setRoute] = useState(false);
 
     useEffect(() => {
         const ele = document.getElementById("dragMap");
-        if (!hasScrollListener && !amer) {
+        if (!hasScrollListener) {
             let x = 0;
             let y = 0;
             let html = document.documentElement;
@@ -64,9 +64,7 @@ export const App = () => {
                 ele.style.removeProperty("user-select");
             };
             setHasScrollListener(true);
-            if (!amer) {
-                ele.addEventListener("mousedown", mouseDownHandler);
-            }
+            ele.addEventListener("mousedown", mouseDownHandler);
         }
     }, [amer]);
 
@@ -89,7 +87,10 @@ export const App = () => {
                 storedMapState={[storedMapName, setStoredMapName]}
             />
             <HelpModal showState={[showHelp, setShowHelp]} />
-            <div id="dragMap" className={!!amer ? "amerPointer" : "draggable"}>
+            <div
+                id="dragMap"
+                className={!!amer || !!route ? "amerPointer" : "draggable"}
+            >
                 <SeaMap
                     mapArray={mapArray}
                     isStoredMap={isStoredMap}
@@ -101,7 +102,6 @@ export const App = () => {
                     mapArray={mapArray}
                     mapSettingsData={mapSettingsData}
                 />
-
                 <Canvas
                     amer={amer}
                     mapArray={mapArray}

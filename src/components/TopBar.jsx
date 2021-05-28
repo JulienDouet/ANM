@@ -47,7 +47,6 @@ export const TopBar = (props) => {
         var elemRoute = document.getElementById("idRoute");
         var elemCanvas = document.getElementById("idCanvas");
         setAmer(!amer);
-        console.log("");
         if (!amer && route) {
             setRoute(false);
             swap(elemCanvas, elemRoute);
@@ -57,10 +56,9 @@ export const TopBar = (props) => {
         var elemRoute = document.getElementById("idRoute");
         var elemCanvas = document.getElementById("idCanvas");
         setRoute(!route);
-        console.log("");
         if (amer && !route) {
             setAmer(false);
-            swap(elemCanvas, elemRoute);
+            swap(elemRoute, elemCanvas);
         }
     };
 
