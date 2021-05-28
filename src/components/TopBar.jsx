@@ -46,26 +46,21 @@ export const TopBar = (props) => {
     const handleAmerState = () => {
         var elemRoute = document.getElementById("idRoute");
         var elemCanvas = document.getElementById("idCanvas");
+        setAmer(!amer);
 
-        if (amer === route) {
-            setAmer(true);
-        } else {
+        if (!amer && route) {
+            setRoute(false);
             swap(elemCanvas, elemRoute);
-            setAmer(!amer);
-            setRoute(!route);
         }
     };
     const handleRouteState = () => {
         var elemRoute = document.getElementById("idRoute");
         var elemCanvas = document.getElementById("idCanvas");
+        setRoute(!route);
 
-        if (amer === route) {
-            setRoute(true);
+        if (amer && !route) {
+            setAmer(false);
             swap(elemCanvas, elemRoute);
-        } else {
-            setRoute(!route);
-            swap(elemCanvas, elemRoute);
-            setAmer(!amer);
         }
     };
 

@@ -76,7 +76,6 @@ export const Route = (props) => {
         const resX = (x / xtab) * (x2 - x1) + x1;
         const resY = (y / ytab) * (y2 - y1) + y1;
 
-        console.log(degToDms(resX, true), " ", degToDms(resY, false));
         return [resX, resY];
     };
 
@@ -90,6 +89,16 @@ export const Route = (props) => {
             routeCanvas.width = mapArray[0].length * 256;
         }
     }, [mapArray]);
+
+    useEffect(() => {
+        const context = routeCanvasRef.current.getContext("2d");
+        context.clearRect(
+            0,
+            0,
+            routeCanvasRef.current.width,
+            routeCanvasRef.current.height
+        );
+    }, [mapSettingsData]);
 
     const setRoute = (event) => {
         const rect = routeCanvasRef.current.getBoundingClientRect();
@@ -119,8 +128,6 @@ export const Route = (props) => {
             lat2,
             long1
         );
-        console.log(distancePixelsReference);
-        console.log(distanceMilesReference);
         let arrayCoordMilesReference = calcLineAngle(
             x,
             y,
@@ -244,12 +251,7 @@ export const Route = (props) => {
             (distanceRSPixels * distanceMilesRf) / distancePixelsRf;
         drawLine(x3, y3, x2, y2, context, "green", degreeRS, distanceRSMiles);
 
-        console.log("Distance RS (en Miles): " + distanceRSMiles);
-        console.log("Angle RS (en Degrés): " + degreeRS);
-
         let degreeCapVrai = degreeRS - deriveVal;
-        console.log("Angle Cap Vrai (en Degrés): " + degreeCapVrai);
-        console.log("Distance Cap Vrai (en Miles): " + distanceRSMiles);
         drawLineAngle(
             x3,
             y3,
@@ -273,11 +275,7 @@ export const Route = (props) => {
         let x4 = arrayCoordCapCompas[0];
         let y4 = arrayCoordCapCompas[1];
 
-        console.log("Angle Cap Compas (en Degrés): " + degreeCapCompas);
-        console.log("Distance Cap Compas (en Miles): " + distanceRSMiles);
-
         let dureeTrajet = (distanceRSMiles * 60) / vitesseFondVal;
-        console.log("Durée du trajet (en minutes) : " + dureeTrajet);
         drawPoint(x4, y4, "purple", dureeTrajet);
 
         handleClose();
