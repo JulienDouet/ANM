@@ -157,6 +157,9 @@ export const Route = (props) => {
     let y2 = y+long * Math.sin((Math.PI * (angle-90)) / 180);
     context.lineTo(x2,y2);
     context.stroke();
+    context.fillStyle = couleur;
+    let milieu = milieuTwoPoints(x,y,x2,y2);
+    context.fillText('Angle (en Degré) : '+angle+ ' \n Distance (en Miles) : '+long,milieu[0],milieu[1]);
 
     return [x2,y2];
 
@@ -172,6 +175,14 @@ export const Route = (props) => {
     context.moveTo(x1,y1);
     context.lineTo(x2,y2);
     context.stroke();
+    context.fillStyle = couleur;
+    let milieu = milieuTwoPoints(x1,y1,x2,y2);
+
+    context.fillText('test lol',milieu[0],milieu[1]);
+  }
+
+  const milieuTwoPoints = (x1,y1,x2,y2) => {
+    return [(x1+x2)/2, (y1+y2)/2];
   }
   //const context = routeCanvasRef.current.getContext("2d");
   const handleOnSubmit = (event) => {
