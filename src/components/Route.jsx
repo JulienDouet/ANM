@@ -7,6 +7,15 @@ import { degToDms } from "../helpers/GenerateMap";
 
 import { convertToDecimalDegre } from "../helpers/GenerateMap";
 var arrayPoints = [];
+var nbrPoints = 0;
+
+var arrayDefLigne = [
+    "Route Fond",
+    "Courant",
+    "Route Surface",
+    "Cap Vrai",
+    "Cap Compas"
+];
 
 var distanceMilesRf = 0;
 var degreeRf = 0;
@@ -14,7 +23,6 @@ var distancePixelsRf = 0;
 var distancePixelsReference = 0;
 var distanceMilesReference = 0;
 export const Route = (props) => {
-    var nbrPoints = 0;
     const { mapArray, route, mapSettingsData } = props;
 
     const [show, setShow] = useState(false);
@@ -29,6 +37,7 @@ export const Route = (props) => {
     const [deriveVal, setDeriveVal] = useState("0");
     const [declinaisonVal, setDeclinaisonVal] = useState("0");
     const [deviationVal, setDeviationVal] = useState("0");
+    const [routeArray, setRouteArray] = useState([]);
 
     const drawPoint = (x, y, color, tmpTrajet) => {
         const context = routeCanvasRef.current.getContext("2d");
@@ -38,8 +47,8 @@ export const Route = (props) => {
         context.fill();
         context.fillText(
             "Temps de trajet (en minutes) : " + Math.round(tmpTrajet),
-            x,
-            y
+            x + 5,
+            y + 5
         );
         context.stroke();
     };
@@ -90,20 +99,10 @@ export const Route = (props) => {
         }
     }, [mapArray]);
 
-    useEffect(() => {
-        const context = routeCanvasRef.current.getContext("2d");
-        context.clearRect(
-            0,
-            0,
-            routeCanvasRef.current.width,
-            routeCanvasRef.current.height
-        );
-    }, [mapSettingsData]);
-
     const setRoute = (event) => {
         const rect = routeCanvasRef.current.getBoundingClientRect();
         const context = routeCanvasRef.current.getContext("2d");
-
+        context.font = "15px Serif";
         let x = event.clientX - rect.left;
         let y = event.clientY - rect.top;
 
@@ -156,9 +155,11 @@ export const Route = (props) => {
         y,
         long,
         angle,
+        longMiles,
         context,
         couleur,
-        epaisseurTrait
+        epaisseurTrait,
+        def
     ) => {
         context.beginPath();
         context.strokeStyle = couleur;
@@ -172,10 +173,12 @@ export const Route = (props) => {
         context.fillStyle = couleur;
         let milieu = milieuTwoPoints(x, y, x2, y2);
         context.fillText(
-            "Angle (en Degré) : " +
-                Math.round(angle) +
+            def +
+                " - " +
+                "Angle (en Degré) : " +
+                roundDecimal(angle, 1) +
                 " \n Distance (en Miles) : " +
-                Math.round(long),
+                roundDecimal(longMiles, 2),
             milieu[0],
             milieu[1]
         );
@@ -186,7 +189,7 @@ export const Route = (props) => {
     const distanceTwoPoints = (x1, y1, x2, y2) => {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     };
-    const drawLine = (x1, y1, x2, y2, context, couleur, angle, long) => {
+    const drawLine = (x1, y1, x2, y2, context, couleur, angle, long, def) => {
         context.beginPath();
         context.strokeStyle = couleur;
         context.moveTo(x1, y1);
@@ -196,10 +199,12 @@ export const Route = (props) => {
         let milieu = milieuTwoPoints(x1, y1, x2, y2);
 
         context.fillText(
-            "Angle (en Degré) : " +
-                Math.round(angle) +
+            def +
+                " - " +
+                "Angle (en Degré) : " +
+                roundDecimal(angle, 1) +
                 " \n Distance (en Miles) : " +
-                Math.round(long),
+                roundDecimal(long, 2),
             milieu[0],
             milieu[1]
         );
@@ -208,6 +213,12 @@ export const Route = (props) => {
     const milieuTwoPoints = (x1, y1, x2, y2) => {
         return [(x1 + x2) / 2, (y1 + y2) / 2];
     };
+
+    function roundDecimal(nombre, precision) {
+        var precision = precision || 2;
+        var tmp = Math.pow(10, precision);
+        return Math.round(nombre * tmp) / tmp;
+    }
     //const context = routeCanvasRef.current.getContext("2d");
     const handleOnSubmit = (event) => {
         const context = routeCanvasRef.current.getContext("2d");
@@ -225,9 +236,11 @@ export const Route = (props) => {
             y1,
             distancePixelsRf,
             capVal,
+            distanceMilesRf,
             context,
             "blue",
-            1
+            1,
+            arrayDefLigne[0]
         );
         let x2 = arrayP2[0];
         let y2 = arrayP2[1];
@@ -237,9 +250,11 @@ export const Route = (props) => {
             y1,
             noeudCourant,
             angleVal,
+            noeudCourant,
             context,
             "red",
-            1
+            1,
+            arrayDefLigne[1]
         );
 
         let x3 = arrayCoord[0];
@@ -249,7 +264,17 @@ export const Route = (props) => {
         let distanceRSPixels = distanceTwoPoints(x3, y3, x2, y2);
         let distanceRSMiles =
             (distanceRSPixels * distanceMilesRf) / distancePixelsRf;
-        drawLine(x3, y3, x2, y2, context, "green", degreeRS, distanceRSMiles);
+        drawLine(
+            x3,
+            y3,
+            x2,
+            y2,
+            context,
+            "green",
+            degreeRS,
+            distanceRSMiles,
+            arrayDefLigne[2]
+        );
 
         let degreeCapVrai = degreeRS - deriveVal;
         drawLineAngle(
@@ -257,9 +282,11 @@ export const Route = (props) => {
             y3,
             distanceRSPixels,
             degreeCapVrai,
+            distanceRSMiles,
             context,
             "brown",
-            1
+            1,
+            arrayDefLigne[3]
         );
 
         let degreeCapCompas = degreeCapVrai - declinaisonVal - deviationVal;
@@ -268,9 +295,11 @@ export const Route = (props) => {
             y3,
             distanceRSPixels,
             degreeCapCompas,
+            distanceRSMiles,
             context,
             "purple",
-            5
+            5,
+            arrayDefLigne[4]
         );
         let x4 = arrayCoordCapCompas[0];
         let y4 = arrayCoordCapCompas[1];
@@ -278,7 +307,23 @@ export const Route = (props) => {
         let dureeTrajet = (distanceRSMiles * 60) / vitesseFondVal;
         drawPoint(x4, y4, "purple", dureeTrajet);
 
+        arrayPoints = [];
         handleClose();
+    };
+
+    const handleOnSuppr = (event) => {
+        const context = routeCanvasRef.current.getContext("2d");
+        const xtab = mapArray[0].length * 256;
+        const ytab = mapArray.length * 256;
+        context.clearRect(0, 0, xtab, ytab);
+
+        var distanceMilesRf = 0;
+        var degreeRf = 0;
+        var distancePixelsRf = 0;
+        var distancePixelsReference = 0;
+        var distanceMilesReference = 0;
+
+        var arrayPoints = [];
     };
     return (
         <>
@@ -328,7 +373,9 @@ export const Route = (props) => {
                             type="number"
                             placeholder="VitesseFond"
                         />
-                        <Form.Label htmlFor="angle">Angle</Form.Label>
+                        <Form.Label htmlFor="angle">
+                            Angle du Courant
+                        </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
                             id="angle"
@@ -337,7 +384,9 @@ export const Route = (props) => {
                             type="number"
                             placeholder="Angle"
                         />
-                        <Form.Label htmlFor="noeud">Noeud</Form.Label>
+                        <Form.Label htmlFor="noeud">
+                            Noeud du Courant
+                        </Form.Label>
                         <Form.Control
                             className="mb-2 mr-sm-2"
                             id="noeud"
@@ -376,9 +425,13 @@ export const Route = (props) => {
                             placeholder="Déviation"
                         />
                     </Modal.Body>
+
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Annuler
+                        </Button>
+                        <Button variant="secondary" onClick={handleOnSuppr}>
+                            Tout supprimer
                         </Button>
                         <Button variant="primary" onClick={handleOnSubmit}>
                             Valider le marquage
